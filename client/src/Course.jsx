@@ -5,9 +5,9 @@ class Course extends React.Component{
     constructor (props) {
         super();
         this.state = {
-            name: props.name
+            name: props.name,
+            onClick: props.onClick
         };
-        console.log(typeof name)
     }
 
     render () {
@@ -15,6 +15,7 @@ class Course extends React.Component{
         return (
             <div key={this.state.name}>
                 <p>{this.state.name}</p>
+                <button onClick={this.state.onClick}>Select</button>
             </div>
         );
     }

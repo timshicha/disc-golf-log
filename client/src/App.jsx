@@ -7,6 +7,7 @@ function App() {
     const [log, setLog] = useState(new Log());
     const [courseNamesHTML, setCourseNamesHTML] = useState("");
     const [nameInputValue, setNameInputValue] = useState("");
+    const [courseSelected, setCourseSelected] = useState(null);
 
     const updateCourseNames = () => {
         const courseNames = log.getCourseNames();
@@ -14,7 +15,9 @@ function App() {
         setCourseNamesHTML(
             courseNames.map(name =>
                 <div key={name}>
-                    <Course name={name}></Course>
+                    <Course name={name} onClick={() => {
+                        setCourseSelected(name);
+                    }}></Course>
                 </div>
             )
         );

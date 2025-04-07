@@ -29,6 +29,10 @@ export class Log {
         return newCourse;
     }
 
+    getCourse = (name) => {
+        return this.courses[name];
+    }
+
     getCourseNames = () => {
         return Object.keys(this.courses);
     }
