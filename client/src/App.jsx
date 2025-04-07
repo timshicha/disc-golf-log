@@ -1,16 +1,31 @@
 import React, { useState } from "react";
 import { Log } from "./data_handling/log";
+import Course from "./Course";
 
 function App() {
 
     const [log, setLog] = useState(new Log());
-    const [courseNames, setCourseNames] = useState("");
+    const [courseNamesHTML, setCourseNamesHTML] = useState("");
     const [nameInputValue, setNameInputValue] = useState("");
+
+    const updateCourseNames = () => {
+        const courseNames = log.getCourseNames();
+        console.log(courseNames);
+        setCourseNamesHTML(
+            courseNames.map(name =>
+                <div key={name}>
+                    <Course name={name}></Course>
+                </div>
+            )
+        );
+    }
 
     return (
         <div className="App">
             <h1>Disc golf pad</h1>
-            <p>{courseNames}</p>
+
+            {courseNamesHTML}
+
             <input
                 type="text"
                 value={nameInputValue}
@@ -21,8 +36,8 @@ function App() {
             <button onClick={() => {
                 log.addCourse(nameInputValue);
                 setNameInputValue("");
+                updateCourseNames();
 
-                setCourseNames(log.getCourseNames());
             }}>
                 Add course
             </button>

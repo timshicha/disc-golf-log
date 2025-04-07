@@ -1,5 +1,5 @@
 
-export class Course {
+export class course {
     // Allow initialization by providing course name and number
     // of holes or by providing a course object
     constructor (nameOrCourse, numberOfHoles) {

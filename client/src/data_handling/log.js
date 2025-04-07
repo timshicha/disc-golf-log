@@ -1,4 +1,4 @@
-import { Course } from "./course";
+import { course } from "./course";
 
 export class Log {
     constructor (courses) {
@@ -24,7 +24,7 @@ export class Log {
                 return false;
             }
         }
-        let newCourse = new Course(nameOrCourse);
+        let newCourse = new course(nameOrCourse);
         this.courses[nameOrCourse] = newCourse;
         return newCourse;
     }
