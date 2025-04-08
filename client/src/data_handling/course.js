@@ -1,5 +1,5 @@
 
-export class course {
+class Course {
     // Allow initialization by providing course name and number
     // of holes or by providing a course object
     constructor (nameOrCourse, numberOfHoles) {
@@ -25,8 +25,6 @@ export class course {
         // Dummy filename for now
         this.rounds.push("round.json");
     }
-
-    getNumberOfRounds = () => {
-        return this.rounds.length;
-    }
 }
+
+export default Course;
