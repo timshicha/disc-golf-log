@@ -7,7 +7,9 @@ function App() {
     const [log, setLog] = useState(new Log());
     const [courseNamesHTML, setCourseNamesHTML] = useState("");
     const [nameInputValue, setNameInputValue] = useState("");
+    const [numberOfHolesInputValue, setNumberOfHolesInputValue] = useState(0);
     const [courseSelected, setCourseSelected] = useState(null);
+    const [numberOfRounds, setNumberOfRounds] = useState(0);
 
     const updateCourseNames = () => {
         const courseNames = log.getCourseNames();
@@ -17,6 +19,7 @@ function App() {
                 <div key={name}>
                     <Course name={name} onClick={() => {
                         setCourseSelected(name);
+                        setNumberOfRounds(log.getCourse(name).getNumberOfRounds());
                     }}></Course>
                 </div>
             )
@@ -29,6 +32,7 @@ function App() {
 
             {courseNamesHTML}
 
+            Name:
             <input
                 type="text"
                 value={nameInputValue}
@@ -36,14 +40,36 @@ function App() {
                     setNameInputValue(event.target.value);
                 }}
             />
+            <br />
+            # of holes:
+            <input
+                type="number"
+                value={numberOfHolesInputValue}
+                onChange={(event => {
+                    setNumberOfHolesInputValue(event.target.value);
+                })}
+            />
+            <br />
             <button onClick={() => {
-                log.addCourse(nameInputValue);
+                log.addCourse(nameInputValue, numberOfHolesInputValue);
                 setNameInputValue("");
                 updateCourseNames();
 
             }}>
                 Add course
             </button>
+            <br />
+            <br />
+            <p>Course selected: {courseSelected}</p>
+            <button onClick={() => {
+                log.getCourse(courseSelected).addRound();
+                setNumberOfRounds(log.getCourse(courseSelected).getNumberOfRounds());
+            }}>
+                Add round to selected course
+            </button>
+
+            <p>Number of rounds at selected course: {numberOfRounds}</p>
+
         </div>
     );
 }

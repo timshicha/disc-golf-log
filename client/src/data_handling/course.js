@@ -20,4 +20,13 @@ export class course {
             this.rounds = nameOrCourse.rounds;
         }
     }
+
+    addRound = () => {
+        // Dummy filename for now
+        this.rounds.push("round.json");
+    }
+
+    getNumberOfRounds = () => {
+        return this.rounds.length;
+    }
 }

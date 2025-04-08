@@ -8,7 +8,7 @@ export class Log {
         }
     }
 
-    addCourse = (nameOrCourse) => {
+    addCourse = (nameOrCourse, numberOfHoles) => {
         // If the name was given
         if(typeof nameOrCourse === "string") {
             // Make sure this name isn't already used
@@ -24,7 +24,7 @@ export class Log {
                 return false;
             }
         }
-        let newCourse = new course(nameOrCourse);
+        let newCourse = new course(nameOrCourse, numberOfHoles);
         this.courses[nameOrCourse] = newCourse;
         return newCourse;
     }

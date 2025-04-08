@@ -22,6 +22,18 @@ export class Round {
         this.score[holeNumber] = newScore;
     }
 
+    modifyEntireScore = (newScoreArray) => {
+        // Must be array and same length
+        if(typeof newScoreArray !== Array) {
+            return false;
+        }
+        if(newScoreArray.length !== this.score.length) {
+            return false;
+        }
+        this.score = newScoreArray;
+        
+    }
+
     getScore = () => {
         return this.score;
     }
