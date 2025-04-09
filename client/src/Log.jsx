@@ -34,11 +34,19 @@ function LogComponent() {
 
             <br />
             <p>Course selected: {courseSelected}</p>
-            <AddCourseButton onClick={null}></AddCourseButton>
+            
+            { // If form to add course is not exapanded, allow button to expand
+            !addCourseActive &&
+            <AddCourseButton onClick={() => {setAddCourseActive(true)}}></AddCourseButton>}
+            
+            { // If form to add course is expanded
+            addCourseActive &&
             <AddCourseFormComponent
                 onSubmit={log.addCourse}
                 callback={updateCourseNames}
-            ></AddCourseFormComponent>
+                onCancel={() => {setAddCourseActive(false)}}
+            ></AddCourseFormComponent>}
+
         </div>
     );
 }

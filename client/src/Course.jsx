@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 class CourseSlotComponent extends React.Component{
     // Parent should send Course object as course argument
@@ -52,8 +52,12 @@ class AddCourseFormComponent extends React.Component {
         this.state = {
             onSubmit: props.onSubmit,
             callback: props.callback,
+            onCancel: props.onCancel,
             courseNameInputValue: ""
         };
+
+        this.courseNameInputValueRef = React.createRef();
+        
     }
 
     render () {
@@ -61,6 +65,7 @@ class AddCourseFormComponent extends React.Component {
             <div>
                 <input
                     type="text"
+                    ref={this.courseNameInputValueRef}
                     onChange={(event) => {
                         this.state.courseNameInputValue = event.target.value;
                     }}
@@ -71,9 +76,17 @@ class AddCourseFormComponent extends React.Component {
                         this.state.onSubmit(this.state.courseNameInputValue);
                     }
                     if(this.state.callback) {
+                        this.state.courseNameInputValue = "";
+                        this.courseNameInputValueRef.current.value = "";
                         this.state.callback();
                     }
                 }}>Add Course</button>
+                <button onClick={() => {
+                    if(this.state.onCancel) {
+                        this.state.onCancel();
+                    }
+                }}>Cancel</button>
+
             </div>
         );
     }
