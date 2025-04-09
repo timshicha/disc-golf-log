@@ -6,9 +6,18 @@ export class Log {
         if(courses) {
             this.courses = courses;
         }
+        // Otherwise, read from local storage, if courses.json exists
+        else {
+            if(localStorage.getItem("courses.json")) {
+                const coursesJson = localStorage.getItem("courses.json");
+                const courses = JSON.parse(coursesJson);
+                console.log(courses)
+                this.addCourses(courses);
+            }
+        }
     }
 
-    addCourse = (nameOrCourse, numberOfHoles) => {
+    addCourse = (nameOrCourse, numberOfHoles=18) => {
         // If the name was given
         if(typeof nameOrCourse === "string") {
             // Make sure this name isn't already used
@@ -25,8 +34,18 @@ export class Log {
             }
         }
         let newCourse = new Course(nameOrCourse, numberOfHoles);
-        this.courses[nameOrCourse] = newCourse;
+        this.courses[newCourse.name] = newCourse;
+        // Update json of courses in localStorage
+        localStorage.setItem("courses.json", JSON.stringify(this.courses));
         return newCourse;
+    }
+
+    addCourses = (dictOfNewCourses) => {
+        const keys = Object.keys(dictOfNewCourses);
+        for (let i = 0; i < keys.length; i++) {
+            console.log("adding course");
+            this.addCourse(dictOfNewCourses[keys[i]]);
+        }
     }
 
     getCourse = (name) => {

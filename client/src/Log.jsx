@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Log } from "./data_handling/log";
 import CourseComponent, { AddCourseButton, AddCourseFormComponent, CourseSlotComponent } from "./Course";
 
@@ -11,9 +11,14 @@ function LogComponent() {
     // Whether the form for adding a course is visible or not
     const [addCourseActive, setAddCourseActive] = useState(false);
 
+    // Initial Setup
+    useEffect (() => {
+        // Log may already have courses in it
+        updateCourseNames();
+    }, []);
+
     const updateCourseNames = () => {
         const courseNames = log.getCourseNames();
-        console.log(courseNames);
         setCourseNamesHTML(
             courseNames.map(name =>
                 <div key={name}>
