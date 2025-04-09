@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Log } from "./data_handling/log";
-import CourseComponent, { CourseSlotComponent } from "./Course";
+import CourseComponent, { AddCourseButton, AddCourseFormComponent, CourseSlotComponent } from "./Course";
 
 function LogComponent() {
 
     const [log, setLog] = useState(new Log());
     const [courseNamesHTML, setCourseNamesHTML] = useState("");
     const [nameInputValue, setNameInputValue] = useState("");
-    const [numberOfHolesInputValue, setNumberOfHolesInputValue] = useState(0);
     const [courseSelected, setCourseSelected] = useState(null);
-    const [numberOfRounds, setNumberOfRounds] = useState(0);
+    // Whether the form for adding a course is visible or not
+    const [addCourseActive, setAddCourseActive] = useState(false);
 
     const updateCourseNames = () => {
         const courseNames = log.getCourseNames();
@@ -32,43 +32,13 @@ function LogComponent() {
 
             {courseNamesHTML}
 
-            Name:
-            <input
-                type="text"
-                value={nameInputValue}
-                onChange={(event) => {
-                    setNameInputValue(event.target.value);
-                }}
-            />
-            <br />
-            # of holes:
-            <input
-                type="number"
-                value={numberOfHolesInputValue}
-                onChange={(event => {
-                    setNumberOfHolesInputValue(event.target.value);
-                })}
-            />
-            <br />
-            <button onClick={() => {
-                log.addCourse(nameInputValue, numberOfHolesInputValue);
-                setNameInputValue("");
-                updateCourseNames();
-
-            }}>
-                Add course
-            </button>
-            <br />
             <br />
             <p>Course selected: {courseSelected}</p>
-            <button onClick={() => {
-                log.getCourse(courseSelected).addRound();
-                setNumberOfRounds(log.getCourse(courseSelected).rounds.length);
-            }}>
-                Add round to selected course
-            </button>
-
-            <p>Number of rounds at selected course: {numberOfRounds}</p>
+            <AddCourseButton onClick={null}></AddCourseButton>
+            <AddCourseFormComponent
+                onSubmit={log.addCourse}
+                callback={updateCourseNames}
+            ></AddCourseFormComponent>
         </div>
     );
 }

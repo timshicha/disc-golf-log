@@ -27,6 +27,58 @@ class CourseSlotComponent extends React.Component{
     }
 }
 
+class AddCourseButton extends React.Component {
+    constructor (props) {
+        super();
+
+        this.state = {
+            onClick: props.onClick
+        }
+    }
+
+    render () {
+        return (
+            <button onClick={this.state.onClick}>
+                Add Course
+            </button>
+        );
+    }
+}
+
+class AddCourseFormComponent extends React.Component {
+    constructor (props) {
+        super();
+
+        this.state = {
+            onSubmit: props.onSubmit,
+            callback: props.callback,
+            courseNameInputValue: ""
+        };
+    }
+
+    render () {
+        return (
+            <div>
+                <input
+                    type="text"
+                    onChange={(event) => {
+                        this.state.courseNameInputValue = event.target.value;
+                    }}
+                >
+                </input>
+                <button onClick={() => {
+                    if(this.state.onSubmit) {
+                        this.state.onSubmit(this.state.courseNameInputValue);
+                    }
+                    if(this.state.callback) {
+                        this.state.callback();
+                    }
+                }}>Add Course</button>
+            </div>
+        );
+    }
+}
+
 class CourseComponent extends React.Component{
     constructor (props) {
         super();
@@ -47,5 +99,5 @@ class CourseComponent extends React.Component{
     }
 }
 
-export { CourseSlotComponent };
+export { CourseSlotComponent, AddCourseButton, AddCourseFormComponent };
 export default CourseComponent;
