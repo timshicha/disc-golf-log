@@ -8,7 +8,7 @@ function LogComponent() {
     const [courseNamesHTML, setCourseNamesHTML] = useState("");
     const [courseSelected, setCourseSelected] = useState(null);
     // Whether the form for adding a course is visible or not
-    const [addCourseActive, setAddCourseActive] = useState(false);
+    const [showAddCourseForm, setShowAddCourseForm] = useState(false);
 
     // Initial Setup
     useEffect (() => {
@@ -38,22 +38,37 @@ function LogComponent() {
         <div className="App">
             <h1>Disc golf pad</h1>
 
-            {courseNamesHTML}
-            <br />
-            { // If form to add course is not exapanded, allow button to expand
-            !addCourseActive &&
-            <AddCourseButton onClick={() => {setAddCourseActive(true)}}></AddCourseButton>}
-            { // If form to add course is expanded
-            addCourseActive &&
-            <AddCourseFormComponent
-                onSubmit={log.addCourse}
-                callback={() => {
-                    updateCourseNames();
-                    setAddCourseActive(false);
-                }}
-                onCancel={() => {setAddCourseActive(false)}}
-            ></AddCourseFormComponent>}
+            { // If a course is selected, do not show the list of courses
+            !courseSelected &&
+            <>
+                {courseNamesHTML}
+                <br />
+                { // If form to add course is not exapanded, allow button to expand
+                !showAddCourseForm &&
+                <AddCourseButton onClick={() => {setShowAddCourseForm(true)}}></AddCourseButton>}
+                { // If form to add course is expanded
+                showAddCourseForm &&
+                <AddCourseFormComponent
+                    onSubmit={log.addCourse}
+                    callback={() => {
+                        updateCourseNames();
+                        setShowAddCourseForm(false);
+                    }}
+                    onCancel={() => {setShowAddCourseForm(false)}}
+                ></AddCourseFormComponent>}
+            </>
+            }
 
+            { // If a course is selected, then show the course
+            courseSelected &&
+            <CourseComponent
+                course={log.courses[courseSelected]}
+                onCloseClick={() => {
+                setCourseSelected(null);
+            }}
+            >
+            </CourseComponent>
+            }
         </div>
     );
 }

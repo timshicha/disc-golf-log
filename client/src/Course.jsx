@@ -112,18 +112,20 @@ class CourseComponent extends React.Component{
     constructor (props) {
         super();
         this.state = {
-            name: props.name,
-            onClick: props.onClick
+            course: props.course,
+            onClick: props.onClick,
+            onCloseClick: props.onCloseClick
         };
     }
 
     render () {
         console.log(this.state);
         return (
-            <div key={this.state.name}>
-                <p>{this.state.name}</p>
-                <button onClick={this.state.onClick}>Select</button>
-            </div>
+            <>
+                <button onClick={this.state.onCloseClick}>Back</button>
+                <br />
+                Course name: {this.state.course.name}
+            </>
         );
     }
 }
