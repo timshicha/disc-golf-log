@@ -26,8 +26,10 @@ function LogComponent() {
                         setCourseSelected(name);
                         setNumberOfRounds(log.getCourse(name).rounds.length);
                     }} onDeleteClick={() => {
-                        log.deleteCourse(name);
-                        updateCourseNames();
+                        if(confirm("Delete course and all of its rounds?")) {
+                            log.deleteCourse(name);
+                            updateCourseNames();
+                        }
                     }}></CourseSlotComponent>
                 </div>
             )
