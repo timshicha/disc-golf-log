@@ -6,7 +6,6 @@ function LogComponent() {
 
     const [log, setLog] = useState(new Log());
     const [courseNamesHTML, setCourseNamesHTML] = useState("");
-    const [nameInputValue, setNameInputValue] = useState("");
     const [courseSelected, setCourseSelected] = useState(null);
     // Whether the form for adding a course is visible or not
     const [addCourseActive, setAddCourseActive] = useState(false);
@@ -24,7 +23,6 @@ function LogComponent() {
                 <div key={name}>
                     <CourseSlotComponent course={log.getCourse(name)} onClick={() => {
                         setCourseSelected(name);
-                        setNumberOfRounds(log.getCourse(name).rounds.length);
                     }} onDeleteClick={() => {
                         if(confirm("Delete course and all of its rounds?")) {
                             log.deleteCourse(name);
@@ -41,19 +39,18 @@ function LogComponent() {
             <h1>Disc golf pad</h1>
 
             {courseNamesHTML}
-
             <br />
-            <p>Course selected: {courseSelected}</p>
-            
             { // If form to add course is not exapanded, allow button to expand
             !addCourseActive &&
             <AddCourseButton onClick={() => {setAddCourseActive(true)}}></AddCourseButton>}
-            
             { // If form to add course is expanded
             addCourseActive &&
             <AddCourseFormComponent
                 onSubmit={log.addCourse}
-                callback={updateCourseNames}
+                callback={() => {
+                    updateCourseNames();
+                    setAddCourseActive(false);
+                }}
                 onCancel={() => {setAddCourseActive(false)}}
             ></AddCourseFormComponent>}
 

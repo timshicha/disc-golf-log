@@ -57,27 +57,39 @@ class AddCourseFormComponent extends React.Component {
             onSubmit: props.onSubmit,
             callback: props.callback,
             onCancel: props.onCancel,
-            courseNameInputValue: ""
+            courseNameInputValue: "",
+            numberOfHolesInputValue: 0
         };
 
         this.courseNameInputValueRef = React.createRef();
+        this.numberOfHolesInputValueRef = React.createRef();
         
     }
 
     render () {
         return (
             <div>
+                Course name:
                 <input
                     type="text"
                     ref={this.courseNameInputValueRef}
                     onChange={(event) => {
                         this.state.courseNameInputValue = event.target.value;
                     }}
-                >
-                </input>
+                ></input>
+                <br />
+                Number of holes:
+                <input
+                    type="number"
+                    ref={this.numberOfHolesInputValueRef}
+                    onChange={(event) => {
+                        this.state.numberOfHolesInputValue = event.target.value;
+                    }}
+                ></input>
+                <br />
                 <button onClick={() => {
                     if(this.state.onSubmit) {
-                        this.state.onSubmit(this.state.courseNameInputValue);
+                        this.state.onSubmit(this.state.courseNameInputValue, this.state.numberOfHolesInputValue);
                     }
                     if(this.state.callback) {
                         this.state.courseNameInputValue = "";
