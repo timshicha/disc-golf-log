@@ -25,6 +25,9 @@ function LogComponent() {
                     <CourseSlotComponent course={log.getCourse(name)} onClick={() => {
                         setCourseSelected(name);
                         setNumberOfRounds(log.getCourse(name).rounds.length);
+                    }} onDeleteClick={() => {
+                        log.deleteCourse(name);
+                        updateCourseNames();
                     }}></CourseSlotComponent>
                 </div>
             )

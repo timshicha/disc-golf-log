@@ -8,20 +8,24 @@ class CourseSlotComponent extends React.Component{
         this.state = {
             name: props.course ? props.course.name : "UNNAMED",
             numberOfHoles: props.course ? props.course.numberOfHoles : 18,
-            onClick: props.onClick
+            onClick: props.onClick,
+            onDeleteClick: props.onDeleteClick
         };
     }
 
     render () {
         return (
             <div
-                style={
-                    {border: "black 1px solid"}
-                }
+                style={{
+                    border: "black 1px solid",
+                    display: "block",
+                    clear: "both"
+                }}
                 onClick={this.state.onClick}
                 onMouseEnter={event => event.target.style.cursor = "pointer"}
             >
                 {this.state.name}, {this.state.numberOfHoles} holes
+                <button style={{float: "right"}} onClick={this.state.onDeleteClick}>Delete</button>
             </div>
         );
     }

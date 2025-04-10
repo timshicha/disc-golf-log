@@ -55,4 +55,12 @@ export class Log {
     getCourseNames = () => {
         return Object.keys(this.courses);
     }
+
+    deleteCourse = (name) => {
+        const course = this.courses[name];
+        delete this.courses[name];
+        // Update json of courses in localStorage
+        localStorage.setItem("courses.json", JSON.stringify(this.courses));
+        return course;
+    }
 }
