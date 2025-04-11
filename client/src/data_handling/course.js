@@ -7,7 +7,6 @@ class Course {
         // name and number of holes
         if(typeof nameOrCourse === "string") {
             this.name = nameOrCourse;
-            this.courseID = crypto.randomUUID();
             this.numberOfHoles = numberOfHoles;
             // Each round is given an integer. This integer will
             // be used in json, example: courseName_13.json.
@@ -29,7 +28,6 @@ class Course {
     updateJson = () => {
         const json = JSON.stringify({
             name: this.name,
-            courseID: this.courseID,
             numberOfHoles: this.numberOfHoles,
             rounds: this.rounds
         });
