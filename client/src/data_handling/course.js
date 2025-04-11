@@ -9,7 +9,11 @@ class Course {
             this.name = nameOrCourse;
             this.courseID = crypto.randomUUID();
             this.numberOfHoles = numberOfHoles;
-            this.rounds = []; // Names of json files
+            // Each round is given an integer. This integer will
+            // be used in json, example: courseName_13.json.
+            // New integer will always be the highest existing
+            // integer + 1.
+            this.rounds = [];
         }
         // If a round json was provided
         else {
@@ -19,11 +23,31 @@ class Course {
             // Copy the names of the json files
             this.rounds = nameOrCourse.rounds;
         }
+        this.updateJson();
+    }
+
+    updateJson = () => {
+        const json = JSON.stringify({
+            name: this.name,
+            courseID: this.courseID,
+            numberOfHoles: this.numberOfHoles,
+            rounds: this.rounds
+        });
+        localStorage.setItem("course:" + this.name + ".json", json);
     }
 
     addRound = () => {
-        // Dummy filename for now
-        this.rounds.push("round.json");
+        // See if there are no rounds
+        if(this.rounds.length === 0) {
+            this.rounds.push(0);
+        }
+        // If there are rounds
+        else {
+            // Find the highest existing integer
+            const highest = this.rounds[this.rounds.length - 1];
+            this.rounds.push(highest + 1);
+        }
+        this.updateJson();
     }
 }
 

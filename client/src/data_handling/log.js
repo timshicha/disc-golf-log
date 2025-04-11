@@ -8,11 +8,12 @@ export class Log {
         }
         // Otherwise, read from local storage, if courses.json exists
         else {
-            if(localStorage.getItem("courses.json")) {
-                const coursesJson = localStorage.getItem("courses.json");
-                const courses = JSON.parse(coursesJson);
-                console.log(courses)
-                this.addCourses(courses);
+            if(localStorage.getItem("log.json")) {
+                const logJSON = localStorage.getItem("log.json");
+                const courses = JSON.parse(logJSON);
+                console.log(courses);
+                // Load these courses from JSON
+                this.loadCourses(courses);
             }
         }
     }
@@ -36,7 +37,7 @@ export class Log {
         let newCourse = new Course(nameOrCourse, numberOfHoles);
         this.courses[newCourse.name] = newCourse;
         // Update json of courses in localStorage
-        localStorage.setItem("courses.json", JSON.stringify(this.courses));
+        localStorage.setItem("log.json", JSON.stringify(Object.keys(this.courses)));
         return newCourse;
     }
 
@@ -45,6 +46,18 @@ export class Log {
         for (let i = 0; i < keys.length; i++) {
             console.log("adding course");
             this.addCourse(dictOfNewCourses[keys[i]]);
+        }
+    }
+
+    loadCourse = (name) => {
+        const courseJSON = localStorage.getItem("course:" + name + ".json");
+        const course = JSON.parse(courseJSON);
+        this.addCourse(course);
+    }
+
+    loadCourses = (names) => {
+        for (let i = 0; i < names.length; i++) {
+            this.loadCourse(names[i]);
         }
     }
 
