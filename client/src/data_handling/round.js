@@ -13,6 +13,10 @@ export class Round {
         }
     }
 
+    updateJSON = () => {
+        
+    }
+
     // Note: holeNumber is really the real hole number - 1
     modifyScore = (holeNumber, newScore) => {
         if(holeNumber < 0 || holeNumber >= this.numberOfHoles) {

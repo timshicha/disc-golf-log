@@ -114,7 +114,8 @@ class CourseComponent extends React.Component{
         this.state = {
             course: props.course,
             onClick: props.onClick,
-            onCloseClick: props.onCloseClick
+            onCloseClick: props.onCloseClick,
+            onAddRoundClick: props.onAddRoundClick
         };
     }
 
@@ -125,6 +126,14 @@ class CourseComponent extends React.Component{
                 <button onClick={this.state.onCloseClick}>Back</button>
                 <br />
                 Course name: {this.state.course.name}
+                <br />
+
+                Rounds:
+                <br />
+                {this.state.course.rounds}
+
+                <br />
+                <button onClick={this.state.onAddRoundClick}>Add Round</button>
             </>
         );
     }

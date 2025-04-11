@@ -64,8 +64,11 @@ function LogComponent() {
             <CourseComponent
                 course={log.courses[courseSelected]}
                 onCloseClick={() => {
-                setCourseSelected(null);
-            }}
+                    setCourseSelected(null);
+                }}
+                onAddRoundClick={() => {
+                    log.courses[courseSelected].addRound();
+                }}
             >
             </CourseComponent>
             }

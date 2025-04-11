@@ -1,3 +1,4 @@
+import { Round } from "./round";
 
 class Course {
     // Allow initialization by providing course name and number
@@ -35,17 +36,17 @@ class Course {
     }
 
     addRound = () => {
-        // See if there are no rounds
-        if(this.rounds.length === 0) {
-            this.rounds.push(0);
-        }
+        // Assume no rounds
+        let roundNumber = 0;
         // If there are rounds
-        else {
+        if(this.rounds.length > 0) {
             // Find the highest existing integer
-            const highest = this.rounds[this.rounds.length - 1];
-            this.rounds.push(highest + 1);
+            roundNumber = this.rounds[this.rounds.length - 1] + 1;
         }
+        this.rounds.push(roundNumber);
         this.updateJson();
+        // Create the round JSON
+        return new Round(this.numberOfHoles);
     }
 }
 
