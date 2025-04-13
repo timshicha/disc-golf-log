@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import RoundComponent from "./Round";
 
 class CourseSlotComponent extends React.Component{
     // Parent should send Course object as course argument
@@ -115,7 +116,8 @@ class CourseComponent extends React.Component{
             course: props.course,
             onClick: props.onClick,
             onCloseClick: props.onCloseClick,
-            onAddRoundClick: props.onAddRoundClick
+            onAddRoundClick: props.onAddRoundClick,
+            roundsHTML: "",
         };
     }
 
@@ -130,7 +132,9 @@ class CourseComponent extends React.Component{
 
                 Rounds:
                 <br />
-                {this.state.course.rounds}
+                {this.state.course.rounds.map((roundName) => 
+                <RoundComponent score={roundName}></RoundComponent>
+                )}
 
                 <br />
                 <button onClick={this.state.onAddRoundClick}>Add Round</button>
