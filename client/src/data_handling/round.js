@@ -1,20 +1,32 @@
 
 export class Round {
-    // Allow initialization with score list or number of holes
-    constructor (scoreOrNumberOfHoles) {
+    // Allow initialization with round or number of holes
+    constructor (roundOrdNumberOfHoles) {
         // If the number of holes is given, then create a blank
         // array with that many holes.
-        if(Number.isInteger(scoreOrNumberOfHoles)) {
-            this.score = new Array(numberOfHoles);
+        console.log(roundOrdNumberOfHoles, typeof roundOrdNumberOfHoles)
+        if(typeof roundOrdNumberOfHoles === "number") {
+            this.score = new Array(roundOrdNumberOfHoles).fill(0);
+            this.roundID = crypto.randomUUID();
         }
-        // If an array is given, copy the scores
+        // If a round is given
         else {
-            this.score = scoreOrNumberOfHoles;
+            // Copy score and round ID
+            this.score = roundOrdNumberOfHoles.score;
+            this.roundID = roundOrdNumberOfHoles.roundID;
         }
+        console.log(this.score, this.roundID)
+        // Create json file for this round
+        this.updateJSON();
     }
 
     updateJSON = () => {
-        
+        localStorage.setItem(this.roundID + ".json", 
+            JSON.stringify({
+                score: this.score,
+                roundID: this.roundID
+            })
+        );
     }
 
     // Note: holeNumber is really the real hole number - 1

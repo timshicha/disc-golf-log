@@ -132,9 +132,12 @@ class CourseComponent extends React.Component{
 
                 Rounds:
                 <br />
-                {this.state.course.rounds.map((roundName) => 
-                <RoundComponent score={roundName}></RoundComponent>
-                )}
+                {this.state.course.rounds.map((roundName) => {
+                    // Look for the json file
+                    return (
+                        <RoundComponent score={roundName} key={roundName}></RoundComponent>
+                    );
+                })}
 
                 <br />
                 <button onClick={this.state.onAddRoundClick}>Add Round</button>

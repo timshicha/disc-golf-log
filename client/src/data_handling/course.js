@@ -46,7 +46,7 @@ class Course {
         this.rounds.push(roundNumber);
         this.updateJson();
         // Create the round JSON
-        return new Round(this.numberOfHoles);
+        return new Round(parseInt(this.numberOfHoles));
     }
 }
 
