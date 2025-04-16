@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import RoundComponent from "./Round";
+import { Round } from "./data_handling/round";
 
 class CourseSlotComponent extends React.Component{
     // Parent should send Course object as course argument
@@ -116,8 +117,8 @@ class CourseComponent extends React.Component{
             course: props.course,
             onClick: props.onClick,
             onCloseClick: props.onCloseClick,
-            onAddRoundClick: props.onAddRoundClick,
             roundsHTML: "",
+            toggle: false
         };
     }
 
@@ -136,21 +137,19 @@ class CourseComponent extends React.Component{
                     // Look for the json file
                     const roundJson = localStorage.getItem(roundName + ".json");
                     let round = null;
-                    let score = "No score";
-                    console.log(roundJson);
                     if(roundJson) {
-                        round = JSON.parse(roundJson);
-                    }
-                    if(round) {
-                        score = round.score;
+                        round = new Round(JSON.parse(roundJson));
                     }
                     return (
-                        <RoundComponent score={score} key={roundName}></RoundComponent>
+                        <RoundComponent round={round} key={roundName}></RoundComponent>
                     );
                 })}
 
                 <br />
-                <button onClick={this.state.onAddRoundClick}>Add Round</button>
+                <button onClick={() => {
+                    this.state.course.addRound();
+                    this.forceUpdate();
+                }}>Add Round</button>
             </>
         );
     }

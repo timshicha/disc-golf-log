@@ -66,9 +66,6 @@ function LogComponent() {
                 onCloseClick={() => {
                     setCourseSelected(null);
                 }}
-                onAddRoundClick={() => {
-                    log.courses[courseSelected].addRound();
-                }}
             >
             </CourseComponent>
             }

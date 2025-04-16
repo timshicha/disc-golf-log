@@ -36,6 +36,7 @@ export class Round {
         }
 
         this.score[holeNumber] = newScore;
+        this.updateJSON();
     }
 
     modifyEntireScore = (newScoreArray) => {
