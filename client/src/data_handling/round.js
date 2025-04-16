@@ -6,7 +6,7 @@ export class Round {
         // array with that many holes.
         console.log(roundOrdNumberOfHoles, typeof roundOrdNumberOfHoles)
         if(typeof roundOrdNumberOfHoles === "number") {
-            this.score = new Array(roundOrdNumberOfHoles).fill(0);
+            this.score = new Array(roundOrdNumberOfHoles).fill("");
             this.roundID = crypto.randomUUID();
         }
         // If a round is given

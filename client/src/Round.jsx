@@ -5,9 +5,10 @@ class ScoreSlotComponent extends React.Component {
         super();
 
         this.state = {
-            value: props.value
+            value: ""
         }
         this.onChange = props.onChange;
+        this.state.value = props.initialValue;
     }
 
     setValue = (value) => {
@@ -21,7 +22,10 @@ class ScoreSlotComponent extends React.Component {
                 height: "30px",
                 fontSize: "25px",
                 textAlign: "center"
-            }} value={this.state.value} onChange={(self) => {this.onChange(self.target.value)}}>
+            }} value={this.state.value} onChange={(self) => {
+                this.onChange(self.target.value);
+                this.state.value = self.target.value;
+            }}>
             </input>
         );
     }
@@ -37,7 +41,6 @@ class RoundComponent extends React.Component {
         console.log(props)
     }
 
-
     render () {
         return (
             <>
@@ -48,7 +51,7 @@ class RoundComponent extends React.Component {
                         this.state.round.modifyScore(index, newValue);
                         console.log(this.state.round.score)
                         this.forceUpdate();
-                    }}></ScoreSlotComponent>
+                    }} key={index} initialValue={scoreValue}></ScoreSlotComponent>
                     );
                 })}
             </>
