@@ -134,8 +134,18 @@ class CourseComponent extends React.Component{
                 <br />
                 {this.state.course.rounds.map((roundName) => {
                     // Look for the json file
+                    const roundJson = localStorage.getItem(roundName + ".json");
+                    let round = null;
+                    let score = "No score";
+                    console.log(roundJson);
+                    if(roundJson) {
+                        round = JSON.parse(roundJson);
+                    }
+                    if(round) {
+                        score = round.score;
+                    }
                     return (
-                        <RoundComponent score={roundName} key={roundName}></RoundComponent>
+                        <RoundComponent score={score} key={roundName}></RoundComponent>
                     );
                 })}
 
