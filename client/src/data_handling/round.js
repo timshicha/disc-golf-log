@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 
 export class Round {
     // Allow initialization with round or number of holes
@@ -7,7 +8,7 @@ export class Round {
         console.log(roundOrdNumberOfHoles, typeof roundOrdNumberOfHoles)
         if(typeof roundOrdNumberOfHoles === "number") {
             this.score = new Array(roundOrdNumberOfHoles).fill("");
-            this.roundID = crypto.randomUUID();
+            this.roundID = uuidv4();
         }
         // If a round is given
         else {
