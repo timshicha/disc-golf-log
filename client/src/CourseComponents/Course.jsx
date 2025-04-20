@@ -19,14 +19,12 @@ class Course extends React.Component{
     // On initial render
     componentDidMount = () => {
         // Load rounds from Dexie
-        getCourseRounds(this.state.course).then(result => {
-            this.setState({rounds: result});
-        });
+        this.reloadCourseRounds();
     }
 
     // Get a list of rounds for this course
-    getRounds = () => {
-        getR(this.state.course.id).then(result => {
+    reloadCourseRounds = () => {
+        getCourseRounds(this.state.course).then(result => {
             this.setState({rounds: result});
         });
     }
@@ -44,7 +42,7 @@ class Course extends React.Component{
             })}
             <AddRoundButton onClick={() => {
                 addRound(this.state.course);
-                this.setState({rounds: getCourseRounds(this.state.course)})
+                this.reloadCourseRounds();
             }}></AddRoundButton>
         </>
         );
