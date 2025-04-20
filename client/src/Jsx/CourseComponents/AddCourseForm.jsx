@@ -1,5 +1,5 @@
 import React from "react";
-import { addCourse } from "../data_handling/course";
+import { addCourse } from "../../data_handling/course";
 
 class AddCourseForm extends React.Component {
     constructor (props) {

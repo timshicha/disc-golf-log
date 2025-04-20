@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "./db";
 
 // Add a course to Dexie
 const addCourse = (name, holes) => {

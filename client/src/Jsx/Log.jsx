@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import { getAllCourses } from "./data_handling/course";
+import { getAllCourses } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 

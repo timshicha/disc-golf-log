@@ -1,5 +1,5 @@
 import React from "react";
-import { addRound, getCourseRounds } from "../data_handling/round";
+import { addRound, getCourseRounds } from "../../data_handling/round";
 import AddRoundButton from "../RoundComponents/AddRoundButton";
 import Round from "../RoundComponents/Round";
 

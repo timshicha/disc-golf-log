@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "./db";
 
 // Add round to course
 const addRound = (course) => {

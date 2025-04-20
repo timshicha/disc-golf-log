@@ -1,6 +1,6 @@
 import React from "react";
 import RoundBox from "./RoundBox";
-import { updateRoundScore } from "../data_handling/round";
+import { updateRoundScore } from "../../data_handling/round";
 
 class Round extends React.Component {
     constructor (props) {
@@ -19,7 +19,7 @@ class Round extends React.Component {
                     return (
                         <RoundBox onChange={(newValue) => {
                             updateRoundScore(this.state.round, index, newValue);
-                        }} key={index} initialValue={scoreValue}></RoundBox>
+                        }} key={index} initialValue={scoreValue} index={index}></RoundBox>
                     );
                 })}
             </>
