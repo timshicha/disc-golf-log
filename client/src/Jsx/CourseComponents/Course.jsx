@@ -2,6 +2,7 @@ import React from "react";
 import { addRound, getCourseRounds } from "../../data_handling/round";
 import AddRoundButton from "../RoundComponents/AddRoundButton";
 import Round from "../RoundComponents/Round";
+import BlueButton from "../BlueButton";
 
 class Course extends React.Component{
     constructor (props) {
@@ -40,10 +41,10 @@ class Course extends React.Component{
                     <Round round={round} key={round.id}></Round>
                 );
             })}
-            <AddRoundButton onClick={() => {
+            <BlueButton onClick={() => {
                 addRound(this.state.course);
                 this.reloadCourseRounds();
-            }}></AddRoundButton>
+            }}>Add Round</BlueButton>
         </>
         );
     }

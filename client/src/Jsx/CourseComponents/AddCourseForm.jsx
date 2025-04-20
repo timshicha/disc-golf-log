@@ -1,5 +1,6 @@
 import React from "react";
 import { addCourse } from "../../data_handling/course";
+import BlueButton from "../BlueButton";
 
 class AddCourseForm extends React.Component {
     constructor (props) {
@@ -40,7 +41,7 @@ class AddCourseForm extends React.Component {
                         <button type="submit">Add course</button>
                     </form>
                 : // Show button to add course
-                    <button onClick={() => {this.setState({showForm: true})}}>Show form</button>
+                    <BlueButton onClick={() => {this.setState({showForm: true})}}>Add Course</BlueButton>
                 }
             </>
         );

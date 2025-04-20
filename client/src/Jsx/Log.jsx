@@ -3,6 +3,7 @@ import AddCourseForm from "./CourseComponents/AddCourseForm";
 import { getAllCourses } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
+import BlueButton from "./BlueButton";
 
 function LogComponent() {
 
@@ -24,13 +25,12 @@ function LogComponent() {
                 <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
             : // If no course selected, show list of courses
                 <>
-                <AddCourseForm callback={reloadCourses}></AddCourseForm>
-                <br ></br>
                 {courses.map(course => {
                     return (
                         <CourseSlot course={course} key={course.name} onClick={() => {setSelectedCourse(course)}}></CourseSlot>
                     );
                 })}
+                <AddCourseForm callback={reloadCourses}></AddCourseForm>
                 </>
             }
         </>
