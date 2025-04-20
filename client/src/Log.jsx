@@ -6,12 +6,16 @@ function LogComponent() {
 
     const [courses, setCourses] = useState([]);
     useEffect(() => {
-        getAllCourses().then(result => setCourses(result));
+        reloadCourses();
     }, []);
+
+    const reloadCourses = () => {
+        getAllCourses().then(result => setCourses(result));
+    }
 
     return (
         <>
-            <AddCourseForm></AddCourseForm>
+            <AddCourseForm callback={reloadCourses}></AddCourseForm>
             {courses.map(course => course.name + ", ")}
         </>
     );
