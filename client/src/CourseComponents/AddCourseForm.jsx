@@ -19,7 +19,7 @@ class AddCourseForm extends React.Component {
         const holesElement = e.target.holes;
 
         // Add to Dexie
-        addCourse(nameElement.value, holesElement.value);
+        addCourse(nameElement.value, parseInt(holesElement.value));
         nameElement.value = "";
         holesElement.value = "";
         this.setState({showForm: false});

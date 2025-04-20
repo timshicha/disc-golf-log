@@ -1,15 +1,22 @@
 import React from "react";
 
 class CourseSlot extends React.Component{
-    // Parent should send Course object as course argument
     constructor (props) {
         super();
+
+        this.onClick = props.onClick;
+
+        this.state = {
+            course: props.course
+        };
     }
 
-    render () {
+    render = () => {
         return (
-            <>
-            </>
+            <div onClick={this.onClick}>
+                {this.state.course.name}
+                <br/>
+            </div>
         );
     }
 }

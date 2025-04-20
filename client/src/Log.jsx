@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
 import { getAllCourses } from "./data_handling/course";
 import Course from "./CourseComponents/Course";
+import CourseSlot from "./CourseComponents/CourseSlot";
 
 function LogComponent() {
 
@@ -20,18 +21,14 @@ function LogComponent() {
         <>
             {selectedCourse
             ? // If a course is selected, show the course
-                <>
-                    <button onClick={() => {setSelectedCourse(null)}}>back</button>
-                    <br/>
-                    {selectedCourse.name}
-                </>
+                <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
             : // If no course selected, show list of courses
                 <>
                 <AddCourseForm callback={reloadCourses}></AddCourseForm>
                 <br ></br>
                 {courses.map(course => {
                     return (
-                        <Course name={course.name} key={course.name} onClick={() => {setSelectedCourse(course)}}></Course>
+                        <CourseSlot course={course} key={course.name} onClick={() => {setSelectedCourse(course)}}></CourseSlot>
                     );
                 })}
                 </>

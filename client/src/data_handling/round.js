@@ -1,21 +1,29 @@
 import db from "../db";
 
-// Add round to course "courseName"
+// Add round to course
 const addRound = (course) => {
+    console.log(course);
     db.rounds.add({
         courseID: course.id,
-        score: new Array(course.holes).fill("")
+        score: new Array(parseInt(course.holes)).fill("")
     });
 }
 
-const getRoundsByCourseID = (courseID) => {
-    return db.rounds.where("courseID").equals(courseID).toArray();
+const getCourseRounds = (course) => {
+    return db.rounds.where("courseID").equals(course.id).toArray();
 }
 
-const replaceScoreByRoundID = (roundID, newScore) => {
-    db.rounds.update(roundID, {
+const replaceRoundScore = (round, newScore) => {
+    db.rounds.update(round.id, {
         score: newScore
     });
 }
 
-export { addRound, getRoundsByCourseID, replaceScoreByRoundID };
+const updateRoundScore = (round, index, newValue) => {
+    round.score[index] = newValue;
+    db.rounds.update(round.id, {
+        score: round.score
+    });
+}
+
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore };
