@@ -16,6 +16,7 @@ function LogComponent() {
     return (
         <>
             <AddCourseForm callback={reloadCourses}></AddCourseForm>
+            <br ></br>
             {courses.map(course => course.name + ", ")}
         </>
     );
