@@ -23,11 +23,11 @@ class RoundBox extends React.Component {
                     {this.index + 1}
                 </div>
                 <input type="number" style={{
-                    maxWidth: "8vw",
+                    width: "35px",
                     padding: "0px",
                     margin: "0px",
-                    height: "8vw",
-                    fontSize: "5vw",
+                    height: "35px",
+                    fontSize: "20px",
                     textAlign: "center"
                 }} value={this.state.value} onChange={(self) => {
                     this.onChange(self.target.value);

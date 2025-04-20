@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import tripleDotImg from "../assets/images/tripleDot.svg";
 
 class TripleDotButton extends React.Component {
@@ -10,9 +10,9 @@ class TripleDotButton extends React.Component {
 
     render = () => {
         return (
-            <img src={tripleDotImg} style={{
-            }}
-            {...this.props}>
+            <img src={tripleDotImg}
+            {...this.props}
+            >
             </img>
         );
     }

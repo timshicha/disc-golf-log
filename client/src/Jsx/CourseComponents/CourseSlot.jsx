@@ -17,17 +17,22 @@ class CourseSlot extends React.Component{
             <div onClick={this.onClick} style={{
                 width: "90%",
                 backgroundColor: "#dddddd",
-                padding: "2%",
+                padding: "10px",
                 margin: "10px",
                 marginLeft: "auto",
                 marginRight: "auto",
+                fontSize: "18px",
                 fontWeight: "bold",
                 fontFamily: "Arial, Helvetica, sans-serif"
             }}>
                 {this.state.course.name}
                 <TripleDotButton style={{
-                    width: "30px",
-                    float: "right"
+                    height: "20px",
+                    float: "right",
+                    cursor: "pointer",
+                }} onClick={e => {
+                    e.stopPropagation();
+                    alert("This feature is still under construction!");
                 }}></TripleDotButton>
                 <br/>
             </div>
