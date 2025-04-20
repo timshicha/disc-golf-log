@@ -30,7 +30,7 @@ class AddCourseForm extends React.Component {
         return (
             <>
                 {this.state.showForm
-                    ? // Show form to add a course
+                ? // Show form to add a course
                     <form onSubmit={this.onAddCourseSubmit}>
                         <label>Course name: </label>
                         <input type="text" name="name"></input>
@@ -39,7 +39,7 @@ class AddCourseForm extends React.Component {
                         <input type="number" name="holes"></input>
                         <button type="submit">Add course</button>
                     </form>
-                    : // Show button to add course
+                : // Show button to add course
                     <button onClick={() => {this.setState({showForm: true})}}>Show form</button>
                 }
             </>
