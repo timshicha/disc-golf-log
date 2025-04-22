@@ -1,4 +1,10 @@
 
+.h-main {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    text-align: center;
+}
+
 .blue-button {
     margin-left: auto;
     margin-right: auto;
