@@ -10,9 +10,9 @@ class BlueButton extends React.Component {
 
     render = () => {
         return (
-            <div {...this.props} className="blue-button">
+            <button {...this.props} className="blue-button">
                 {this.props.children}
-            </div>
+            </button>
         );
     }
 }

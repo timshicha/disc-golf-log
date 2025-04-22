@@ -17,13 +17,14 @@ class CourseSlot extends React.Component{
             <div onClick={this.onClick} style={{
                 width: "90%",
                 backgroundColor: "#dddddd",
-                padding: "2%",
+                padding: "3%",
                 margin: "10px",
                 marginLeft: "auto",
                 marginRight: "auto",
                 fontSize: "18px",
                 fontWeight: "bold",
-                fontFamily: "Arial, Helvetica, sans-serif"
+                fontFamily: "Arial, Helvetica, sans-serif",
+                borderRadius: "7px"
             }}>
                 {this.state.course.name}
                 <TripleDotButton style={{

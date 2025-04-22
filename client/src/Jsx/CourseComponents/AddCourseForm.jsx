@@ -28,21 +28,50 @@ class AddCourseForm extends React.Component {
         this.callback();
     }
 
+    onCancel = (e) => {
+        e.preventDefault();
+        // Clear fields of the form...
+        // Since the buttons are wrapped in a div, the form is the
+        // grandparent of the button
+        e.target.parentElement.parentElement.name.value = "";
+        e.target.parentElement.parentElement.holes.value = "";
+        this.setState({showForm: false});
+    }
+
     render () {
         return (
             <>
-                {this.state.showForm || true
+                {this.state.showForm
                 ? // Show form to add a course
                     <AddItemForm onSubmit={this.onAddCourseSubmit}>
-                        <label>Course name: </label>
-                        <input type="text" name="name"></input>
-                        <br />
-                        <label>Holes: </label>
-                        <input type="number" name="holes"></input>
-                        <BlueButton type="submit">Add course</BlueButton>
+                        <label htmlFor="name">Name: </label>
+                        <input type="text" name="name" id="name" style={{
+                            marginRight: "10px",
+                            marginBottom: "10px"
+                        }}></input>
+                        <label htmlFor="holes">Holes: </label>
+                        <input type="number" name="holes" id="holes" style={{
+                            width: "40px",
+                        }}></input>
+                        <div style={{
+                            display: "block",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            width: "fit-content"
+                        }}>
+                            <BlueButton type="submit" style={{
+                                margin: "10px",
+                                display: "inline-block"
+                            }}>Add course</BlueButton>
+                            <BlueButton onClick={this.onCancel} style={{
+                                margin: "10px",
+                                backgroundColor: "gray",
+                                display: "inline-block"
+                            }}>Cancel</BlueButton>
+                        </div>
                     </AddItemForm>
                 : // Show button to add course
-                    <BlueButton onClick={() => {this.setState({showForm: true})}}>Add Course</BlueButton>
+                    <BlueButton onClick={() => {this.setState({showForm: true})}}>New Course</BlueButton>
                 }
             </>
         );
