@@ -1,32 +1,19 @@
+import db from "./db";
 
-export class course {
-    // Allow initialization by providing course name and number
-    // of holes or by providing a course object
-    constructor (nameOrCourse, numberOfHoles) {
-        // If a name was provided, then create blank course with
-        // name and number of holes
-        if(typeof nameOrCourse === "string") {
-            this.name = nameOrCourse;
-            this.courseID = crypto.randomUUID();
-            this.numberOfHoles = numberOfHoles;
-            this.rounds = []; // Names of json files
-        }
-        // If a round json was provided
-        else {
-            this.name = nameOrCourse.name;
-            this.courseID = nameOrCourse.courseID;
-            this.numberOfHoles = nameOrCourse.numberOfHoles;
-            // Copy the names of the json files
-            this.rounds = nameOrCourse.rounds;
-        }
-    }
-
-    addRound = () => {
-        // Dummy filename for now
-        this.rounds.push("round.json");
-    }
-
-    getNumberOfRounds = () => {
-        return this.rounds.length;
-    }
+// Add a course to Dexie
+const addCourse = (name, holes) => {
+    db.courses.add({
+        name: name,
+        holes: holes
+    });
 }
+
+const getCourseByName = (name) => {
+    return db.courses.where("name").equals(name).first();
+}
+
+const getAllCourses = () => {
+    return db.courses.toArray();
+}
+
+export { addCourse, getCourseByName, getAllCourses };

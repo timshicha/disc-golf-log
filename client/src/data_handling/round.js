@@ -1,40 +1,29 @@
+import db from "./db";
 
-export class Round {
-    // Allow initialization with score list or number of holes
-    constructor (scoreOrNumberOfHoles) {
-        // If the number of holes is given, then create a blank
-        // array with that many holes.
-        if(Number.isInteger(scoreOrNumberOfHoles)) {
-            this.score = new Array(numberOfHoles);
-        }
-        // If an array is given, copy the scores
-        else {
-            this.score = scoreOrNumberOfHoles;
-        }
-    }
-
-    // Note: holeNumber is really the real hole number - 1
-    modifyScore = (holeNumber, newScore) => {
-        if(holeNumber < 0 || holeNumber >= this.numberOfHoles) {
-            return false;
-        }
-
-        this.score[holeNumber] = newScore;
-    }
-
-    modifyEntireScore = (newScoreArray) => {
-        // Must be array and same length
-        if(typeof newScoreArray !== Array) {
-            return false;
-        }
-        if(newScoreArray.length !== this.score.length) {
-            return false;
-        }
-        this.score = newScoreArray;
-        
-    }
-
-    getScore = () => {
-        return this.score;
-    }
+// Add round to course
+const addRound = (course) => {
+    console.log(course);
+    db.rounds.add({
+        courseID: course.id,
+        score: new Array(parseInt(course.holes)).fill("")
+    });
 }
+
+const getCourseRounds = (course) => {
+    return db.rounds.where("courseID").equals(course.id).toArray();
+}
+
+const replaceRoundScore = (round, newScore) => {
+    db.rounds.update(round.id, {
+        score: newScore
+    });
+}
+
+const updateRoundScore = (round, index, newValue) => {
+    round.score[index] = newValue;
+    db.rounds.update(round.id, {
+        score: round.score
+    });
+}
+
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore };
