@@ -17,7 +17,7 @@ class CourseSlot extends React.Component{
             <div onClick={this.onClick} style={{
                 width: "90%",
                 backgroundColor: "#dddddd",
-                padding: "10px",
+                padding: "2%",
                 margin: "10px",
                 marginLeft: "auto",
                 marginRight: "auto",

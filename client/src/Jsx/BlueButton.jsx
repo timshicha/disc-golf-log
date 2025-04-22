@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/general.css";
 
 class BlueButton extends React.Component {
     constructor (props) {
@@ -9,20 +10,8 @@ class BlueButton extends React.Component {
 
     render = () => {
         return (
-            <div {...this.props} style={{
-                marginLeft: "auto",
-                marginRight: "auto",
-                backgroundColor: "#4a86e8",
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "18px",
-                fontFamily: "Arial, Helvetica, sans-serif",
-                padding: "10px",
-                border: "none",
-                borderRadius: "7px",
-                cursor: "pointer",
-                width: "fit-content"
-            }}>
+            <div {...this.props} className="blue-button">
+                {this.props.children}
             </div>
         );
     }
