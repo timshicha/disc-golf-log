@@ -13,6 +13,13 @@ class RoundBox extends React.Component {
     }
 
     render () {
+        // If number is above 0, add + in front
+        if(this.state.value > 0) {
+            let numAsString = this.state.value.toString();
+            if(numAsString[0] !== "+") {
+                this.state.value = "+" + numAsString;
+            }
+        }
         return (
             <div style={{display: "inline-block"}}>
                 <div style={{
@@ -22,7 +29,7 @@ class RoundBox extends React.Component {
                 }}>
                     {this.index + 1}
                 </div>
-                <input type="number" name="scoreBox" style={{
+                <input type="text" name="scoreBox" style={{
                     width: "35px",
                     padding: "0px",
                     margin: "0px",
