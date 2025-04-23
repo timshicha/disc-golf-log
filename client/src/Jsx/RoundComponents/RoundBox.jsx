@@ -22,7 +22,7 @@ class RoundBox extends React.Component {
                 }}>
                     {this.index + 1}
                 </div>
-                <input type="number" style={{
+                <input type="number" name="scoreBox" style={{
                     width: "35px",
                     padding: "0px",
                     margin: "0px",

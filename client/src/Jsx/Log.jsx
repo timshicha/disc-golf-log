@@ -20,12 +20,12 @@ function LogComponent() {
 
     return (
         <>
-            <h1 className="h-main">My Courses</h1>
             {selectedCourse
             ? // If a course is selected, show the course
                 <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
             : // If no course selected, show list of courses
                 <>
+                <h1 className="h-main">My Courses</h1>
                 {courses.length > 0
                 ? // If there are courses, show courses
                     <>
