@@ -2,7 +2,7 @@ import React from "react";
 import { addRound, getCourseRounds } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
-import backCarrot from "../../assets/images/backCarrot.svg";
+import backCarrot from "../../assets/images/backCarrot.png";
 
 class Course extends React.Component{
     constructor (props) {

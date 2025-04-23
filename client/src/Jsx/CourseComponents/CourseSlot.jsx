@@ -21,21 +21,37 @@ class CourseSlot extends React.Component{
                 margin: "10px",
                 marginLeft: "auto",
                 marginRight: "auto",
-                fontSize: "18px",
-                fontWeight: "bold",
-                fontFamily: "Arial, Helvetica, sans-serif",
                 borderRadius: "7px"
             }}>
-                {this.state.course.name}
+                {/* Course settings button (triple dot icon) */}
                 <TripleDotButton style={{
                     height: "20px",
                     float: "right",
                     cursor: "pointer",
+                    marginTop: "8px"
                 }} onClick={e => {
                     e.stopPropagation();
                     alert("This feature is still under construction!");
                 }}></TripleDotButton>
-                <br/>
+                {/* Course title */}
+                <div style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                }}>
+                    {this.state.course.name}
+                </div>
+                {/* Number of holes text */}
+                <div style={{
+                    fontSize: "12px"
+                }}>
+                    {this.state.course.holes === 1
+                    ?
+                    <>1 hole</>
+                    :
+                    <>{this.state.course.holes} holes</>
+                    }
+                </div>
             </div>
         );
     }
