@@ -15,6 +15,12 @@ class Round extends React.Component {
         return (
             <>
             <br />
+            <div style={{
+                width: "90%",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "start"
+            }}>
                 {this.state.round.score.map((scoreValue, index) => {
                     return (
                         <RoundBox onChange={(newValue) => {
@@ -22,6 +28,7 @@ class Round extends React.Component {
                         }} key={index} initialValue={scoreValue} index={index}></RoundBox>
                     );
                 })}
+            </div>
             </>
         );
     }

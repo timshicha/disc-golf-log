@@ -17,11 +17,15 @@ class RoundBox extends React.Component {
         if(this.state.value > 0) {
             let numAsString = this.state.value.toString();
             if(numAsString[0] !== "+") {
-                this.state.value = "+" + numAsString;
+                // this.state.value = "+" + numAsString;
             }
         }
         return (
-            <div style={{display: "inline-block"}}>
+            <div style={{
+                flex: "0 0 auto",
+                width: "11%",
+                margin: "0px"
+            }}>
                 <div style={{
                     width: "100%",
                     fontSize: "3vw",
@@ -29,13 +33,15 @@ class RoundBox extends React.Component {
                 }}>
                     {this.index + 1}
                 </div>
-                <input type="text" name="scoreBox" style={{
-                    width: "35px",
-                    padding: "0px",
-                    margin: "0px",
-                    height: "35px",
-                    fontSize: "20px",
-                    textAlign: "center"
+                <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"
+                    style={{
+                        borderRadius: "0px",
+                        width: "100%",
+                        padding: "0px",
+                        margin: "0px",
+                        height: "auto",
+                        fontSize: "20px",
+                        textAlign: "center",
                 }} value={this.state.value} onChange={(self) => {
                     this.onChange(self.target.value);
                     this.setState({value: self.target.value});
