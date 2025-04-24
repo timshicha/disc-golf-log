@@ -20,8 +20,14 @@ class AddCourseForm extends React.Component {
         const nameElement = e.target.name;
         const holesElement = e.target.holes;
 
+        // Make sure they provided a valid number of holes (integer above 0)
+        const numberOfHoles = parseInt(holesElement.value);
+        if(!numberOfHoles || numberOfHoles < 0) {
+            alert("Enter a valid number of holes.");
+            return;
+        }
         // Add to Dexie
-        addCourse(nameElement.value, parseInt(holesElement.value));
+        addCourse(nameElement.value, numberOfHoles);
         nameElement.value = "";
         holesElement.value = "";
         this.setState({showForm: false});

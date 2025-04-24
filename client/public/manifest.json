@@ -1,6 +1,8 @@
 {
     "name": "Bogey Pad",
     "short_name": "Bogey Pad",
+    "version": "1.0.0",
+    "description": "Supports basic functionality: add courses and rounds, auto-calculates round totals.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
