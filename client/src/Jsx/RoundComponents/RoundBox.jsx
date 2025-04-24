@@ -24,29 +24,39 @@ class RoundBox extends React.Component {
             <div style={{
                 flex: "0 0 auto",
                 width: "11%",
-                margin: "0px"
+                margin: "0px",
+                marginLeft: "0px",
+                marginTop: "-1px"
             }}>
                 <div style={{
-                    width: "100%",
-                    fontSize: "3vw",
-                    textAlign: "center"
+                    position: "relative"
                 }}>
-                    {this.index + 1}
+                    <div style={{
+                        position: "absolute",
+                        zIndex: "100",
+                        marginLeft: "2px",
+                        marginTop: "0px",
+                        fontSize: "10px",
+                        color: "#aaaaaa",
+                    }}>
+                        {this.index + 1}
+                    </div>
+                    <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"
+                        style={{
+                            borderRadius: "0px",
+                            width: "100%",
+                            padding: "0px",
+                            margin: "0px",
+                            height: "35px",
+                            fontSize: "20px",
+                            textAlign: "center",
+                            border: "1px #cccccc solid",
+                    }} value={this.state.value} onChange={(self) => {
+                        this.onChange(self.target.value);
+                        this.setState({value: self.target.value});
+                    }}>
+                    </input>
                 </div>
-                <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"
-                    style={{
-                        borderRadius: "0px",
-                        width: "100%",
-                        padding: "0px",
-                        margin: "0px",
-                        height: "auto",
-                        fontSize: "20px",
-                        textAlign: "center",
-                }} value={this.state.value} onChange={(self) => {
-                    this.onChange(self.target.value);
-                    this.setState({value: self.target.value});
-                }}>
-                </input>
             </div>
         );
     }

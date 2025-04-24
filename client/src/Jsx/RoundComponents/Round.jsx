@@ -19,7 +19,7 @@ class Round extends React.Component {
                 width: "90%",
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "start"
+                justifyContent: "start",
             }}>
                 {this.state.round.score.map((scoreValue, index) => {
                     return (
