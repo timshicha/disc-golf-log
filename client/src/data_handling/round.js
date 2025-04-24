@@ -26,4 +26,17 @@ const updateRoundScore = (round, index, newValue) => {
     });
 }
 
-export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore };
+const getRoundTotal = (round) => {
+    let total = 0;
+    for(let i = 0; i < round.score.length; i++) {
+        // If the value is not a number or 0,
+        // don't add anything
+        const value = parseInt(round.score[i]);
+        if(value) {
+            total += value;
+        }
+    }
+    return total;
+}
+
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal };

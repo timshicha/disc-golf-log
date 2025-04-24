@@ -36,9 +36,8 @@ class RoundBox extends React.Component {
                         zIndex: "100",
                         marginLeft: "2px",
                         marginTop: "0px",
-                        fontSize: "10px",
                         color: "#aaaaaa",
-                    }}>
+                    }} className="small-text">
                         {this.index + 1}
                     </div>
                     <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"

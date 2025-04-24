@@ -45,3 +45,27 @@
 .margin-top-10 {
     margin-top: 10px;
 }
+
+.red-text {
+    color: red;
+}
+
+.green-text {
+    color: green;
+}
+
+.black-text {
+    color: black;
+}
+
+.red-background {
+    background-color: red;
+}
+
+.green-background {
+    background-color: green;
+}
+
+.black-background {
+    background-color: black;
+}
