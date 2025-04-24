@@ -21,3 +21,27 @@
     width: fit-content;
     display: block;
 }
+
+
+.small-text {
+    font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Text color for subtle text */
+.text-color-subtle {
+    color: #aaaaaa;
+}
+
+/* Text color for background text */
+.text-color-semi-subtle {
+    color: #666666;
+}
+
+.margin-top-5 {
+    margin-top: 5px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
