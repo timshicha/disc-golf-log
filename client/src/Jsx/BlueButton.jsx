@@ -6,13 +6,16 @@ class BlueButton extends React.Component {
         super();
 
         this.props = props;
+        this.state = {
+            className: props.className
+        }
     }
 
     render = () => {
         return (
-            <div {...this.props} className="blue-button">
+            <button {...this.props} className={"blue-button " + this.state.className}>
                 {this.props.children}
-            </div>
+            </button>
         );
     }
 }

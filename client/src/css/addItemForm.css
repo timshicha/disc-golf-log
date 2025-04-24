@@ -12,7 +12,8 @@
 
 /* The labels of the form */
 .add-item-form > label {
-    color: white;
+    color: black;
+    font-weight: bold;
 }
 
 /* The input fields of the form */

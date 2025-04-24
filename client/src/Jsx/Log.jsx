@@ -3,7 +3,7 @@ import AddCourseForm from "./CourseComponents/AddCourseForm";
 import { getAllCourses } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
-import BlueButton from "./BlueButton";
+import "../css/general.css";
 
 function LogComponent() {
 
@@ -25,11 +25,24 @@ function LogComponent() {
                 <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
             : // If no course selected, show list of courses
                 <>
-                {courses.map(course => {
-                    return (
-                        <CourseSlot course={course} key={course.name} onClick={() => {setSelectedCourse(course)}}></CourseSlot>
-                    );
-                })}
+                <h1 className="h-main">My Courses</h1>
+                {courses.length > 0
+                ? // If there are courses, show courses
+                    <>
+                    {courses.map(course => {
+                        return (
+                            <CourseSlot course={course} key={course.name} onClick={() => {setSelectedCourse(course)}}></CourseSlot>
+                        );
+                    })}
+                    </>
+                :   // If there are 0 courses, show a message saying there
+                    // are no courses
+                    <p style={{
+                        "textAlign": "center",
+                        "color": "gray",
+                        "margin": "25px"
+                    }}>You don't have any courses.</p>
+                }
                 <AddCourseForm callback={reloadCourses}></AddCourseForm>
                 </>
             }

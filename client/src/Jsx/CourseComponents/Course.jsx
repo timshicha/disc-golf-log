@@ -2,6 +2,8 @@ import React from "react";
 import { addRound, getCourseRounds } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
+import backCarrot from "../../assets/images/backCarrot.png";
+import "../../css/general.css";
 
 class Course extends React.Component{
     constructor (props) {
@@ -32,18 +34,25 @@ class Course extends React.Component{
     render = () => {
         return (
             <>
-            <button onClick={this.onBackClick}>back</button>
-            <br/>
-            {this.state.course.name}
-            {this.state.rounds.map(round => {
+            <input type="image" onClick={this.onBackClick}
+                src={backCarrot} style={{
+                top: "10px",
+                width: "30px",
+                position: "absolute",
+                backgroundColor: "#dddddd",
+                padding: "5px",
+                borderRadius: "7px"
+            }}></input>
+            <h1 className="h-main">{this.state.course.name}</h1>
+            {this.state.rounds.map((round, index) => {
                 return (
-                    <Round round={round} key={round.id}></Round>
+                    <Round round={round} key={round.id} index={index}></Round>
                 );
             })}
             <BlueButton onClick={() => {
                 addRound(this.state.course);
                 this.reloadCourseRounds();
-            }}>Add Round</BlueButton>
+            }} className="margin-top-10">Add Round</BlueButton>
         </>
         );
     }

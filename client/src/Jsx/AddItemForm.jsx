@@ -10,7 +10,7 @@ class AddItemForm extends React.Component {
 
     render = () => {
         return (
-            <form style={{
+            <form {...this.props} style={{
                 width: "90%",
                 marginLeft: "auto",
                 marginRight: "auto",
