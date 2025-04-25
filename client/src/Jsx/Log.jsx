@@ -6,6 +6,7 @@ import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
 import OptionsList from "./OptionsList/OptionsList";
 import OptionsListButton from "./OptionsList/OptionsListButton";
+import OptionsListTitle from "./OptionsList/OptionsListTitle";
 
 function LogComponent() {
 
@@ -25,6 +26,7 @@ function LogComponent() {
         <>
             {showOptionsCourse ?
                 <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
+                    <OptionsListTitle>{showOptionsCourse.name}</OptionsListTitle>
                     <OptionsListButton onClick={() => {
                         deleteCourse(showOptionsCourse);
                         // Update the list of courses

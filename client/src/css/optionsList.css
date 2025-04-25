@@ -14,6 +14,14 @@
     padding: 10px;
 }
 
+.options-list-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    width: calc(100% - 25px);
+}
+
 .options-list-x {
     position: absolute;
     width: 20px;
@@ -21,10 +29,10 @@
 }
 
 .options-list-button {
-    width: calc(100% - 30px);
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 10px;
+    margin-top: 10px;
     background-color: #dddddd;
     color: black;
     font-weight: bold;
@@ -38,6 +46,6 @@
 }
 
 /* Don't add margin below the bottom button (padding covers that) */
-.options-list > .options-list-button:last-child {
+/* .options-list > .options-list-button:last-child {
     margin-bottom: 0px;
-}
+} */

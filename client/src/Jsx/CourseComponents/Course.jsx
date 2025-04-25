@@ -6,6 +6,7 @@ import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
 import OptionsList from "../OptionsList/OptionsList";
 import OptionsListButton from "../OptionsList/OptionsListButton";
+import OptionsListTitle from "../OptionsList/OptionsListTitle";
 
 class Course extends React.Component{
     constructor (props) {
@@ -44,6 +45,7 @@ class Course extends React.Component{
                 <OptionsList onClose={() => {
                     this.setState({roundSelectedIndex: null});
                 }}>
+                    <OptionsListTitle>Round {this.state.roundSelectedIndex + 1}</OptionsListTitle>
                     <OptionsListButton onClick={() => {
                         console.log("Deleting round");
                         deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
