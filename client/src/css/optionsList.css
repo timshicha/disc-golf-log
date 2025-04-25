@@ -6,25 +6,25 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
     width: 250px;
-    min-height: 100px;
+    /* min-height: 100px; */
     height: fit-content;
     background-color: #bbbbbb;
     border-radius: 10px;
-    text-align: center;
+    text-align: left;
+    padding: 10px;
 }
 
 .options-list-x {
     position: absolute;
     width: 20px;
-    top: 10px;
     right: 10px;
 }
 
 .options-list-button {
-    width: 80%;
+    width: calc(100% - 30px);
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10px;
+    margin-bottom: 10px;
     background-color: #dddddd;
     color: black;
     font-weight: bold;
@@ -34,5 +34,10 @@
     border: none;
     border-radius: 7px;
     cursor: pointer;
-    display: block;
+    display: inline-block;
+}
+
+/* Don't add margin below the bottom button (padding covers that) */
+.options-list > .options-list-button:last-child {
+    margin-bottom: 0px;
 }
