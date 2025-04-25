@@ -4,6 +4,7 @@ import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
+import OptionsList from "../OptionsList";
 
 class Course extends React.Component{
     constructor (props) {
@@ -14,8 +15,12 @@ class Course extends React.Component{
 
         this.state = {
             course: props.course,
-            rounds: []
+            rounds: [],
+            // Which round the options list is opened for,
+            // if it is open
+            optionsListOpenFor: null
         };
+
     }
 
     // On initial render
@@ -34,6 +39,14 @@ class Course extends React.Component{
     render = () => {
         return (
             <>
+            {this.state.optionsListOpenFor ?
+                <OptionsList onClose={() => {
+                    this.setState({optionsListOpenFor: null});
+                }}>
+
+                </OptionsList> :
+                null
+            }
             <input type="image" onClick={this.onBackClick}
                 src={backCarrot} style={{
                 top: "10px",
@@ -46,7 +59,12 @@ class Course extends React.Component{
             <h1 className="h-main">{this.state.course.name}</h1>
             {this.state.rounds.map((round, index) => {
                 return (
-                    <Round round={round} key={round.id} index={index}></Round>
+                    <Round round={round} key={round.id} index={index}
+                        // When the user clicks on the triple dot icon
+                        // on this round
+                        onOpenOptionsList={() => {
+                            this.setState({optionsListOpenFor: round});
+                    }}></Round>
                 );
             })}
             <BlueButton onClick={() => {
