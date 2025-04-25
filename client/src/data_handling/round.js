@@ -39,9 +39,13 @@ const getRoundTotal = (round) => {
     return total;
 }
 
-const deleteRound = (round => {
+const deleteRound = (round) => {
     db.rounds.delete(round.id);
     return round.id;
-});
+};
 
-export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal, deleteRound };
+const deleteRoundsByCourseID = (courseID) => {
+    db.rounds.where("courseID").equals(courseID).delete();
+}
+
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal, deleteRound, deleteRoundsByCourseID };

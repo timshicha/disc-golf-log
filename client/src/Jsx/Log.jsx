@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import { getAllCourses } from "../data_handling/course";
+import { deleteCourse, getAllCourses } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
+import OptionsList from "./OptionsList/OptionsList";
+import OptionsListButton from "./OptionsList/OptionsListButton";
 
 function LogComponent() {
 
     const [courses, setCourses] = useState([]);
     // By default, no course is selected, so show list of courses
     const [selectedCourse, setSelectedCourse] = useState(null);
+    const [showOptionsCourse, setShowOptionsCourse] = useState(null);
     useEffect(() => {
         reloadCourses();
     }, []);
@@ -20,6 +23,18 @@ function LogComponent() {
 
     return (
         <>
+            {showOptionsCourse ?
+                <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
+                    <OptionsListButton onClick={() => {
+                        deleteCourse(showOptionsCourse);
+                        // Update the list of courses
+                        setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
+                        setShowOptionsCourse(null);
+                    }}>Delete course</OptionsListButton>
+                </OptionsList> :
+                null
+            }
+            <>
             {selectedCourse
             ? // If a course is selected, show the course
                 <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
@@ -31,7 +46,15 @@ function LogComponent() {
                     <>
                     {courses.map(course => {
                         return (
-                            <CourseSlot course={course} key={course.name} onClick={() => {setSelectedCourse(course)}}></CourseSlot>
+                            <CourseSlot course={course}
+                                key={course.name}
+                                onClick={() => {
+                                    setSelectedCourse(course);
+                                }}
+                                onOpenOptionsList = {() => {
+                                    setShowOptionsCourse(course);
+                                }}>
+                            </CourseSlot>
                         );
                     })}
                     </>
@@ -46,6 +69,7 @@ function LogComponent() {
                 <AddCourseForm callback={reloadCourses}></AddCourseForm>
                 </>
             }
+            </>
         </>
     );
 }

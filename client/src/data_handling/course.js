@@ -1,4 +1,5 @@
 import db from "./db";
+import { deleteRoundsByCourseID } from "./round";
 
 // Add a course to Dexie
 const addCourse = (name, holes) => {
@@ -16,4 +17,11 @@ const getAllCourses = () => {
     return db.courses.toArray();
 }
 
-export { addCourse, getCourseByName, getAllCourses };
+const deleteCourse = (course) => {
+    // Delete all rounds for this course
+    deleteRoundsByCourseID(course.id);
+    db.courses.delete(course.id);
+    return course.id;
+}
+
+export { addCourse, getCourseByName, getAllCourses, deleteCourse };
