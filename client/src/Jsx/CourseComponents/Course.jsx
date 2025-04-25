@@ -1,10 +1,11 @@
 import React from "react";
-import { addRound, getCourseRounds } from "../../data_handling/round";
+import { addRound, deleteRound, getCourseRounds } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
-import OptionsList from "../OptionsList";
+import OptionsList from "../OptionsList/OptionsList";
+import OptionsListButton from "../OptionsList/OptionsListButton";
 
 class Course extends React.Component{
     constructor (props) {
@@ -18,7 +19,7 @@ class Course extends React.Component{
             rounds: [],
             // Which round the options list is opened for,
             // if it is open
-            optionsListOpenFor: null
+            roundSelectedIndex: null
         };
 
     }
@@ -39,11 +40,23 @@ class Course extends React.Component{
     render = () => {
         return (
             <>
-            {this.state.optionsListOpenFor ?
+            {this.state.roundSelectedIndex !== null ?
                 <OptionsList onClose={() => {
-                    this.setState({optionsListOpenFor: null});
+                    this.setState({roundSelectedIndex: null});
                 }}>
+                    <OptionsListButton onClick={() => {
+                        console.log("Deleting round");
+                        deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
+                        // Delete the round from the array
+                        this.state.rounds.splice(this.state.roundSelectedIndex, 1);
+                        this.setState({
+                            rounds: this.state.rounds,
+                            roundSelectedIndex: null
+                        })
 
+                        this.forceUpdate();
+
+                    }}>Delete round</OptionsListButton>
                 </OptionsList> :
                 null
             }
@@ -59,12 +72,15 @@ class Course extends React.Component{
             <h1 className="h-main">{this.state.course.name}</h1>
             {this.state.rounds.map((round, index) => {
                 return (
-                    <Round round={round} key={round.id} index={index}
+                    <Round round={round} key={index} index={index} data={round}
                         // When the user clicks on the triple dot icon
                         // on this round
                         onOpenOptionsList={() => {
-                            this.setState({optionsListOpenFor: round});
-                    }}></Round>
+                            this.setState({
+                                roundSelectedIndex: index
+                            });
+                    }}>
+                    </Round>
                 );
             })}
             <BlueButton onClick={() => {

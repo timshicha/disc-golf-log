@@ -1,6 +1,6 @@
 import React from "react";
-import "../css/OptionsList.css";
-import whiteX from "../assets/images/whiteX.png";
+import "../../css/OptionsList.css";
+import whiteX from "../../assets/images/whiteX.png";
 
 class OptionsList extends React.Component {
     constructor (props) {

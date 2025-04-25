@@ -10,6 +10,7 @@
     height: fit-content;
     background-color: #bbbbbb;
     border-radius: 10px;
+    text-align: center;
 }
 
 .options-list-x {
@@ -17,4 +18,21 @@
     width: 20px;
     top: 10px;
     right: 10px;
+}
+
+.options-list-button {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    background-color: #dddddd;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    display: block;
 }
