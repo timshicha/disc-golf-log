@@ -1,6 +1,7 @@
 import React from "react";
 import RoundBox from "./RoundBox";
 import { getRoundTotal, updateRoundScore } from "../../data_handling/round";
+import TripleDotButton from "../TripleDotButton";
 import "../../css/general.css";
 
 class Round extends React.Component {
@@ -48,10 +49,15 @@ class Round extends React.Component {
 
     render () {
         return (
-            <div className="margin-top-5" style={{fontWeight: "bold"}}>
-            <div className="small-text text-color-semi-subtl">
+            <div className="margin-top-10" style={{
+                fontWeight: "bold",
+                width: "fit-content"
+                }}>
+            <div className="medium-text text-color-subtle" style={{
+                width: "90%"
+            }}>
                 <div style={{
-                    minWidth: "20px",
+                    minWidth: "35px",
                     display: "inline-block",
                     color: "white",
                     textAlign: "center",
@@ -66,24 +72,33 @@ class Round extends React.Component {
                     {this.state.total > 0 ? "+" : ""}{this.state.total}
                 </div>
                 Round {this.state.index + 1}
+                <TripleDotButton style={{
+                    height: "15px",
+                    float: "right"
+                }} onClick={() => alert("This feature is still under construction!")}></TripleDotButton>
             </div>
             <div style={{
-                width: "90%",
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "start",
+                display: "inline-block",
+                width: "fit-content"
             }}>
-                {this.state.round.score.map((scoreValue, index) => {
-                    return (
-                        <RoundBox onChange={(newValue) => {
-                            updateRoundScore(this.state.round, index, newValue);
-                            this.recalculateTotal();
-                        }}
-                        key={index}
-                        initialValue={scoreValue}
-                        index={index}/>
-                    );
-                })}
+                <div style={{
+                    width: "90%",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "start",
+                }}>
+                    {this.state.round.score.map((scoreValue, index) => {
+                        return (
+                            <RoundBox onChange={(newValue) => {
+                                updateRoundScore(this.state.round, index, newValue);
+                                this.recalculateTotal();
+                            }}
+                            key={index}
+                            initialValue={scoreValue}
+                            index={index}/>
+                        );
+                    })}
+                </div>
             </div>
             </div>
         );

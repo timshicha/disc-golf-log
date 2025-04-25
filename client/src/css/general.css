@@ -28,6 +28,11 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.medium-text {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 /* Text color for subtle text */
 .text-color-subtle {
     color: #aaaaaa;
