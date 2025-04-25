@@ -23,7 +23,7 @@ class OptionsList extends React.Component {
         return (
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
-                <div {...this.props} className="options-list" ref={this.ref}>
+                <div {...this.props} className="form-main options-modal" ref={this.ref}>
                     {/* X-button closes the options list window */}
                     <input type="image" src={whiteX}
                         onClick={this.props.onClose}

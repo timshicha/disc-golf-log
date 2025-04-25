@@ -9,7 +9,7 @@ class OptionsListButton extends React.Component {
 
     render = () => {
         return (
-            <button {...this.props} className={"options-list-button " + this.props.className}>
+            <button {...this.props} className={"form-button " + this.props.className}>
                 {this.props.children}
             </button>
         );

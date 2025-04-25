@@ -33,6 +33,13 @@
     display: block;
 }
 
+.blue-bg {
+    background-color: #4a86e8;
+}
+
+.gray-bg {
+    background-color: #dddddd;
+}
 
 .small-text {
     font-size: 10px;
@@ -84,4 +91,17 @@
 
 .black-background {
     background-color: black;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.half-width-button {
+    width: 45%;
+}
+
+.mx-5 {
+    margin-left: 5px;
+    margin-right: 5px;
 }

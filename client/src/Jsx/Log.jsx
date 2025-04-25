@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import { deleteCourse, getAllCourses } from "../data_handling/course";
+import { deleteCourse, getAllCourses, renameCourse } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
 import OptionsList from "./OptionsList/OptionsList";
 import OptionsListButton from "./OptionsList/OptionsListButton";
 import OptionsListTitle from "./OptionsList/OptionsListTitle";
+import RenameModal from "./CourseComponents/RenameModal";
 
 function LogComponent() {
 
@@ -14,12 +15,19 @@ function LogComponent() {
     // By default, no course is selected, so show list of courses
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showOptionsCourse, setShowOptionsCourse] = useState(null);
+    const [showRenameModal, setShowRenameModal] = useState(false);
     useEffect(() => {
         reloadCourses();
     }, []);
 
     const reloadCourses = () => {
         getAllCourses().then(result => setCourses(result));
+    }
+
+    const handleRenameCourse = (newName) => {
+        showOptionsCourse.name = newName;
+        renameCourse(showOptionsCourse, newName);
+        setShowRenameModal(false);
     }
 
     return (
@@ -32,10 +40,21 @@ function LogComponent() {
                         // Update the list of courses
                         setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
                         setShowOptionsCourse(null);
-                    }}>Delete course</OptionsListButton>
+                    }} className="full-width">Delete</OptionsListButton>
+                    <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width"
+                        onChange={(event) => {
+                            setRenameModalInputValue(event.target.value);
+                        }}>Rename</OptionsListButton>                    
+                    {showRenameModal ?
+                    <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
+                        <OptionsListTitle>Rename</OptionsListTitle>
+                    </RenameModal> :
+                    null
+                    }
                 </OptionsList> :
                 null
             }
+
             <>
             {selectedCourse
             ? // If a course is selected, show the course

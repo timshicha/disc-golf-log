@@ -17,6 +17,13 @@ const getAllCourses = () => {
     return db.courses.toArray();
 }
 
+const renameCourse = (course, newName) => {
+    db.courses.update(course.id, {
+        name: newName
+    });
+    return newName;
+}
+
 const deleteCourse = (course) => {
     // Delete all rounds for this course
     deleteRoundsByCourseID(course.id);
@@ -24,4 +31,4 @@ const deleteCourse = (course) => {
     return course.id;
 }
 
-export { addCourse, getCourseByName, getAllCourses, deleteCourse };
+export { addCourse, getCourseByName, getAllCourses, renameCourse, deleteCourse };

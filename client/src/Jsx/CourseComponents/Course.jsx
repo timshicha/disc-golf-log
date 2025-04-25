@@ -56,7 +56,7 @@ class Course extends React.Component{
 
                         this.forceUpdate();
 
-                    }}>Delete round</OptionsListButton>
+                    }} className="full-width">Delete round</OptionsListButton>
                 </OptionsList> :
                 null
             }

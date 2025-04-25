@@ -1,17 +1,7 @@
 
-.options-list {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
+.options-modal {
     width: 250px;
-    /* min-height: 100px; */
     height: fit-content;
-    background-color: #bbbbbb;
-    border-radius: 10px;
-    text-align: left;
-    padding: 10px;
 }
 
 .options-list-title {
@@ -26,23 +16,6 @@
     position: absolute;
     width: 20px;
     right: 10px;
-}
-
-.options-list-button {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10px;
-    background-color: #dddddd;
-    color: black;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    display: inline-block;
 }
 
 /* Don't add margin below the bottom button (padding covers that) */
