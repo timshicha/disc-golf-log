@@ -16,6 +16,7 @@ class Round extends React.Component {
             // The logic for styling it is more complicated,
             // so using a state for it.
             totalComponent: <span>(0)</span>,
+            props: props
         }
 
         this.onOpenOptionsList = props.onOpenOptionsList;
@@ -53,8 +54,8 @@ class Round extends React.Component {
         return (
             <div className="margin-top-10" style={{
                 fontWeight: "bold",
-                width: "fit-content"
-                }}>
+                width: "fit-content",
+            }}>
                 <div className="medium-text text-color-subtle" style={{
                     width: "90%"
                 }}>
@@ -73,7 +74,7 @@ class Round extends React.Component {
                     }>
                         {this.state.total > 0 ? "+" : ""}{this.state.total}
                     </div>
-                    Round {this.state.index + 1}
+                    Round {this.props.index + 1}
                     <TripleDotButton style={{
                         height: "15px",
                         float: "right"

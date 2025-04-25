@@ -47,10 +47,8 @@ class Course extends React.Component{
                     <OptionsListButton onClick={() => {
                         console.log("Deleting round");
                         deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
-                        // Delete the round from the array
-                        this.state.rounds.splice(this.state.roundSelectedIndex, 1);
                         this.setState({
-                            rounds: this.state.rounds,
+                            rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
                             roundSelectedIndex: null
                         })
 
@@ -72,14 +70,15 @@ class Course extends React.Component{
             <h1 className="h-main">{this.state.course.name}</h1>
             {this.state.rounds.map((round, index) => {
                 return (
-                    <Round round={round} key={index} index={index} data={round}
+                    <Round round={round} key={round.id} index={index}
                         // When the user clicks on the triple dot icon
                         // on this round
                         onOpenOptionsList={() => {
                             this.setState({
                                 roundSelectedIndex: index
                             });
-                    }}>
+                        }}
+                    >
                     </Round>
                 );
             })}
