@@ -5,7 +5,8 @@ const addRound = (course) => {
     console.log(course);
     db.rounds.add({
         courseID: course.id,
-        score: new Array(parseInt(course.holes)).fill("")
+        score: new Array(parseInt(course.holes)).fill(""),
+        date: new Date()
     });
 }
 

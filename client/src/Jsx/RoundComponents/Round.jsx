@@ -3,6 +3,7 @@ import RoundBox from "./RoundBox";
 import { getRoundTotal, updateRoundScore } from "../../data_handling/round";
 import TripleDotButton from "../TripleDotButton";
 import "../../css/general.css";
+import { dateToString } from "../../js_utils/formatting";
 
 class Round extends React.Component {
     constructor (props) {
@@ -81,6 +82,9 @@ class Round extends React.Component {
                     }} onClick={() => {
                         this.onOpenOptionsList();
                     }}></TripleDotButton>
+                    <div style={{
+                        float: "right"
+                    }}>{dateToString(this.state.round.date)}</div>
                 </div>
                 <div style={{
                     display: "inline-block",

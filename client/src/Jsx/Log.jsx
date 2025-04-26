@@ -10,7 +10,6 @@ import OptionsListTitle from "./OptionsList/OptionsListTitle";
 import RenameModal from "./CourseComponents/RenameModal";
 
 function LogComponent() {
-
     const [courses, setCourses] = useState([]);
     // By default, no course is selected, so show list of courses
     const [selectedCourse, setSelectedCourse] = useState(null);
