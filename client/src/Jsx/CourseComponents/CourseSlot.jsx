@@ -40,6 +40,7 @@ class CourseSlot extends React.Component{
                     fontSize: "18px",
                     fontWeight: "bold",
                     fontFamily: "Arial, Helvetica, sans-serif",
+                    height: "18px"
                 }}>
                     {this.state.course.name}
                 </div>

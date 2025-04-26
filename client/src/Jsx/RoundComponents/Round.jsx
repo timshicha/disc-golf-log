@@ -83,7 +83,8 @@ class Round extends React.Component {
                         this.onOpenOptionsList();
                     }}></TripleDotButton>
                     <div style={{
-                        float: "right"
+                        float: "right",
+                        marginRight: "4px"
                     }}>{dateToString(this.state.round.date)}</div>
                 </div>
                 <div style={{

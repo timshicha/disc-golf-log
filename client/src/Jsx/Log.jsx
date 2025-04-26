@@ -27,6 +27,8 @@ function LogComponent() {
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName);
         setShowRenameModal(false);
+        // Also close options modal
+        setShowOptionsCourse(null);
     }
 
     return (
@@ -34,16 +36,23 @@ function LogComponent() {
             {showOptionsCourse ?
                 <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
                     <OptionsListTitle>{showOptionsCourse.name}</OptionsListTitle>
+                    <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width"
+                        onChange={(event) => {
+                            setRenameModalInputValue(event.target.value);
+                    }}>Rename
+                    </OptionsListButton>                    
+                    <OptionsListButton className="full-width" onClick={() => {
+                        alert("This feature is under construction!");
+                    }}>
+                        Adjust date
+                    </OptionsListButton>
                     <OptionsListButton onClick={() => {
                         deleteCourse(showOptionsCourse);
                         // Update the list of courses
                         setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
                         setShowOptionsCourse(null);
-                    }} className="full-width">Delete</OptionsListButton>
-                    <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width"
-                        onChange={(event) => {
-                            setRenameModalInputValue(event.target.value);
-                        }}>Rename</OptionsListButton>                    
+                    }} className="full-width caution-button">Delete
+                    </OptionsListButton>
                     {showRenameModal ?
                     <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
                         <OptionsListTitle>Rename</OptionsListTitle>
