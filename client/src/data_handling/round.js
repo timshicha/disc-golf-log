@@ -5,7 +5,8 @@ const addRound = (course) => {
     console.log(course);
     db.rounds.add({
         courseID: course.id,
-        score: new Array(parseInt(course.holes)).fill("")
+        score: new Array(parseInt(course.holes)).fill(""),
+        date: new Date()
     });
 }
 
@@ -39,4 +40,13 @@ const getRoundTotal = (round) => {
     return total;
 }
 
-export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal };
+const deleteRound = (round) => {
+    db.rounds.delete(round.id);
+    return round.id;
+};
+
+const deleteRoundsByCourseID = (courseID) => {
+    db.rounds.where("courseID").equals(courseID).delete();
+}
+
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal, deleteRound, deleteRoundsByCourseID };

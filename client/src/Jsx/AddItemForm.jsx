@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/addItemForm.css";
+import "../css/forms.css";
 
 class AddItemForm extends React.Component {
     constructor (props) {
@@ -14,7 +14,7 @@ class AddItemForm extends React.Component {
                 width: "90%",
                 marginLeft: "auto",
                 marginRight: "auto",
-            }} className="add-item-form">
+            }} className="form-main">
                 {this.props.children}
             </form>
         );

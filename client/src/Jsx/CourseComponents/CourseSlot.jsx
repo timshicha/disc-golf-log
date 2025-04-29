@@ -10,6 +10,8 @@ class CourseSlot extends React.Component{
         this.state = {
             course: props.course
         };
+
+        this.onOpenOptionsList = props.onOpenOptionsList;
     }
 
     render = () => {
@@ -31,13 +33,14 @@ class CourseSlot extends React.Component{
                     marginTop: "8px"
                 }} onClick={e => {
                     e.stopPropagation();
-                    alert("This feature is still under construction!");
+                    this.onOpenOptionsList();
                 }}></TripleDotButton>
                 {/* Course title */}
                 <div style={{
                     fontSize: "18px",
                     fontWeight: "bold",
                     fontFamily: "Arial, Helvetica, sans-serif",
+                    height: "18px"
                 }}>
                     {this.state.course.name}
                 </div>

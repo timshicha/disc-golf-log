@@ -1,9 +1,12 @@
 import React from "react";
-import { addRound, getCourseRounds } from "../../data_handling/round";
+import { addRound, deleteRound, getCourseRounds } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
+import OptionsList from "../OptionsList/OptionsList";
+import OptionsListButton from "../OptionsList/OptionsListButton";
+import OptionsListTitle from "../OptionsList/OptionsListTitle";
 
 class Course extends React.Component{
     constructor (props) {
@@ -14,8 +17,12 @@ class Course extends React.Component{
 
         this.state = {
             course: props.course,
-            rounds: []
+            rounds: [],
+            // Which round the options list is opened for,
+            // if it is open
+            roundSelectedIndex: null
         };
+
     }
 
     // On initial render
@@ -34,6 +41,25 @@ class Course extends React.Component{
     render = () => {
         return (
             <>
+            {this.state.roundSelectedIndex !== null ?
+                <OptionsList onClose={() => {
+                    this.setState({roundSelectedIndex: null});
+                }}>
+                    <OptionsListTitle>Round {this.state.roundSelectedIndex + 1}</OptionsListTitle>
+                    <OptionsListButton onClick={() => {
+                        console.log("Deleting round");
+                        deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
+                        this.setState({
+                            rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
+                            roundSelectedIndex: null
+                        })
+
+                        this.forceUpdate();
+
+                    }} className="full-width caution-button">Delete round</OptionsListButton>
+                </OptionsList> :
+                null
+            }
             <input type="image" onClick={this.onBackClick}
                 src={backCarrot} style={{
                 top: "10px",
@@ -46,7 +72,16 @@ class Course extends React.Component{
             <h1 className="h-main">{this.state.course.name}</h1>
             {this.state.rounds.map((round, index) => {
                 return (
-                    <Round round={round} key={round.id} index={index}></Round>
+                    <Round round={round} key={round.id} index={index}
+                        // When the user clicks on the triple dot icon
+                        // on this round
+                        onOpenOptionsList={() => {
+                            this.setState({
+                                roundSelectedIndex: index
+                            });
+                        }}
+                    >
+                    </Round>
                 );
             })}
             <BlueButton onClick={() => {

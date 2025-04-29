@@ -1,0 +1,33 @@
+
+.options-modal {
+    width: 250px;
+    height: fit-content;
+}
+
+.options-list-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    height: 20px;
+    text-align: center;
+    width: calc(100% - 25px);
+}
+
+.close-x-button {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+}
+
+.close-x-img {
+    width: 20px;
+    display: block;
+}
+
+/* Don't add margin below the bottom button (padding covers that) */
+/* .options-list > .options-list-button:last-child {
+    margin-bottom: 0px;
+} */

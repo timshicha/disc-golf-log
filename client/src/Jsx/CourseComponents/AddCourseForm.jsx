@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
 import BlueButton from "../BlueButton";
 import AddItemForm from "../AddItemForm";
@@ -11,6 +11,7 @@ class AddCourseForm extends React.Component {
             showForm: false, // Initially show "add course" button
         };
 
+        this.nameInputRef = createRef();
         this.callback = props.callback;
     }
 
@@ -20,12 +21,22 @@ class AddCourseForm extends React.Component {
         const nameElement = e.target.name;
         const holesElement = e.target.holes;
 
+        // Make sure they provided a valid number of holes (integer above 0)
+        const numberOfHoles = parseInt(holesElement.value);
+        if(!numberOfHoles || numberOfHoles < 0) {
+            alert("Enter a valid number of holes.");
+            return;
+        }
         // Add to Dexie
-        addCourse(nameElement.value, parseInt(holesElement.value));
+        addCourse(nameElement.value, numberOfHoles);
         nameElement.value = "";
         holesElement.value = "";
         this.setState({showForm: false});
         this.callback();
+    }
+
+    componentDidUpdate = () => {
+        this.nameInputRef.current?.focus();
     }
 
     onCancel = (e) => {
@@ -44,15 +55,19 @@ class AddCourseForm extends React.Component {
                 {this.state.showForm
                 ? // Show form to add a course
                     <AddItemForm onSubmit={this.onAddCourseSubmit}>
-                        <label htmlFor="name">Name: </label>
-                        <input type="text" name="name" id="name" style={{
-                            marginRight: "10px",
-                            marginBottom: "10px"
-                        }}></input>
-                        <label htmlFor="holes">Holes: </label>
-                        <input type="number" name="holes" id="holes" style={{
-                            width: "40px",
-                        }}></input>
+                        <div className="form-input-block">
+                            <label htmlFor="name">Name: </label>
+                            <input type="text" name="name" id="name" style={{
+                                marginRight: "10px",
+                                marginBottom: "10px"
+                            }} ref={this.nameInputRef}></input>
+                        </div>
+                        <div className="form-input-block">
+                            <label htmlFor="holes">Holes: </label>
+                            <input type="number" name="holes" id="holes" style={{
+                                width: "40px",
+                            }}></input>
+                        </div>
                         <div style={{
                             display: "block",
                             marginLeft: "auto",
