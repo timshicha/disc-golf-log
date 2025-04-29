@@ -24,11 +24,11 @@ class OptionsList extends React.Component {
         return (
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
-                <div {...this.props} className="form-main options-modal" ref={this.ref}>
+                <form {...this.props} className="form-main options-modal" ref={this.ref}>
                     {/* X-button closes the options list window */}
                     <CloseX onClick={this.props.onClose}></CloseX>
                     {this.props.children}  
-                </div>
+                </form>
             </>
         );
     }

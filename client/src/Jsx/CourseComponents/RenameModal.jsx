@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import "../../css/OptionsList.css";
 import "../../css/forms.css";
 import OptionsListButton from "../OptionsList/OptionsListButton";
+import OptionsList from "../OptionsList/OptionsList";
 import CloseX from "./CloseX";
 
 class RenameModal extends React.Component {
@@ -27,19 +28,17 @@ class RenameModal extends React.Component {
 
     render = () => {
         return (
-            <form {...this.props} style={{
-                width: "90%",
-                marginLeft: "auto",
-                marginRight: "auto",
-            }} className="form-main options-list rename-modal"
-                onSubmit={this.props.onSubmit}>
+            <>
+            <OptionsList {...this.props}>
                 <CloseX onClick={this.props.onClose}></CloseX>
                 {this.props.children}
                 <label htmlFor="name"></label>
                 <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
                 <OptionsListButton className="half-width-button mx-5" type="submit">Apply</OptionsListButton>
                 <OptionsListButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</OptionsListButton>
-            </form>
+            </OptionsList>
+
+            </>
         );
     }
 }
