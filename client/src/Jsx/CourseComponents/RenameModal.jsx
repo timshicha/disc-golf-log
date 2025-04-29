@@ -21,7 +21,7 @@ class RenameModal extends React.Component {
         });
     }
 
-    componentDidUpdate = () => {
+    componentDidMount = () => {
         this.nameInputRef.current?.focus();
     }
 
