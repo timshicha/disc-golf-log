@@ -1,14 +1,15 @@
-import React from "react";
+import React, { createRef } from "react";
 import "../../css/OptionsList.css";
 import "../../css/forms.css";
-import whiteX from "../../assets/images/whiteX.png";
 import OptionsListButton from "../OptionsList/OptionsListButton";
+import CloseX from "./CloseX";
 
 class RenameModal extends React.Component {
     constructor (props) {
         super ();
 
         this.props = props;
+        this.nameInputRef = createRef();
         this.state = {
             inputValue: props.value || ""
         }
@@ -20,22 +21,25 @@ class RenameModal extends React.Component {
         });
     }
 
+    componentDidUpdate = () => {
+        this.nameInputRef.current?.focus();
+    }
+
     render = () => {
         return (
-            <div className="options-list form-main rename-modal">
-                {/* X-button closes the options list window */}
-                <input type="image" src={whiteX}
-                    onClick={this.props.onClose}
-                    className="options-list-x">
-                </input>
-                {this.props.children}  
-                <input type="text" className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
-                <OptionsListButton className="half-width-button mx-5" onClick={() => {
-                    this.props.onSubmit(this.state.inputValue);
-                }}>Apply</OptionsListButton>
-                <OptionsListButton className="half-width-button mx-5" onClick={() => {this.setState({inputValue: ""})}}>Clear</OptionsListButton>
-            </div>
-
+            <form {...this.props} style={{
+                width: "90%",
+                marginLeft: "auto",
+                marginRight: "auto",
+            }} className="form-main options-list rename-modal"
+                onSubmit={this.props.onSubmit}>
+                <CloseX onClick={this.props.onClose}></CloseX>
+                {this.props.children}
+                <label htmlFor="name"></label>
+                <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
+                <OptionsListButton className="half-width-button mx-5" type="submit">Apply</OptionsListButton>
+                <OptionsListButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</OptionsListButton>
+            </form>
         );
     }
 }

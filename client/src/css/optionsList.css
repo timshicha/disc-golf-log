@@ -13,11 +13,18 @@
     width: calc(100% - 25px);
 }
 
-.options-list-x {
+.close-x-button {
     position: absolute;
-    width: 20px;
     right: 10px;
     top: 5px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+}
+
+.close-x-img {
+    width: 20px;
+    display: block;
 }
 
 /* Don't add margin below the bottom button (padding covers that) */

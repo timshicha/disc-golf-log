@@ -31,7 +31,7 @@
 }
 
 /* The submit button of the form */
-.form-main > button {
+.form-button {
     margin-top: 10px;
     font-weight: bold;
     font-size: 18px;

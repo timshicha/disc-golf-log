@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
 import BlueButton from "../BlueButton";
 import AddItemForm from "../AddItemForm";
@@ -11,6 +11,7 @@ class AddCourseForm extends React.Component {
             showForm: false, // Initially show "add course" button
         };
 
+        this.nameInputRef = createRef();
         this.callback = props.callback;
     }
 
@@ -34,6 +35,10 @@ class AddCourseForm extends React.Component {
         this.callback();
     }
 
+    componentDidUpdate = () => {
+        this.nameInputRef.current?.focus();
+    }
+
     onCancel = (e) => {
         e.preventDefault();
         // Clear fields of the form...
@@ -54,7 +59,7 @@ class AddCourseForm extends React.Component {
                         <input type="text" name="name" id="name" style={{
                             marginRight: "10px",
                             marginBottom: "10px"
-                        }}></input>
+                        }} ref={this.nameInputRef}></input>
                         <label htmlFor="holes">Holes: </label>
                         <input type="number" name="holes" id="holes" style={{
                             width: "40px",

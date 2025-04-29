@@ -23,7 +23,9 @@ function LogComponent() {
         getAllCourses().then(result => setCourses(result));
     }
 
-    const handleRenameCourse = (newName) => {
+    const handleRenameCourse = (event) => {
+        event.preventDefault();
+        const newName = event.target.name.value;
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName);
         setShowRenameModal(false);
@@ -33,36 +35,35 @@ function LogComponent() {
 
     return (
         <>
-            {showOptionsCourse ?
-                <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
-                    <OptionsListTitle>{showOptionsCourse.name}</OptionsListTitle>
-                    <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width"
-                        onChange={(event) => {
-                            setRenameModalInputValue(event.target.value);
-                    }}>Rename
-                    </OptionsListButton>                    
-                    <OptionsListButton className="full-width" onClick={() => {
-                        alert("This feature is under construction!");
-                    }}>
-                        Adjust date
-                    </OptionsListButton>
-                    <OptionsListButton onClick={() => {
-                        deleteCourse(showOptionsCourse);
-                        // Update the list of courses
-                        setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
-                        setShowOptionsCourse(null);
-                    }} className="full-width caution-button">Delete
-                    </OptionsListButton>
-                    {showRenameModal ?
-                    <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
-                        <OptionsListTitle>Rename</OptionsListTitle>
-                    </RenameModal> :
-                    null
-                    }
-                </OptionsList> :
-                null
+            {showRenameModal ?
+                <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
+                    <OptionsListTitle>Rename</OptionsListTitle>
+                </RenameModal> :
+                <>
+                {showOptionsCourse ?
+                    <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
+                        <OptionsListTitle>{showOptionsCourse.name}</OptionsListTitle>
+                        <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width black-text"
+                            onChange={(event) => {
+                                setRenameModalInputValue(event.target.value);
+                        }}>Rename
+                        </OptionsListButton>                    
+                        <OptionsListButton className="full-width black-text" onClick={() => {
+                            alert("This feature is under construction!");
+                        }}>
+                            Adjust date
+                        </OptionsListButton>
+                        <OptionsListButton onClick={() => {
+                            deleteCourse(showOptionsCourse);
+                            // Update the list of courses
+                            setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
+                            setShowOptionsCourse(null);
+                        }} className="full-width caution-button">Delete
+                        </OptionsListButton>
+                    </OptionsList> : null
+                }
+                </>
             }
-
             <>
             {selectedCourse
             ? // If a course is selected, show the course

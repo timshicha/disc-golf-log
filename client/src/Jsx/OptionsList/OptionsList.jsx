@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import "../../css/OptionsList.css";
 import whiteX from "../../assets/images/whiteX.png";
 import Backdrop from "../BackDrop";
+import CloseX from "../CourseComponents/CloseX";
 
 class OptionsList extends React.Component {
     constructor (props) {
@@ -25,10 +26,7 @@ class OptionsList extends React.Component {
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
                 <div {...this.props} className="form-main options-modal" ref={this.ref}>
                     {/* X-button closes the options list window */}
-                    <input type="image" src={whiteX}
-                        onClick={this.props.onClose}
-                        className="options-list-x">
-                    </input>
+                    <CloseX onClick={this.props.onClose}></CloseX>
                     {this.props.children}  
                 </div>
             </>
