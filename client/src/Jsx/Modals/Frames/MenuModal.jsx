@@ -1,9 +1,9 @@
 import React, { createRef } from "react";
-import "../../css/OptionsList.css";
-import Backdrop from "./ModalComponents/BackDrop";
-import CloseX from "./ModalComponents/CloseX";
+import "../../../css/OptionsList.css";
+import Backdrop from "../ModalComponents/BackDrop";
+import CloseX from "../ModalComponents/CloseX";
 
-class MainModal extends React.Component {
+class OptionsList extends React.Component {
     constructor (props) {
         super();
 
@@ -11,7 +11,6 @@ class MainModal extends React.Component {
         this.ref = createRef();
     }
 
-    // Handle Click on the outside (close form)
     handleClickOutside = (event) => {
         if(this.ref.current && !this.ref.current.contains(event.target)) {
             event.preventDefault();
@@ -34,4 +33,4 @@ class MainModal extends React.Component {
     }
 }
 
-export default MainModal;
+export default OptionsList;

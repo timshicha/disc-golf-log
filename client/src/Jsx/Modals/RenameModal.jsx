@@ -1,7 +1,7 @@
 import React, { createRef } from "react";
-import "../../css/OptionsList.css";
+import "../../css/optionsList.css";
 import "../../css/forms.css";
-import MainModal from "./MainModal";
+import FormModal from "./Frames/FormModal";
 import ModalButton from "./ModalComponents/ModalButton";
 
 class RenameModal extends React.Component {
@@ -28,13 +28,13 @@ class RenameModal extends React.Component {
     render = () => {
         return (
             <>
-            <MainModal {...this.props}>
+            <FormModal {...this.props}>
                 {this.props.children}
                 <label htmlFor="name"></label>
                 <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
                 <ModalButton className="half-width-button mx-5" type="submit">Apply</ModalButton>
                 <ModalButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</ModalButton>
-            </MainModal>
+            </FormModal>
 
             </>
         );

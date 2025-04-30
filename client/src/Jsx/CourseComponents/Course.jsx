@@ -4,7 +4,7 @@ import Round from "../RoundComponents/Round";
 import BlueButton from "../BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
-import OptionsList from "../OptionsList/OptionsList";
+import OptionsList from "../Modals/Frames/MenuModal";
 import OptionsListButton from "../Modals/ModalComponents/ModalButton";
 import OptionsListTitle from "../Modals/ModalComponents/ModalTitle";
 

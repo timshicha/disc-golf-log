@@ -4,9 +4,9 @@ import { deleteCourse, getAllCourses, renameCourse } from "../data_handling/cour
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
-import OptionsList from "./OptionsList/OptionsList";
-import OptionsListButton from "./Modals/ModalComponents/ModalButton";
-import OptionsListTitle from "./Modals/ModalComponents/ModalTitle";
+import MenuModal from "./Modals/Frames/MenuModal";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
+import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
 
 function LogComponent() {
@@ -37,30 +37,30 @@ function LogComponent() {
         <>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
-                    <OptionsListTitle>Rename</OptionsListTitle>
+                    <ModalTitle>Rename</ModalTitle>
                 </RenameModal> :
                 <>
                 {showOptionsCourse ?
-                    <OptionsList onClose={() => {setShowOptionsCourse(null)}}>
-                        <OptionsListTitle>{showOptionsCourse.name}</OptionsListTitle>
-                        <OptionsListButton onClick={() => setShowRenameModal(true)} className="full-width black-text"
+                    <MenuModal onClose={() => {setShowOptionsCourse(null)}}>
+                        <ModalTitle>{showOptionsCourse.name}</ModalTitle>
+                        <ModalButton onClick={() => setShowRenameModal(true)} className="full-width black-text"
                             onChange={(event) => {
                                 setRenameModalInputValue(event.target.value);
                         }}>Rename
-                        </OptionsListButton>                    
-                        <OptionsListButton className="full-width black-text" onClick={() => {
+                        </ModalButton>                    
+                        <ModalButton className="full-width black-text" onClick={() => {
                             alert("This feature is under construction!");
                         }}>
                             Adjust date
-                        </OptionsListButton>
-                        <OptionsListButton onClick={() => {
+                        </ModalButton>
+                        <ModalButton onClick={() => {
                             deleteCourse(showOptionsCourse);
                             // Update the list of courses
                             setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
                             setShowOptionsCourse(null);
                         }} className="full-width caution-button">Delete
-                        </OptionsListButton>
-                    </OptionsList> : null
+                        </ModalButton>
+                    </MenuModal> : null
                 }
                 </>
             }
