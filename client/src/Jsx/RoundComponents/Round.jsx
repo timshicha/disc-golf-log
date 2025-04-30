@@ -3,7 +3,7 @@ import RoundBox from "./RoundBox";
 import { getRoundTotal, updateRoundScore } from "../../data_handling/round";
 import TripleDotButton from "../Components/TripleDotButton";
 import "../../css/general.css";
-import { dateToString } from "../../js_utils/formatting";
+import { formatDate } from "../../js_utils/formatting";
 
 class Round extends React.Component {
     constructor (props) {
@@ -20,7 +20,7 @@ class Round extends React.Component {
             props: props
         }
 
-        this.onOpenOptionsList = props.onOpenOptionsList;
+        this.onOpenModal = props.onOpenModal;
     }
 
     recalculateTotal = () => {
@@ -80,12 +80,12 @@ class Round extends React.Component {
                         height: "15px",
                         float: "right"
                     }} onClick={() => {
-                        this.onOpenOptionsList();
+                        this.onOpenModal();
                     }}></TripleDotButton>
                     <div style={{
                         float: "right",
                         marginRight: "4px"
-                    }}>{dateToString(this.state.round.date)}</div>
+                    }}>{formatDate(this.state.round.date)}</div>
                 </div>
                 <div style={{
                     display: "inline-block",

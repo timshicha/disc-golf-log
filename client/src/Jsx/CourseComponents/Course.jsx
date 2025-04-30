@@ -1,5 +1,5 @@
 import React from "react";
-import { addRound, deleteRound, getCourseRounds } from "../../data_handling/round";
+import { addRound, deleteRound, getCourseRounds, updateRoundDate } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../Components/BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
@@ -7,6 +7,7 @@ import "../../css/general.css";
 import MenuModal from "../Modals/Frames/MenuModal";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import ModalTitle from "../Modals/ModalComponents/ModalTitle";
+import DateInputModal from "../Modals/DateInputModal";
 
 class Course extends React.Component{
     constructor (props) {
@@ -20,7 +21,8 @@ class Course extends React.Component{
             rounds: [],
             // Which round the options list is opened for,
             // if it is open
-            roundSelectedIndex: null
+            roundSelectedIndex: null,
+            showDateInputModal: false
         };
 
     }
@@ -40,25 +42,49 @@ class Course extends React.Component{
 
     render = () => {
         return (
-            <>
-            {this.state.roundSelectedIndex !== null ?
-                <MenuModal onClose={() => {
-                    this.setState({roundSelectedIndex: null});
-                }}>
-                    <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                    <ModalButton onClick={() => {
-                        console.log("Deleting round");
-                        deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
-                        this.setState({
-                            rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
-                            roundSelectedIndex: null
-                        })
+        <>
+            {/* If the date input modal is shown */}
+            {this.state.showDateInputModal ?
+                <DateInputModal onSubmit={(newDate) => {
+                        // Make sure new date is not null
+                        if(newDate) {
+                            updateRoundDate(this.state.rounds[this.state.roundSelectedIndex], newDate);
+                            this.setState({
+                                showDateInputModal: false,
+                                roundSelectedIndex: null
+                            });
+                        }
+                    }}
+                    onClose={() => {
+                        this.setState({showDateInputModal: false});
+                    }}
+                >
+                </DateInputModal> :
+                <>
+                {/* Otherwise, if a round is selected, show the option modal. */}
+                {this.state.roundSelectedIndex !== null &&
+                    <MenuModal onClose={() => {
+                        this.setState({roundSelectedIndex: null});
+                    }}>
+                        <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
+                        <ModalButton className="full-width black-text" onClick={() => {
+                                this.setState({showDateInputModal: true});
+                            }}>Adjust date
+                        </ModalButton>
+                        <ModalButton onClick={() => {
+                            console.log("Deleting round");
+                            deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
+                            this.setState({
+                                rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
+                                roundSelectedIndex: null
+                            })
 
-                        this.forceUpdate();
+                            this.forceUpdate();
 
-                    }} className="full-width caution-button">Delete round</ModalButton>
-                </MenuModal> :
-                null
+                        }} className="full-width caution-button">Delete round</ModalButton>
+                    </MenuModal>
+                }
+                </>
             }
             <input type="image" onClick={this.onBackClick}
                 src={backCarrot} style={{
@@ -75,7 +101,7 @@ class Course extends React.Component{
                     <Round round={round} key={round.id} index={index}
                         // When the user clicks on the triple dot icon
                         // on this round
-                        onOpenMenuModal={() => {
+                        onOpenModal={() => {
                             this.setState({
                                 roundSelectedIndex: index
                             });

@@ -1,12 +1,12 @@
+import { dateToFormattedString } from "../js_utils/formatting";
 import db from "./db";
 
 // Add round to course
-const addRound = (course) => {
-    console.log(course);
+const addRound = (course) => {  
     db.rounds.add({
         courseID: course.id,
         score: new Array(parseInt(course.holes)).fill(""),
-        date: new Date()
+        date: dateToFormattedString(new Date())
     });
 }
 
@@ -24,6 +24,13 @@ const updateRoundScore = (round, index, newValue) => {
     round.score[index] = newValue;
     db.rounds.update(round.id, {
         score: round.score
+    });
+}
+
+const updateRoundDate = (round, newDate) => {
+    round.date = newDate;
+    db.rounds.update(round.id, {
+        date: round.date
     });
 }
 
@@ -49,4 +56,4 @@ const deleteRoundsByCourseID = (courseID) => {
     db.rounds.where("courseID").equals(courseID).delete();
 }
 
-export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, getRoundTotal, deleteRound, deleteRoundsByCourseID };
+export { addRound, getCourseRounds, replaceRoundScore, updateRoundScore, updateRoundDate, getRoundTotal, deleteRound, deleteRoundsByCourseID };

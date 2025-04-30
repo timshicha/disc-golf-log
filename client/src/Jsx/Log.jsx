@@ -48,11 +48,6 @@ function LogComponent() {
                                 setRenameModalInputValue(event.target.value);
                         }}>Rename
                         </ModalButton>                    
-                        <ModalButton className="full-width black-text" onClick={() => {
-                            alert("This feature is under construction!");
-                        }}>
-                            Adjust date
-                        </ModalButton>
                         <ModalButton onClick={() => {
                             deleteCourse(showOptionsCourse);
                             // Update the list of courses
