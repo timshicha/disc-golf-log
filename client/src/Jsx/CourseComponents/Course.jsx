@@ -5,8 +5,8 @@ import BlueButton from "../BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
 import OptionsList from "../OptionsList/OptionsList";
-import OptionsListButton from "../OptionsList/OptionsListButton";
-import OptionsListTitle from "../OptionsList/OptionsListTitle";
+import OptionsListButton from "../Modals/ModalComponents/ModalButton";
+import OptionsListTitle from "../Modals/ModalComponents/ModalTitle";
 
 class Course extends React.Component{
     constructor (props) {

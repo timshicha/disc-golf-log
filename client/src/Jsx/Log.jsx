@@ -5,9 +5,9 @@ import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
 import OptionsList from "./OptionsList/OptionsList";
-import OptionsListButton from "./OptionsList/OptionsListButton";
-import OptionsListTitle from "./OptionsList/OptionsListTitle";
-import RenameModal from "./CourseComponents/RenameModal";
+import OptionsListButton from "./Modals/ModalComponents/ModalButton";
+import OptionsListTitle from "./Modals/ModalComponents/ModalTitle";
+import RenameModal from "./Modals/RenameModal";
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);

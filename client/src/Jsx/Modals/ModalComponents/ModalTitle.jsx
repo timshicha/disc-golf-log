@@ -1,10 +1,10 @@
 import React from "react";
 
-const OptionsListTitle = (props) => {
+const ModalTitle = (props) => {
 
     return (
         <div className="options-list-title" {...props}></div>
     );
 }
 
-export default OptionsListTitle;
+export default ModalTitle;
