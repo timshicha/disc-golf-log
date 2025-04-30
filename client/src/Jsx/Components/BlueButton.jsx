@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/general.css";
+import "../../css/general.css";
 
 class BlueButton extends React.Component {
     constructor (props) {

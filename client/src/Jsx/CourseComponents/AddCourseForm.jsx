@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
-import BlueButton from "../BlueButton";
+import BlueButton from "../Components/BlueButton";
 
 class AddCourseForm extends React.Component {
     constructor (props) {

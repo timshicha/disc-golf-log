@@ -1,7 +1,7 @@
 import React from "react";
 import RoundBox from "./RoundBox";
 import { getRoundTotal, updateRoundScore } from "../../data_handling/round";
-import TripleDotButton from "../TripleDotButton";
+import TripleDotButton from "../Components/TripleDotButton";
 import "../../css/general.css";
 import { dateToString } from "../../js_utils/formatting";
 

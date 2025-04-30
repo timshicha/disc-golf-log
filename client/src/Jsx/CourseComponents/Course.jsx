@@ -1,12 +1,12 @@
 import React from "react";
 import { addRound, deleteRound, getCourseRounds } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
-import BlueButton from "../BlueButton";
+import BlueButton from "../Components/BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
 import "../../css/general.css";
-import OptionsList from "../Modals/Frames/MenuModal";
-import OptionsListButton from "../Modals/ModalComponents/ModalButton";
-import OptionsListTitle from "../Modals/ModalComponents/ModalTitle";
+import MenuModal from "../Modals/Frames/MenuModal";
+import ModalButton from "../Modals/ModalComponents/ModalButton";
+import ModalTitle from "../Modals/ModalComponents/ModalTitle";
 
 class Course extends React.Component{
     constructor (props) {
@@ -42,11 +42,11 @@ class Course extends React.Component{
         return (
             <>
             {this.state.roundSelectedIndex !== null ?
-                <OptionsList onClose={() => {
+                <MenuModal onClose={() => {
                     this.setState({roundSelectedIndex: null});
                 }}>
-                    <OptionsListTitle>Round {this.state.roundSelectedIndex + 1}</OptionsListTitle>
-                    <OptionsListButton onClick={() => {
+                    <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
+                    <ModalButton onClick={() => {
                         console.log("Deleting round");
                         deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
                         this.setState({
@@ -56,8 +56,8 @@ class Course extends React.Component{
 
                         this.forceUpdate();
 
-                    }} className="full-width caution-button">Delete round</OptionsListButton>
-                </OptionsList> :
+                    }} className="full-width caution-button">Delete round</ModalButton>
+                </MenuModal> :
                 null
             }
             <input type="image" onClick={this.onBackClick}
@@ -75,7 +75,7 @@ class Course extends React.Component{
                     <Round round={round} key={round.id} index={index}
                         // When the user clicks on the triple dot icon
                         // on this round
-                        onOpenOptionsList={() => {
+                        onOpenMenuModal={() => {
                             this.setState({
                                 roundSelectedIndex: index
                             });

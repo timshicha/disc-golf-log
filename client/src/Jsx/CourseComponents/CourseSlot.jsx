@@ -1,5 +1,5 @@
 import React from "react";
-import TripleDotButton from "../TripleDotButton";
+import TripleDotButton from "../Components/TripleDotButton";
 
 class CourseSlot extends React.Component{
     constructor (props) {
