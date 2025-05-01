@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
 import { deleteCourse, getAllCourses, renameCourse } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
@@ -8,6 +8,8 @@ import MenuModal from "./Modals/Frames/MenuModal";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
+import Dropdown from "./Modals/Frames/Dropdown";
+import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -15,6 +17,8 @@ function LogComponent() {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showOptionsCourse, setShowOptionsCourse] = useState(null);
     const [showRenameModal, setShowRenameModal] = useState(false);
+
+    const sortByDropdownRef = useRef(null);
     useEffect(() => {
         reloadCourses();
     }, []);
@@ -66,6 +70,15 @@ function LogComponent() {
             : // If no course selected, show list of courses
                 <>
                 <h1 className="h-main">My Courses</h1>
+                <Dropdown ref={sortByDropdownRef} className="reorder-courses-dropdown" onChange={() => {
+                    // console.log(sortByDropdownRef.current.getValue());
+                    alert("This feature is under construction!");
+                }}>
+                    <DropdownOption value="As ordered">As ordered</DropdownOption>
+                    <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
+                    <DropdownOption value="Most often played">Most often played</DropdownOption>
+                    <DropdownOption value="Most recently played">Most recently played</DropdownOption>
+                </Dropdown>
                 {courses.length > 0
                 ? // If there are courses, show courses
                     <>
