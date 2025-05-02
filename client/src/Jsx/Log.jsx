@@ -21,13 +21,15 @@ function LogComponent() {
     // Using ref for state.
     // A callback is passed to a child component that depends on this value,
     // and ref allows the child to always have the current value.
-    const sortCourseBy = useRef("Alphabetical");
+    const sortCourseBy = useRef(localStorage.getItem("sortCoursesBy") || "Alphabetical");
 
     const sortByDropdownRef = useRef(null);
 
+    // Reload (load) on initial render
+    // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
         reloadCourses();
-    }, []);
+    }, [selectedCourse]);
 
     const reloadCourses = () => {
         getAllCourses().then(result => {
@@ -57,6 +59,8 @@ function LogComponent() {
         setShowRenameModal(false);
         // Also close options modal
         setShowOptionsCourse(null);
+        // Reload courses (order of courses may need to change)
+        reloadCourses();
     }
 
     return (
@@ -92,10 +96,11 @@ function LogComponent() {
             : // If no course selected, show list of courses
                 <>
                 <h1 className="h-main">My Courses</h1>
-                <Dropdown ref={sortByDropdownRef} className="reorder-courses-dropdown" onChange={() => {
+                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
                     // console.log(sortByDropdownRef.current.getValue());
                     const newSortBy = sortByDropdownRef.current?.getValue();
                     if(newSortBy) {
+                        localStorage.setItem("sortCoursesBy", newSortBy);
                         sortCourseBy.current = newSortBy;
                         reloadCourses();
                     }

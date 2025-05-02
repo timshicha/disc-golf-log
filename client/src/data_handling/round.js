@@ -23,7 +23,7 @@ const replaceRoundScore = (round, newScore) => {
         score: newScore
     });
     // Update the course "modified" time
-    db.courses.update(course.id, {
+    db.courses.update(round.courseID, {
         modified: Date ()
     });
 }
@@ -34,7 +34,7 @@ const updateRoundScore = (round, index, newValue) => {
         score: round.score
     });
     // Update the course "modified" time
-    db.courses.update(course.id, {
+    db.courses.update(round.courseID, {
         modified: Date ()
     });
 }
@@ -45,7 +45,7 @@ const updateRoundDate = (round, newDate) => {
         date: round.date
     });
     // Update the course "modified" time
-    db.courses.update(course.id, {
+    db.courses.update(round.courseID, {
         modified: Date ()
     });
 }
@@ -66,7 +66,7 @@ const getRoundTotal = (round) => {
 const deleteRound = (round) => {
     db.rounds.delete(round.id);
     // Update the course "modified" time
-    db.courses.update(course.id, {
+    db.courses.update(round.courseID, {
         modified: Date ()
     });
 };
