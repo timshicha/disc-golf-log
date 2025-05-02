@@ -10,6 +10,7 @@ import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
 import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
+import { compareDates, compareStrings } from "../js_utils/sorting";
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -17,14 +18,35 @@ function LogComponent() {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showOptionsCourse, setShowOptionsCourse] = useState(null);
     const [showRenameModal, setShowRenameModal] = useState(false);
+    // Using ref for state.
+    // A callback is passed to a child component that depends on this value,
+    // and ref allows the child to always have the current value.
+    const sortCourseBy = useRef("Alphabetical");
 
     const sortByDropdownRef = useRef(null);
+
     useEffect(() => {
         reloadCourses();
     }, []);
 
     const reloadCourses = () => {
-        getAllCourses().then(result => setCourses(result));
+        getAllCourses().then(result => {
+            console.log(sortCourseBy.current);
+            // If sort alphabetically
+            if(sortCourseBy.current === "Alphabetical") {
+                console.log("sort: alpha");
+                result = result.sort((a, b) => compareStrings(a.name, b.name));
+            }
+            // // If sort by most recently added first
+            // else if(sortCourseBy.current === "Recently added") {
+            //     result = result.reverse();
+            // }
+            else if(sortCourseBy.current === "Recently modified") {
+                result = result.sort((a, b) => compareDates(b.modified, a.modified));
+            }
+            console.log(result);
+            setCourses(result);
+        });
     }
 
     const handleRenameCourse = (event) => {
@@ -72,12 +94,15 @@ function LogComponent() {
                 <h1 className="h-main">My Courses</h1>
                 <Dropdown ref={sortByDropdownRef} className="reorder-courses-dropdown" onChange={() => {
                     // console.log(sortByDropdownRef.current.getValue());
-                    alert("This feature is under construction!");
+                    const newSortBy = sortByDropdownRef.current?.getValue();
+                    if(newSortBy) {
+                        sortCourseBy.current = newSortBy;
+                        reloadCourses();
+                    }
                 }}>
-                    <DropdownOption value="As ordered">As ordered</DropdownOption>
                     <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                    <DropdownOption value="Most often played">Most often played</DropdownOption>
-                    <DropdownOption value="Most recently played">Most recently played</DropdownOption>
+                    <DropdownOption value="Recently modified">Recently modified</DropdownOption>
+                    {/* <DropdownOption value="Recently added">Recently added</DropdownOption> */}
                 </Dropdown>
                 {courses.length > 0
                 ? // If there are courses, show courses

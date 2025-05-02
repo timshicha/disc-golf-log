@@ -8,6 +8,10 @@ const addRound = (course) => {
         score: new Array(parseInt(course.holes)).fill(""),
         date: dateToFormattedString(new Date())
     });
+    // Update the course "modified" time
+    db.courses.update(course.id, {
+        modified: Date ()
+    });
 }
 
 const getCourseRounds = (course) => {
@@ -18,6 +22,10 @@ const replaceRoundScore = (round, newScore) => {
     db.rounds.update(round.id, {
         score: newScore
     });
+    // Update the course "modified" time
+    db.courses.update(course.id, {
+        modified: Date ()
+    });
 }
 
 const updateRoundScore = (round, index, newValue) => {
@@ -25,12 +33,20 @@ const updateRoundScore = (round, index, newValue) => {
     db.rounds.update(round.id, {
         score: round.score
     });
+    // Update the course "modified" time
+    db.courses.update(course.id, {
+        modified: Date ()
+    });
 }
 
 const updateRoundDate = (round, newDate) => {
     round.date = newDate;
     db.rounds.update(round.id, {
         date: round.date
+    });
+    // Update the course "modified" time
+    db.courses.update(course.id, {
+        modified: Date ()
     });
 }
 
@@ -49,7 +65,10 @@ const getRoundTotal = (round) => {
 
 const deleteRound = (round) => {
     db.rounds.delete(round.id);
-    return round.id;
+    // Update the course "modified" time
+    db.courses.update(course.id, {
+        modified: Date ()
+    });
 };
 
 const deleteRoundsByCourseID = (courseID) => {

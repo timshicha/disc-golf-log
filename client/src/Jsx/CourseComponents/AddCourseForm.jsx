@@ -27,11 +27,12 @@ class AddCourseForm extends React.Component {
             return;
         }
         // Add to Dexie
-        addCourse(nameElement.value, numberOfHoles);
-        nameElement.value = "";
-        holesElement.value = "";
-        this.setState({showForm: false});
-        this.callback();
+        addCourse(nameElement.value, numberOfHoles).then(() => {
+            nameElement.value = "";
+            holesElement.value = "";
+            this.setState({showForm: false});
+            this.callback();
+        });
     }
 
     componentDidUpdate = () => {

@@ -3,9 +3,10 @@ import { deleteRoundsByCourseID } from "./round";
 
 // Add a course to Dexie
 const addCourse = (name, holes) => {
-    db.courses.add({
+    return db.courses.add({
         name: name,
-        holes: holes
+        holes: holes,
+        modified: Date ()
     });
 }
 
@@ -19,7 +20,8 @@ const getAllCourses = () => {
 
 const renameCourse = (course, newName) => {
     db.courses.update(course.id, {
-        name: newName
+        name: newName,
+        modified: Date ()
     });
     return newName;
 }
