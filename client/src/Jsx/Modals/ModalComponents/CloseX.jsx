@@ -1,5 +1,5 @@
 import React from "react";
-import whiteX from "../../assets/images/whiteX.png";
+import whiteX from "../../../assets/images/whiteX.png";
 
 
 class CloseX extends React.Component {

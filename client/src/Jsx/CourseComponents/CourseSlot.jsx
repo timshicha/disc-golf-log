@@ -1,5 +1,5 @@
 import React from "react";
-import TripleDotButton from "../TripleDotButton";
+import TripleDotButton from "../Components/TripleDotButton";
 
 class CourseSlot extends React.Component{
     constructor (props) {
@@ -11,6 +11,7 @@ class CourseSlot extends React.Component{
             course: props.course
         };
 
+        this.props = props;
         this.onOpenOptionsList = props.onOpenOptionsList;
     }
 
@@ -48,11 +49,11 @@ class CourseSlot extends React.Component{
                 <div style={{
                     fontSize: "12px"
                 }}>
-                    {this.state.course.holes === 1
+                    {this.props.rounds === 1
                     ?
-                    <>1 hole</>
+                    <>Played 1 time</>
                     :
-                    <>{this.state.course.holes} holes</>
+                    <>Played {this.props.rounds} times</>
                     }
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-class OptionsListButton extends React.Component {
+class ModalButton extends React.Component {
     constructor (props) {
         super ();
 
@@ -16,4 +16,4 @@ class OptionsListButton extends React.Component {
     }
 }
 
-export default OptionsListButton;
+export default ModalButton;

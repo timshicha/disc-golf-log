@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
-import BlueButton from "../BlueButton";
-import AddItemForm from "../AddItemForm";
+import BlueButton from "../Components/BlueButton";
 
 class AddCourseForm extends React.Component {
     constructor (props) {
@@ -28,11 +27,12 @@ class AddCourseForm extends React.Component {
             return;
         }
         // Add to Dexie
-        addCourse(nameElement.value, numberOfHoles);
-        nameElement.value = "";
-        holesElement.value = "";
-        this.setState({showForm: false});
-        this.callback();
+        addCourse(nameElement.value, numberOfHoles).then(() => {
+            nameElement.value = "";
+            holesElement.value = "";
+            this.setState({showForm: false});
+            this.callback();
+        }).catch((error) => console.log(error));
     }
 
     componentDidUpdate = () => {
@@ -54,7 +54,11 @@ class AddCourseForm extends React.Component {
             <>
                 {this.state.showForm
                 ? // Show form to add a course
-                    <AddItemForm onSubmit={this.onAddCourseSubmit}>
+                    <form onSubmit={this.onAddCourseSubmit} style={{
+                        width: "90%",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                    }} className="form-main">
                         <div className="form-input-block">
                             <label htmlFor="name">Name: </label>
                             <input type="text" name="name" id="name" style={{
@@ -84,7 +88,7 @@ class AddCourseForm extends React.Component {
                                 display: "inline-block"
                             }}>Cancel</BlueButton>
                         </div>
-                    </AddItemForm>
+                    </form>
                 : // Show button to add course
                     <BlueButton onClick={() => {this.setState({showForm: true})}}>New Course</BlueButton>
                 }

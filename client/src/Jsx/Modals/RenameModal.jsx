@@ -1,9 +1,8 @@
 import React, { createRef } from "react";
-import "../../css/OptionsList.css";
+import "../../css/optionsList.css";
 import "../../css/forms.css";
-import OptionsListButton from "../OptionsList/OptionsListButton";
-import OptionsList from "../OptionsList/OptionsList";
-import CloseX from "./CloseX";
+import FormModal from "./Frames/FormModal";
+import ModalButton from "./ModalComponents/ModalButton";
 
 class RenameModal extends React.Component {
     constructor (props) {
@@ -29,14 +28,13 @@ class RenameModal extends React.Component {
     render = () => {
         return (
             <>
-            <OptionsList {...this.props}>
-                <CloseX onClick={this.props.onClose}></CloseX>
+            <FormModal {...this.props}>
                 {this.props.children}
                 <label htmlFor="name"></label>
                 <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
-                <OptionsListButton className="half-width-button mx-5" type="submit">Apply</OptionsListButton>
-                <OptionsListButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</OptionsListButton>
-            </OptionsList>
+                <ModalButton className="half-width-button mx-5" type="submit">Apply</ModalButton>
+                <ModalButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</ModalButton>
+            </FormModal>
 
             </>
         );

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import tripleDotImg from "../assets/images/tripleDot.svg";
+import tripleDotImg from "../../assets/images/tripleDot.svg";
 
 class TripleDotButton extends React.Component {
     constructor (props) {
