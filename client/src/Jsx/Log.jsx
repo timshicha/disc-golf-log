@@ -12,13 +12,6 @@ import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 
-// Initial setup: read localStorage flags to see what hasn't been done
-if(!localStorage.getItem("updatedRoundCounts")) {
-    updateRoundCounts();
-    console.log("Updated round counts");
-    localStorage.setItem("updatedRoundCounts", Date ());
-}
-
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -36,8 +29,16 @@ function LogComponent() {
     // Reload (load) on initial render
     // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
-        console.log("reloading");
-        reloadCourses();
+        // If calculations for rounds per course haven't been made
+        if(!localStorage.getItem("updatedRoundCounts")) {
+            updateRoundCounts().then(() => {
+                localStorage.setItem("updatedRoundCounts", Date ());
+                reloadCourses();
+            });
+        }
+        else {
+            reloadCourses();
+        }
     }, [selectedCourse]);
 
     const reloadCourses = () => {
