@@ -9,8 +9,10 @@ const addRound = (course) => {
         date: dateToFormattedString(new Date())
     });
     // Update the course "modified" time
-    db.courses.update(course.id, {
-        modified: Date ()
+    return db.courses.where("id").equals(course.id).modify(course => {
+        course.modified = Date ();
+        if(!course.rounds) course.rounds = 0;
+        course.rounds++;
     });
 }
 
@@ -66,8 +68,9 @@ const getRoundTotal = (round) => {
 const deleteRound = (round) => {
     db.rounds.delete(round.id);
     // Update the course "modified" time
-    db.courses.update(round.courseID, {
-        modified: Date ()
+    return db.courses.where("id").equals(round.courseID).modify(course => {
+        course.modified = Date ();
+        if(course.rounds) course.rounds--;
     });
 };
 

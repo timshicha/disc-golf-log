@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import { deleteCourse, getAllCourses, renameCourse } from "../data_handling/course";
+import { deleteCourse, getAllCourses, renameCourse, updateRoundCounts } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
@@ -11,6 +11,14 @@ import RenameModal from "./Modals/RenameModal";
 import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
+
+// Initial setup: read localStorage flags to see what hasn't been done
+if(!localStorage.getItem("updatedRoundCounts")) {
+    updateRoundCounts();
+    console.log("Updated round counts");
+    localStorage.setItem("updatedRoundCounts", Date ());
+}
+
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -45,6 +53,10 @@ function LogComponent() {
             // }
             else if(sortCourseBy.current === "Recently modified") {
                 result = result.sort((a, b) => compareDates(b.modified, a.modified));
+            }
+            else if(sortCourseBy.current === "Most played") {
+                // Update round counts
+                result = result.sort((a, b) => compareStrings(b.rounds, a.rounds));
             }
             console.log(result);
             setCourses(result);
@@ -107,7 +119,7 @@ function LogComponent() {
                 }}>
                     <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
                     <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                    {/* <DropdownOption value="Recently added">Recently added</DropdownOption> */}
+                    <DropdownOption value="Most played">Most played</DropdownOption>
                 </Dropdown>
                 {courses.length > 0
                 ? // If there are courses, show courses
