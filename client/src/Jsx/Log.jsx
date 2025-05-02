@@ -36,21 +36,16 @@ function LogComponent() {
     // Reload (load) on initial render
     // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
+        console.log("reloading");
         reloadCourses();
     }, [selectedCourse]);
 
     const reloadCourses = () => {
         getAllCourses().then(result => {
-            console.log(sortCourseBy.current);
             // If sort alphabetically
             if(sortCourseBy.current === "Alphabetical") {
-                console.log("sort: alpha");
                 result = result.sort((a, b) => compareStrings(a.name, b.name));
             }
-            // // If sort by most recently added first
-            // else if(sortCourseBy.current === "Recently added") {
-            //     result = result.reverse();
-            // }
             else if(sortCourseBy.current === "Recently modified") {
                 result = result.sort((a, b) => compareDates(b.modified, a.modified));
             }
@@ -58,7 +53,6 @@ function LogComponent() {
                 // Update round counts
                 result = result.sort((a, b) => compareStrings(b.rounds, a.rounds));
             }
-            console.log(result);
             setCourses(result);
         });
     }
@@ -109,7 +103,6 @@ function LogComponent() {
                 <>
                 <h1 className="h-main">My Courses</h1>
                 <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
-                    // console.log(sortByDropdownRef.current.getValue());
                     const newSortBy = sortByDropdownRef.current?.getValue();
                     if(newSortBy) {
                         localStorage.setItem("sortCoursesBy", newSortBy);
@@ -128,6 +121,7 @@ function LogComponent() {
                         return (
                             <CourseSlot course={course}
                                 key={course.name}
+                                rounds={course.rounds}
                                 onClick={() => {
                                     setSelectedCourse(course);
                                 }}

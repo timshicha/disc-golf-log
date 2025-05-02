@@ -6,7 +6,8 @@ const addCourse = (name, holes) => {
     return db.courses.add({
         name: name,
         holes: holes,
-        modified: Date ()
+        modified: Date (),
+        rounds: 0
     });
 }
 
