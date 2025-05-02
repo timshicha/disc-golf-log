@@ -32,7 +32,7 @@ class AddCourseForm extends React.Component {
             holesElement.value = "";
             this.setState({showForm: false});
             this.callback();
-        });
+        }).catch((error) => console.log(error));
     }
 
     componentDidUpdate = () => {

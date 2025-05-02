@@ -3,11 +3,20 @@ import { deleteRoundsByCourseID } from "./round";
 
 // Add a course to Dexie
 const addCourse = (name, holes) => {
-    return db.courses.add({
-        name: name,
-        holes: holes,
-        modified: Date (),
-        rounds: 0
+    // Don't allow duplicates
+    return db.courses.where("name").equals(name).first().then(result => {
+        // If name already exists
+        if(result) {
+            return new Promise((resolve, reject) => {
+                reject("A course with this name already exists!");
+            });
+        }
+        return db.courses.add({
+            name: name,
+            holes: holes,
+            modified: Date (),
+            rounds: 0
+        });
     });
 }
 
@@ -20,11 +29,19 @@ const getAllCourses = () => {
 }
 
 const renameCourse = (course, newName) => {
-    db.courses.update(course.id, {
-        name: newName,
-        modified: Date ()
+    // Don't allow duplicates
+    return db.courses.where("name").equals(newName).first().then(result => {
+        // If name already exists
+        if(result) {
+            return new Promise((resolve, reject) => {
+                reject("A course with this name already exists!");
+            });
+        }
+        return db.courses.update(course.id, {
+            name: newName,
+            modified: Date ()
+        });
     });
-    return newName;
 }
 
 const deleteCourse = (course) => {

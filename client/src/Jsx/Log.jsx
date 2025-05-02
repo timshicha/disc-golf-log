@@ -61,12 +61,16 @@ function LogComponent() {
         event.preventDefault();
         const newName = event.target.name.value;
         showOptionsCourse.name = newName;
-        renameCourse(showOptionsCourse, newName);
-        setShowRenameModal(false);
-        // Also close options modal
-        setShowOptionsCourse(null);
-        // Reload courses (order of courses may need to change)
-        reloadCourses();
+        renameCourse(showOptionsCourse, newName).then(result => {
+            // If rename successful
+            setShowRenameModal(false);
+            // Also close options modal
+            setShowOptionsCourse(null);
+            // Reload courses (order of courses may need to change)
+            reloadCourses();
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     return (
