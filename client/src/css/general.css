@@ -113,3 +113,16 @@
     margin-left: 5px;
     margin-right: 5px;
 }
+
+#rounds-div {
+    height: calc(70vh);
+    overflow-y: scroll;
+    overflow-anchor: bottom;
+}
+
+.fixed-bottom-button {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}

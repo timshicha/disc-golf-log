@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { addRound, deleteRound, getCourseRounds, updateRoundDate } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../Components/BlueButton";
@@ -15,6 +15,8 @@ class Course extends React.Component{
 
         this.onClick = props.onClick;
         this.onBackClick = props.onBackClick;
+
+        this.roundsDivRef = createRef(null);
 
         this.state = {
             course: props.course,
@@ -38,6 +40,13 @@ class Course extends React.Component{
         getCourseRounds(this.state.course).then(result => {
             this.setState({rounds: result});
         });
+    }
+
+    scrollToBottom = () => {
+        if(this.roundsDivRef.current) {
+            console.log("scrolling")
+            this.roundsDivRef.current.scrollTop = this.roundsDivRef.current.scrollHeight;
+        }
     }
 
     render = () => {
@@ -96,24 +105,28 @@ class Course extends React.Component{
                 borderRadius: "7px"
             }}></input>
             <h1 className="h-main">{this.state.course.name}</h1>
-            {this.state.rounds.map((round, index) => {
-                return (
-                    <Round round={round} key={round.id} index={index}
-                        // When the user clicks on the triple dot icon
-                        // on this round
-                        onOpenModal={() => {
-                            this.setState({
-                                roundSelectedIndex: index
-                            });
-                        }}
-                    >
-                    </Round>
-                );
-            })}
+            <div id="rounds-div" ref={this.roundsDivRef}>
+                {this.state.rounds.map((round, index) => {
+                    return (
+                        <Round round={round} key={round.id} index={index}
+                            // When the user clicks on the triple dot icon
+                            // on this round
+                            onOpenModal={() => {
+                                this.setState({
+                                    roundSelectedIndex: index
+                                });
+                            }}
+                        >
+                        </Round>
+                    );
+                })}
+            </div>
             <BlueButton onClick={() => {
                 addRound(this.state.course);
                 this.reloadCourseRounds();
-            }} className="margin-top-10">Add Round</BlueButton>
+                // Scroll to bottom
+                this.scrollToBottom();
+            }} className="margin-top-10 fixed-bottom-button">Add Round</BlueButton>
         </>
         );
     }
