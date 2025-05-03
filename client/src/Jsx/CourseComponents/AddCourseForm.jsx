@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
+import ModalButton from "../Modals/ModalComponents/ModalButton";
 
 class AddCourseForm extends React.Component {
     constructor (props) {
@@ -72,21 +73,9 @@ class AddCourseForm extends React.Component {
                                 width: "40px",
                             }}></input>
                         </div>
-                        <div style={{
-                            display: "block",
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            width: "fit-content"
-                        }}>
-                            <BlueButton type="submit" style={{
-                                margin: "10px",
-                                display: "inline-block"
-                            }}>Add course</BlueButton>
-                            <BlueButton onClick={this.onCancel} style={{
-                                margin: "10px",
-                                backgroundColor: "gray",
-                                display: "inline-block"
-                            }}>Cancel</BlueButton>
+                        <div>
+                            <ModalButton onClick={this.onCancel} className="half-width-button gray-background mx-5">Cancel</ModalButton>
+                            <ModalButton type="submit" className="half-width-button blue-background mx-5">Add course</ModalButton>
                         </div>
                     </form>
                 : // Show button to add course

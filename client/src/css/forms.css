@@ -41,7 +41,6 @@
     border-radius: 7px;
     cursor: pointer;
     display: inline-block;
-    background-color: rgb(70, 70, 70);
     color: white;
 }
 
@@ -69,6 +68,7 @@
 
 .form-input-block {
     display: block;
+    text-align: left;
 }
 
 .adjust-date-input {

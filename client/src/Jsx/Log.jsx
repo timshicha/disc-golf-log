@@ -12,13 +12,6 @@ import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 
-// Initial setup: read localStorage flags to see what hasn't been done
-if(!localStorage.getItem("updatedRoundCounts")) {
-    updateRoundCounts();
-    console.log("Updated round counts");
-    localStorage.setItem("updatedRoundCounts", Date ());
-}
-
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -32,12 +25,21 @@ function LogComponent() {
     const sortCourseBy = useRef(localStorage.getItem("sortCoursesBy") || "Alphabetical");
 
     const sortByDropdownRef = useRef(null);
+    const renameModalRef = useRef(null);
 
     // Reload (load) on initial render
     // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
-        console.log("reloading");
-        reloadCourses();
+        // If calculations for rounds per course haven't been made
+        if(!localStorage.getItem("updatedRoundCounts")) {
+            updateRoundCounts().then(() => {
+                localStorage.setItem("updatedRoundCounts", Date ());
+                reloadCourses();
+            });
+        }
+        else {
+            reloadCourses();
+        }
     }, [selectedCourse]);
 
     const reloadCourses = () => {
@@ -76,17 +78,16 @@ function LogComponent() {
     return (
         <>
             {showRenameModal ?
-                <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)}>
+                <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
                 </RenameModal> :
                 <>
                 {showOptionsCourse ?
                     <MenuModal onClose={() => {setShowOptionsCourse(null)}}>
                         <ModalTitle>{showOptionsCourse.name}</ModalTitle>
-                        <ModalButton onClick={() => setShowRenameModal(true)} className="full-width black-text"
-                            onChange={(event) => {
-                                setRenameModalInputValue(event.target.value);
-                        }}>Rename
+                        <ModalButton onClick={() => {
+                            setShowRenameModal(true);
+                        }} className="full-width black-text gray-background">Rename
                         </ModalButton>                    
                         <ModalButton onClick={() => {
                             deleteCourse(showOptionsCourse);
