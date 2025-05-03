@@ -44,7 +44,6 @@ class Course extends React.Component{
 
     scrollToBottom = () => {
         if(this.roundsDivRef.current) {
-            console.log("scrolling")
             this.roundsDivRef.current.scrollTop = this.roundsDivRef.current.scrollHeight;
         }
     }
