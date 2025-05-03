@@ -67,7 +67,7 @@ class Course extends React.Component{
                         this.setState({roundSelectedIndex: null});
                     }}>
                         <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                        <ModalButton className="full-width black-text" onClick={() => {
+                        <ModalButton className="full-width black-text gray-background" onClick={() => {
                                 this.setState({showDateInputModal: true});
                             }}>Adjust date
                         </ModalButton>

@@ -84,7 +84,7 @@ function LogComponent() {
                 {showOptionsCourse ?
                     <MenuModal onClose={() => {setShowOptionsCourse(null)}}>
                         <ModalTitle>{showOptionsCourse.name}</ModalTitle>
-                        <ModalButton onClick={() => setShowRenameModal(true)} className="full-width black-text"
+                        <ModalButton onClick={() => setShowRenameModal(true)} className="full-width black-text gray-background"
                             onChange={(event) => {
                                 setRenameModalInputValue(event.target.value);
                         }}>Rename

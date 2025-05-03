@@ -32,8 +32,8 @@ class RenameModal extends React.Component {
                 {this.props.children}
                 <label htmlFor="name"></label>
                 <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>
-                <ModalButton className="half-width-button mx-5" type="submit">Apply</ModalButton>
-                <ModalButton className="half-width-button mx-5" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</ModalButton>
+                <ModalButton className="half-width-button mx-5 gray-background" type="button" onClick={() => {this.setState({inputValue: ""})}}>Clear</ModalButton>
+                <ModalButton className="half-width-button mx-5 blue-background" type="submit">Apply</ModalButton>
             </FormModal>
 
             </>
