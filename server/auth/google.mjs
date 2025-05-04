@@ -10,59 +10,40 @@ const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 // When the user logs in with Google in the front end, they get a code which
 // is passed to the server. We use this function to convert the code for a
 // Google token (which can then be used to get user data);
-const exchangeGoogleCodeForToken = (code) => {
-    return new Promise((resolve, reject) => {
-        // Data to pass to Google API
-        const data = new URLSearchParams({
-            code,
+const exchangeGoogleCodeForToken = async (code) => {
+    const token_result = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            code: code,
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
             redirect_uri: "postmessage",
             grant_type: "authorization_code"
-        }).toString();
-
-        // Send request to Google API
-        const req = https.request(
-            {
-                method: "POST",
-                hostname: "oauth2.googleapis.com",
-                path: "/token",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Content-Length": Buffer.byteLength(data)
-                }
-            },
-            (res) => {
-                let body = "";
-                res.on("data", (chunk) => (body += chunk));
-                res.on("end", () => {
-                    if(res.statusCode >= 400) return reject(body);
-                    resolve(JSON.parse(body));
-                });
-            }
-        );
-
-        req.on("error", reject);
-        req.write(data);
-        req.end();
+        })
     });
+
+    if(!token_result.ok) {
+        throw new Error(`Google code to token exchange failed: ${await token_result.text()}`);
+    }
+
+    return token_result.json();
 }
 
-const fetchUserGoogleInfo = (google_access_token) => {
-    return new PromiseRejectionEvent((resolve, reject) => {
-        https.get(
-            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`,
-            (res) => {
-                let body = "";
-                res.on("data", (chunk) => (body += chunk));
-                res.on("end", () => {
-                    if(res.statusCode >= 400) {
-                        return reject(body);
-                    }
-                });
-            }
-        ).on("error", reject);
+const fetchUserGoogleInfo = async (google_access_token) => {
+    const user_result = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+        headers: {
+            Authorization: `Bearer ${google_access_token}`
+        }
     });
+
+    if(!user_result.ok) {
+        throw new Error(`Fetching Google user profile failed: ${await user_result.text()}`)
+    }
+
+    return user_result.json();
 }
 
 export { exchangeGoogleCodeForToken, fetchUserGoogleInfo };

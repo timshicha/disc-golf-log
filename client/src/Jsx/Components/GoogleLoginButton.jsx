@@ -10,7 +10,7 @@ const GoogleLoginButton = () => {
             const { code } = tokenResponse;
 
             try {
-                const res = await fetch(`${import.meta.env.VITE_SERVER_HOST}:${import.meta.env.VITE_SERVER_PORT}/auth/google`, {
+                const res = await fetch("http://localhost:3000/auth/google", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -27,6 +27,7 @@ const GoogleLoginButton = () => {
         onError: () => {
             console.log("Login failed.");
         },
+        // redirect_uri: "postmessage",
         scope: "email profile"
     });
 
