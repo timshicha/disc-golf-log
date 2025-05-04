@@ -1,33 +1,28 @@
-import { createServer } from "node:http";
+import express from "express";
+import cors from "cors";
 import { configDotenv } from "dotenv";
 import { loginAndGetToken } from "./req/users.mjs";
 
 configDotenv();
 const HOST = process.env.HOST;
 const PORT = process.env.PORT;
+const ENV = process.env.ENV
+const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
-const server = createServer (async (req, res) => {
-    console.log(req.url);
+const app = express();
+app.use(cors({
+    origin: ENV === "dev" ? "*" : CLIENT_HOSTNAME,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+app.use(express.json());
 
-    // Separate url path and url parameters
-    const url = new URL(req.url, `http://${req.headers.host}`);
-    req.pathname = url.pathname;
-    req.email = url.searchParams.get("email");
-
-    // If logging in (user wants a token)
-    if(req.method === "GET" && req.pathname === "/token") {
-        await loginAndGetToken(req, res);
-    }
-    // If not a valid request
-    else {
-        res.writeHead(400);
-        res.end(JSON.stringify({
-            error: "Invalid request!"
-        }));
-    }
+// If logging in (user wants a token)
+app.post("/auth/google", async (req, res) => {
+    console.log("Here");
+    res.writeHead(200);
+    res.end("Success");
 });
 
 // starts a simple http server locally on port 3000
-server.listen(PORT, HOST, () => {
-    console.log(`Listening at ${HOST}:${PORT}...`);
-});
+app.listen(PORT, () => console.log("Listening on 3000..."));

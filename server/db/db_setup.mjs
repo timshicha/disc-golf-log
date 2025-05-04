@@ -1,6 +1,5 @@
 // Supabase is used for postgres DB
 import postgres from "postgres";
-import dns from "dns";
 import { configDotenv } from "dotenv";
 
 configDotenv();
