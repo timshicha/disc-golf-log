@@ -11,6 +11,7 @@ import RenameModal from "./Modals/RenameModal";
 import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
+import GoogleLoginButton from "./Components/GoogleLoginButton";
 
 
 function LogComponent() {
@@ -77,6 +78,7 @@ function LogComponent() {
 
     return (
         <>
+            <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
