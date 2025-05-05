@@ -1,6 +1,5 @@
 import { configDotenv } from "dotenv";
-import https from "https";
-import { parse } from "url";
+import { addUser, findUserByEmail } from "../db/users.mjs";
 
 configDotenv();
 
@@ -46,4 +45,34 @@ const fetchUserGoogleInfo = async (google_access_token) => {
     return user_result.json();
 }
 
-export { exchangeGoogleCodeForToken, fetchUserGoogleInfo };
+const handleGoogleLoginRequest = async (req, res) => {
+    const { code } = req.body;
+
+    if(!code) {
+        return res.status(400).json({
+            error: "Missing code"
+        });
+    }
+    const google_access_token = await exchangeGoogleCodeForToken(code);
+    if(!google_access_token) {
+        res.status(400).json({
+            error: "Invalid Google token"
+        });
+    }
+    // Must use google_access_token.access_token because it's a
+    // json of items.
+    const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
+
+    // Find user by email
+    let user = await findUserByEmail(google_profile.email);
+    // If user doesn't exist, add them
+    if(!user) {
+        user = await addUser(google_profile.email, google_profile.name);
+    }
+
+    res.status(200).json({
+        message: JSON.stringify(user)
+    });
+}
+
+export { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest };

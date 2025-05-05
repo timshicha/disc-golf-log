@@ -7,4 +7,9 @@ const findUserByEmail = async (email) => {
     return user;
 }
 
-export { findUserByEmail };
+// Add a user with email
+const addUser = async (email, name) => {
+    return await db`INSERT INTO users (email, name) VALUES (${email}, ${name})`;
+}
+
+export { findUserByEmail, addUser };

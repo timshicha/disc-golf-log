@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { configDotenv } from "dotenv";
-import { exchangeGoogleCodeForToken, fetchUserGoogleInfo } from "./auth/google.mjs";
+import { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest } from "./auth/google.mjs";
 
 configDotenv();
 const HOST = process.env.HOST;
@@ -19,26 +19,7 @@ app.use(express.json());
 
 // If logging in (user wants a token)
 app.post("/auth/google", async (req, res) => {
-    const { code } = req.body;
-
-    if(!code) {
-        return res.status(400).json({
-            error: "Missing code"
-        });
-    }
-    const google_access_token = await exchangeGoogleCodeForToken(code);
-    if(!google_access_token) {
-        res.status(400).json({
-            error: "Invalid Google token"
-        });
-    }
-    // Must use google_access_token.access_token because it's a
-    // json of items.
-    const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
-
-    res.status(200).json({
-        message: JSON.stringify(google_profile)
-    });
+    handleGoogleLoginRequest(req, res);
 });
 
 // starts a simple http server locally on port 3000
