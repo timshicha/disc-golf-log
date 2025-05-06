@@ -1,5 +1,6 @@
 import { configDotenv } from "dotenv";
 import { addUser, findUserByEmail } from "../db/users.mjs";
+import { generateToken } from "./tokens.mjs";
 
 configDotenv();
 
@@ -69,6 +70,8 @@ const handleGoogleLoginRequest = async (req, res) => {
     if(!user) {
         user = await addUser(google_profile.email, google_profile.name);
     }
+
+    console.log(await generateToken(google_profile.email));
 
     res.status(200).json({
         message: JSON.stringify(user)

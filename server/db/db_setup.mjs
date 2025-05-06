@@ -5,14 +5,14 @@ import { configDotenv } from "dotenv";
 configDotenv();
 
 const connectionString = process.env.DATABASE_URL;
-const sql = postgres(connectionString, {
+const db = postgres(connectionString, {
     ssl: "require"
 });
 
 (async () => {
     try {
         console.log("Testing connection to postgres...");
-        await sql`SELECT 1`;
+        await db`SELECT 1`;
         console.log("Connected to postgres!");
     } catch (error) {
         console.log("Connection to postres failed: " + error);
@@ -20,4 +20,4 @@ const sql = postgres(connectionString, {
     }
 })();
 
-export default sql;
+export default db;
