@@ -16,4 +16,16 @@ const generateToken = async (email) => {
     }
 }
 
-export { generateToken };
+const validateToken = async (token) => {
+    try {
+        const userID = await db`SELECT * FROM tokens WHERE token = "${token}"`;
+        console.log("Token validated! User ID: " + userID);
+        return token;
+    }
+    catch (error) {
+        console.log("Error validating token: " + error);
+        return null;
+    }
+}
+
+export { generateToken, validateToken };
