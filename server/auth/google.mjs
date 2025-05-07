@@ -71,7 +71,12 @@ const handleGoogleLoginRequest = async (req, res) => {
         user = await addUser(google_profile.email, google_profile.name);
     }
 
-    console.log(await generateToken(google_profile.email));
+    const token = await generateToken(google_profile.email);
+    // If a token was generated, set as a cookie
+    if(token) {
+        res.token = token;
+        console.log("Token set: " + token);
+    }
 
     res.status(200).json({
         message: JSON.stringify(user)

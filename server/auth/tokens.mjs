@@ -17,10 +17,14 @@ const generateToken = async (email) => {
 }
 
 const validateToken = async (token) => {
+    if(!token) {
+        console.log("Error validating token: no token");
+        return null;
+    }
     try {
-        const userID = await db`SELECT * FROM tokens WHERE token = "${token}"`;
+        const userID = await db`SELECT user_id FROM tokens WHERE token = ${token}`;
         console.log("Token validated! User ID: " + userID);
-        return token;
+        return userID;
     }
     catch (error) {
         console.log("Error validating token: " + error);

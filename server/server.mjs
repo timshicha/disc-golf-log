@@ -25,10 +25,14 @@ app.post("/auth/google", async (req, res) => {
 
 // If adding a course
 app.post("/auth", async (req, res) => {
-    const token = req.body;
-    console.log(token);
-    const userID = validateToken(token);
-    res.status(200).send(userID);
+    // Try validating token
+    const user_id = await validateToken(res.token);
+    if(user_id === null) {
+        res.status(400).send("Can't validate user");
+    }
+    else {
+        res.status(200).send("Validated. User ID: " + user_id);
+    }
 });
 
 // starts a simple http server locally on port 3000
