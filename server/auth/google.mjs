@@ -74,7 +74,9 @@ const handleGoogleLoginRequest = async (req, res) => {
     const token = await generateToken(google_profile.email);
     // If a token was generated, set as a cookie
     if(token) {
-        res.token = token;
+        res.cookie("token", token, {
+            secure: false
+        });
         console.log("Token set: " + token);
     }
 

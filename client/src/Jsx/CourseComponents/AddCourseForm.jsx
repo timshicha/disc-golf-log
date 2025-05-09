@@ -34,6 +34,15 @@ class AddCourseForm extends React.Component {
             this.setState({showForm: false});
             this.callback();
         }).catch((error) => console.log(error));
+
+        // Attempt to add to database
+        fetch("http://localhost:3000/course", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
     }
 
     componentDidUpdate = () => {

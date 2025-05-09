@@ -12,6 +12,7 @@ const GoogleLoginButton = () => {
             try {
                 const res = await fetch("http://localhost:3000/auth/google", {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json"
                     },
