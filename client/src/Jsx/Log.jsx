@@ -13,6 +13,8 @@ import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 
+const SERVER_URI = import.meta.env.VITE_SERVER_URI
+
 
 function LogComponent() {
     const [courses, setCourses] = useState([]);
@@ -67,7 +69,7 @@ function LogComponent() {
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName).then(result => {
             // Update change in cloud
-            fetch("http://localhost:3000/course", {
+            fetch(`${SERVER_URI}/course`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {

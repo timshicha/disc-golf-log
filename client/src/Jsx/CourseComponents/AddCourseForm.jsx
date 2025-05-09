@@ -3,6 +3,8 @@ import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
+
 class AddCourseForm extends React.Component {
     constructor (props) {
         super();
@@ -33,7 +35,7 @@ class AddCourseForm extends React.Component {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
-            fetch("http://localhost:3000/course", {
+            fetch(`${SERVER_URI}/course`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

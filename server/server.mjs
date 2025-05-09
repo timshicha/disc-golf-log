@@ -14,7 +14,7 @@ const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: CLIENT_HOSTNAME,
     credentials: true,
     methods: ["GET", "POST", "PUT", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
