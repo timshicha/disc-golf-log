@@ -19,8 +19,8 @@ app.use(cors({
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json()); // Automatically parse body when json
+app.use(cookieParser()); // Automatically parse cookies
 
 // If logging in (user wants a token)
 app.post("/auth/google", async (req, res) => {
@@ -32,11 +32,17 @@ app.post("/course", async (req, res) => {
     // Try validating token
     const user_id = await validateToken(req.cookies.token);
     if(user_id === null) {
-        res.status(401).send("Can't validate user");
+        res.status(401).send("Can't validate user.");
+        return;
     }
-    else {
-        res.status(200).send("Validated. User ID: " + user_id);
-    }
+    // At this point the user has been validated and we have their userID
+    try {
+        await addCourse(user_id, req.body?.name, req.body?.holes);
+        res.status(200);
+    } catch (error) {
+        res.status(400).send(error);
+        console.log(error);
+    }    
 });
 
 // starts a simple http server locally on port 3000

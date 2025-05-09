@@ -20,29 +20,32 @@ class AddCourseForm extends React.Component {
 
         const nameElement = e.target.name;
         const holesElement = e.target.holes;
+        const name = nameElement.value;
+        const holes = parseInt(holesElement.value);
 
         // Make sure they provided a valid number of holes (integer above 0)
-        const numberOfHoles = parseInt(holesElement.value);
-        if(!numberOfHoles || numberOfHoles < 0) {
+        if(!holes || holes < 0) {
             alert("Enter a valid number of holes.");
             return;
         }
         // Add to Dexie
-        addCourse(nameElement.value, numberOfHoles).then(() => {
+        addCourse(name, holes).then(() => {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
+            fetch("http://localhost:3000/course", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    holes: holes
+                })
+            });
             this.callback();
         }).catch((error) => console.log(error));
-
-        // Attempt to add to database
-        fetch("http://localhost:3000/course", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
     }
 
     componentDidUpdate = () => {

@@ -25,7 +25,11 @@ const validateToken = async (token) => {
     }
     try {
         console.log("Validating token: " + token);
-        const userID = await db`SELECT user_id FROM tokens WHERE token = ${token}`;
+        const userObj = await db`SELECT user_id FROM tokens WHERE token = ${token}`;
+        const userID = userObj[0]?.user_id;
+        if(!userID) {
+            throw("Can't map token to a user.");
+        }
         console.log("Token validated! User ID: " + userID);
         return userID;
     }
