@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import { configDotenv } from "dotenv";
 import { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest } from "./auth/google.mjs";
 import { validateToken } from "./auth/tokens.mjs";
-import { addCourse } from "./req/courses.mjs";
+import { addCourse, modifyCourse } from "./req/courses.mjs";
 
 configDotenv();
 const HOST = process.env.HOST;
@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json()); // Automatically parse body when json
@@ -44,6 +44,24 @@ app.post("/course", async (req, res) => {
         console.log(error);
     }    
 });
+
+// If modifying a course
+app.put("/course", async (req, res) => {
+    // Validate token
+    const user_id = await validateToken(req.cookies.token);
+    if(user_id === null) {
+        res.status(401).send("Can't validate user.");
+        return;
+    }
+    // At this point the user has been validated and we have their userID
+    try {
+        await modifyCourse(user_id, req.body?.name, req.body?.newName);
+        res.status(200);
+    } catch (error) {
+        res.status(400).send(error);
+        console.log(error);
+    } 
+})
 
 // starts a simple http server locally on port 3000
 app.listen(PORT, "localhost", () => console.log("Listening on 3000..."));

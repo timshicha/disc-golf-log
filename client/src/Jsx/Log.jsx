@@ -62,9 +62,22 @@ function LogComponent() {
 
     const handleRenameCourse = (event) => {
         event.preventDefault();
+        const oldName= showOptionsCourse.name;
         const newName = event.target.name.value;
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName).then(result => {
+            // Update change in cloud
+            fetch("http://localhost:3000/course", {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: oldName,
+                    newName: newName
+                })
+            })
             // If rename successful
             setShowRenameModal(false);
             // Also close options modal
