@@ -12,6 +12,7 @@ import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
+import ServerQueue from "../serverCalls/ServerQueue";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI
 
@@ -68,19 +69,7 @@ function LogComponent() {
         const newName = event.target.name.value;
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName).then(result => {
-            // Update change in cloud
-            fetch(`${SERVER_URI}/course`, {
-                method: "PUT",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: oldName,
-                    newName: newName
-                })
-            })
-            // If rename successful
+            ServerQueue.renameCourse(oldName, newName);
             setShowRenameModal(false);
             // Also close options modal
             setShowOptionsCourse(null);
@@ -108,6 +97,7 @@ function LogComponent() {
                         </ModalButton>                    
                         <ModalButton onClick={() => {
                             deleteCourse(showOptionsCourse);
+                            ServerQueue.deleteCourse(showOptionsCourse.name);
                             // Update the list of courses
                             setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
                             setShowOptionsCourse(null);

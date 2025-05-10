@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
+import ServerQueue from "../../serverCalls/ServerQueue";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -35,17 +36,7 @@ class AddCourseForm extends React.Component {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
-            fetch(`${SERVER_URI}/course`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: name,
-                    holes: holes
-                })
-            });
+            ServerQueue.addCourse(name, holes);
             this.callback();
         }).catch((error) => console.log(error));
     }
