@@ -7,9 +7,9 @@ db.version(1).stores({
     addCourseQueue: "++id, name, holes",
     deleteCourseQueue: "++id, name",
     renameCourseQueue: "++id, oldName, newName",
-    addRoundQueue: "++id, courseID",
+    addRoundQueue: "++id, courseID, roundID",
     deleteRoundQueue: "++id, roundID",
-    modifyRound: "++id, roundID, newScore"
+    modifyRoundQueue: "++id, roundID, newScore"
 });
 
 export default db;

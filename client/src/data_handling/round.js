@@ -3,17 +3,18 @@ import db from "./db";
 
 // Add round to course
 const addRound = (course) => {  
-    db.rounds.add({
+    const id = db.rounds.add({
         courseID: course.id,
         score: new Array(parseInt(course.holes)).fill(""),
         date: dateToFormattedString(new Date())
     });
     // Update the course "modified" time
-    return db.courses.where("id").equals(course.id).modify(course => {
+    db.courses.where("id").equals(course.id).modify(course => {
         course.modified = Date ();
         if(!course.rounds) course.rounds = 0;
         course.rounds++;
     });
+    return id;
 }
 
 const getCourseRounds = (course) => {

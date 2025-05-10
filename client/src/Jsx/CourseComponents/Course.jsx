@@ -8,6 +8,7 @@ import MenuModal from "../Modals/Frames/MenuModal";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import ModalTitle from "../Modals/ModalComponents/ModalTitle";
 import DateInputModal from "../Modals/DateInputModal";
+import ServerQueue from "../../serverCalls/ServerQueue";
 
 class Course extends React.Component{
     constructor (props) {
@@ -80,12 +81,12 @@ class Course extends React.Component{
                             }}>Adjust date
                         </ModalButton>
                         <ModalButton onClick={() => {
-                            console.log("Deleting round");
+                            ServerQueue.deleteRound(this.state.rounds[this.state.roundSelectedIndex].id);
                             deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
                             this.setState({
                                 rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
                                 roundSelectedIndex: null
-                            })
+                            });
 
                             this.forceUpdate();
 
@@ -121,10 +122,12 @@ class Course extends React.Component{
                 })}
             </div>
             <BlueButton onClick={() => {
-                addRound(this.state.course);
-                this.reloadCourseRounds();
-                // Scroll to bottom
-                this.scrollToBottom();
+                addRound(this.state.course).then(roundID => {
+                    ServerQueue.addRound(this.state.course.id, roundID);
+                    this.reloadCourseRounds();
+                    // Scroll to bottom
+                    this.scrollToBottom();
+                });
             }} className="margin-top-10 fixed-bottom-button">Add Round</BlueButton>
         </>
         );
