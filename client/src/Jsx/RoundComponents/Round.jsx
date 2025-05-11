@@ -99,9 +99,7 @@ class Round extends React.Component {
                             return (
                                 <RoundBox onChange={(newValue) => {
                                     updateRoundScore(this.props.round, index, newValue);
-                                    ServerQueue.modifyRound(this.props.round.id, this.props.score).then(result => {
-                                        console.log(result);
-                                    });
+                                    ServerQueue.modifyRound(this.props.round.id, this.props.round.score);
                                     this.recalculateTotal();
                                 }}
                                 key={index}

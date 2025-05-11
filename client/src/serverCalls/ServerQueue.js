@@ -137,6 +137,29 @@ class ServerQueue {
             }
         });
     }
+
+    static getQueue = () => {
+        const queue = {};
+        return db.addCourseQueue.toArray().then(result => {
+            queue.addCourseQueue = result;
+            return db.deleteCourseQueue.toArray().then(result => {
+                queue.deleteCourseQueue = result;
+                return db.renameCourseQueue.toArray().then(result => {
+                    queue.renameCourseQueue = result;
+                    return db.addRoundQueue.toArray().then(result => {
+                        queue.addRoundQueue = result;
+                        return db.deleteRoundQueue.toArray().then(result => {
+                            queue.deleteRoundQueue = result;
+                            return db.modifyRoundQueue.toArray().then(result => {
+                                queue.modifyRoundQueue = result;
+                                return queue;
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
 }
 
 export default ServerQueue;

@@ -82,6 +82,9 @@ function LogComponent() {
 
     return (
         <>
+            <button onClick={() => {
+                ServerQueue.getQueue().then(result => console.log(result));
+            }}>see queue</button>
             <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
