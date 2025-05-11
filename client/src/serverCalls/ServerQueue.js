@@ -32,21 +32,20 @@ class ServerQueue {
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
     static deleteCourse = (name) => {
         // See if the course was added in the queue
-        return db.addCourseQueue.where("name").equals(name).first().then(result => {
+        return db.addCourseQueue.where("name").equals(name).first().then(async (result) => {
             // If the course was added in the queue, simply delete it from the queue
             if(result) {
-                return db.addCourseQueue.delete(result.id);
+                await db.addCourseQueue.delete(result.id);
+                return;
             }
             // See if a course was renamed to this name
-            return db.renameCourseQueue.where("newName").equals(name).first().then(result => {
+            await db.renameCourseQueue.where("newName").equals(name).first().then(async (result) => {
                 // If a course was renamed, remove the rename and delete original
                 if(result) {
                     const oldName = result.oldName;
-                    return db.renameCourseQueue.delete(result.id).then(result => {
-                        return db.deleteCourseQueue.add({ name: oldName});
-                    });
+                    await db.renameCourseQueue.delete(result.id);
                 }
-                // If a course was not renamed, simply delete
+                // Delete the course
                 return db.deleteCourseQueue.add( {name: name });
             })
         });
@@ -113,16 +112,18 @@ class ServerQueue {
 
     static modifyRound = (roundID, newScore) => {
         // See if the round was already modified
-        return db.modifyRoundQueue.where("roundID").equals(roundID).first().then(result => {
-            // If round was already modify, modify the modificaiton
+        return db.modifyRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
+            // If round was already modified, modify the modificaiton
             if(result) {
-                return db.modifyRoundQueue.update(result.id, { newScore: newScore });
+                await db.modifyRoundQueue.update(result.id, { newScore: newScore });
             }
             // Otherwise add the modification
-            return db.modifyRoundQueue.add({
-                roundID: roundID,
-                newScore: newScore
-            });
+            else {
+                await db.modifyRoundQueue.add({
+                    roundID: roundID,
+                    newScore: newScore
+                });
+            }
         });
     }
 }
