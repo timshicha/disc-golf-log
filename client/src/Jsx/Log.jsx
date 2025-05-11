@@ -96,8 +96,12 @@ function LogComponent() {
                         }} className="full-width black-text gray-background">Rename
                         </ModalButton>                    
                         <ModalButton onClick={() => {
-                            deleteCourse(showOptionsCourse);
-                            ServerQueue.deleteCourse(showOptionsCourse.name);
+                            // ServerQueue.deleteCourse must be called before deleteCourse
+                            // because it depends on values still being in Dexie that are
+                            // deleted by deleteCoruse
+                            ServerQueue.deleteCourse(showOptionsCourse).then(() => {
+                                deleteCourse(showOptionsCourse);
+                            })
                             // Update the list of courses
                             setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
                             setShowOptionsCourse(null);

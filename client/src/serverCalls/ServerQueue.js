@@ -30,16 +30,27 @@ class ServerQueue {
     // Challenges:
     // 1) If a user created a, then deleted a, result: user did nothing
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
-    static deleteCourse = (name) => {
+    static deleteCourse = (course) => {
+        console.log(course.id)
         // See if the course was added in the queue
-        return db.addCourseQueue.where("name").equals(name).first().then(async (result) => {
+        return db.addCourseQueue.where("name").equals(course.name).first().then(async (result) => {
+            // Find all rounds that belong to this course
+            const rounds = await db.rounds.where("courseID").equals(course.id).toArray();
+            
+            for (let i = 0; i < rounds.length; i++) {
+                const round = rounds[i];
+                await db.addRoundQueue.where("roundID").equals(round.id).delete();
+                await db.modifyRoundQueue.where("roundID").equals(round.id).delete();
+                await db.deleteRoundQueue.where("roundID").equals(round.id).delete();
+            }
+            
             // If the course was added in the queue, simply delete it from the queue
             if(result) {
                 await db.addCourseQueue.delete(result.id);
                 return;
             }
             // See if a course was renamed to this name
-            await db.renameCourseQueue.where("newName").equals(name).first().then(async (result) => {
+            await db.renameCourseQueue.where("newName").equals(course.name).first().then(async (result) => {
                 // If a course was renamed, remove the rename and delete original
                 if(result) {
                     const oldName = result.oldName;
