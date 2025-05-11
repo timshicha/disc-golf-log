@@ -90,23 +90,24 @@ class ServerQueue {
 
     static deleteRound = (roundID) => {
         // See if this round was created in the queue
-        return db.addRoundQueue.where("roundID").equals(roundID).first().then(result => {
-            // If the round was added in the queue, remove the add
-            if(result) {
-                return db.addRoundQueue.delete(result.id);
-            }
-            // See if the round was modified
-            return db.modifyRoundQueue.where("roundID").equals(roundID).first().then(result => {
-                // If the round was modified, delete the modification and
-                // and add the round deletion to queue
+        return db.addRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
+            console.log("here1");
+            // Delete the modifications (if any)
+            await db.modifyRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
                 if(result) {
-                    return db.modifyRoundQueue.delete(roundID).then(() => {
-                        return db.deleteRoundQueue.add( {roundID: roundID } );
-                    });
+                    db.modifyRoundQueue.delete(result.id);
                 }
-                // Otherwuise just delete the round
-                return db.deleteRoundQueue.add( {roundID: roundID } );
             });
+            // If added in the queue, delete add
+            if(result) {
+                console.log("here2");
+                await db.addRoundQueue.delete(result.id);
+            }
+            // Otherwise add deletion
+            else {
+                console.log("here3");
+                await db.deleteRoundQueue.add({ roundID: roundID });
+            }
         });
     }
 

@@ -11,22 +11,19 @@ class Round extends React.Component {
         super();
 
         this.state = {
-            round: props.round,
-            index: props.index,
             total: 0,
             // Component showing total score for the round.
             // The logic for styling it is more complicated,
             // so using a state for it.
             totalComponent: <span>(0)</span>,
-            props: props
         }
-
+        this.props = props;
         this.onOpenModal = props.onOpenModal;
     }
 
     recalculateTotal = () => {
         // New total
-        const total = getRoundTotal(this.state.round);
+        const total = getRoundTotal(this.props.round);
         this.setState({
             total: total
         });
@@ -81,12 +78,12 @@ class Round extends React.Component {
                         height: "15px",
                         float: "right"
                     }} onClick={() => {
-                        this.onOpenModal();
+                        this.onOpenModal(this.props.index);
                     }}></TripleDotButton>
                     <div style={{
                         float: "right",
                         marginRight: "4px"
-                    }}>{formatDate(this.state.round.date)}</div>
+                    }}>{formatDate(this.props.round.date)}</div>
                 </div>
                 <div style={{
                     display: "inline-block",
@@ -98,11 +95,11 @@ class Round extends React.Component {
                         flexWrap: "wrap",
                         justifyContent: "start",
                     }}>
-                        {this.state.round.score.map((scoreValue, index) => {
+                        {this.props.round.score.map((scoreValue, index) => {
                             return (
                                 <RoundBox onChange={(newValue) => {
-                                    updateRoundScore(this.state.round, index, newValue);
-                                    ServerQueue.modifyRound(this.state.round.id, this.state.round.score).then(result => {
+                                    updateRoundScore(this.props.round, index, newValue);
+                                    ServerQueue.modifyRound(this.props.round.id, this.props.score).then(result => {
                                         console.log(result);
                                     });
                                     this.recalculateTotal();
