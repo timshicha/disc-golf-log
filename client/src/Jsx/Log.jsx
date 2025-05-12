@@ -83,8 +83,17 @@ function LogComponent() {
     return (
         <>
             <button onClick={() => {
-                ServerQueue.getQueue().then(result => console.log(result));
-            }}>see queue</button>
+                ServerQueue.getQueue().then(result => {
+                    fetch(SERVER_URI + "/data", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(result)
+                    }).then(result => console.log(result));
+                });
+            }}>upload to cloud</button>
             <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>

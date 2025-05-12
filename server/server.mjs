@@ -5,6 +5,7 @@ import { configDotenv } from "dotenv";
 import { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest } from "./auth/google.mjs";
 import { validateToken } from "./auth/tokens.mjs";
 import { addCourse, modifyCourse } from "./req/courses.mjs";
+import { consumeBulkData } from "./req/bulkData.mjs";
 
 configDotenv();
 const HOST = process.env.HOST;
@@ -61,6 +62,24 @@ app.put("/course", async (req, res) => {
         res.status(400).send(error);
         console.log(error);
     } 
+});
+
+// If the user sends a list of modifications
+app.post("/data", async (req, res) => {
+        // Validate token
+        const user_id = await validateToken(req.cookies.token);
+        if(user_id === null) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        // At this point the user has been validated and we have their userID
+        try {
+            console.log(`Updated ${await consumeBulkData(user_id, req.body)} records.`);
+            res.status(200);
+        } catch (error) {
+            res.status(400).send(error);
+            console.log(error);
+        } 
 })
 
 // starts a simple http server locally on port 3000
