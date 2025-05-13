@@ -21,12 +21,7 @@ class ServerQueue {
     }
 
     static addCourse = (course) => {
-        return db.addCourseQueue.add({
-            courseUUID: course.courseUUID,
-            name: course.name,
-            holes: course.holes,
-            modified: course.modified
-        });
+        return db.addCourseQueue.add(course);
     }
 
     // Challenges:
@@ -34,21 +29,19 @@ class ServerQueue {
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
     static deleteCourse = (course) => {
         // Delete all rounds and round modifications related to this course
-        return db.rounds.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-            return db.addRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-                return db.deleteRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-                    return db.modifyRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-                        // Remove all course modifications
-                        return db.modifyCourseQueue.delete(course.courseUUID).then(() => {
-                            // Find if the course was added in the queue
-                            return db.addCourseQueue.get(course.courseUUID).then(result => {
-                                // If added in the queue, remove the add
-                                if(result) {
-                                    return db.addCourseQueue.delete(course.courseUUID);
-                                }
-                                // If not added in the queue, add the delete
-                                return db.deleteCourseQueue.add({ courseUUID: course.courseUUID });
-                            });
+        return db.addRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+            return db.deleteRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                return db.modifyRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                    // Remove all course modifications
+                    return db.modifyCourseQueue.delete(course.courseUUID).then(() => {
+                        // Find if the course was added in the queue
+                        return db.addCourseQueue.get(course.courseUUID).then(result => {
+                            // If added in the queue, remove the add
+                            if(result) {
+                                return db.addCourseQueue.delete(course.courseUUID);
+                            }
+                            // If not added in the queue, add the delete
+                            return db.deleteCourseQueue.add({ courseUUID: course.courseUUID });
                         });
                     });
                 });
@@ -81,53 +74,50 @@ class ServerQueue {
         });
     }
 
-    static addRound = (courseID, roundID) => {
-        return;
-        return db.addRoundQueue.add({
-            courseID: courseID,
-            roundID: roundID
-        });
+    static addRound = (round) => {
+        // Add round to queue
+        return db.addRoundQueue.add(round);
     }
 
-    static deleteRound = (roundID) => {
-        return;
-        // See if this round was created in the queue
-        return db.addRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
-            console.log("here1");
-            // Delete the modifications (if any)
-            await db.modifyRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
-                if(result) {
-                    db.modifyRoundQueue.delete(result.id);
-                }
-            });
-            // If added in the queue, delete add
+    static deleteRound = (round) => {
+        // Find the round if it was added in the queue
+        return db.addRoundQueue.get(round.roundUUID).then(result => {
+            // If added in the queue, delete the add
             if(result) {
-                console.log("here2");
-                await db.addRoundQueue.delete(result.id);
+                return db.addRoundQueue.delete(round.roundUUID);
             }
-            // Otherwise add deletion
-            else {
-                console.log("here3");
-                await db.deleteRoundQueue.add({ roundID: roundID });
-            }
-        });
-    }
-
-    static modifyRound = (roundID, newScore) => {
-        return;
-        // See if the round was already modified
-        return db.modifyRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
-            // If round was already modified, modify the modificaiton
-            if(result) {
-                await db.modifyRoundQueue.update(result.id, { newScore: newScore });
-            }
-            // Otherwise add the modification
-            else {
-                await db.modifyRoundQueue.add({
-                    roundID: roundID,
-                    newScore: newScore
+            // Otherwise, delete the modifications and add delete to queue
+            return db.modifyRoundQueue.delete(round.roundUUID).then(() => {
+                return db.deleteRoundQueue.add({
+                    roundUUID: round.roundUUID,
+                    courseUUID: round.courseUUID
                 });
+            });
+        });
+        
+    }
+
+    static modifyRound = (round) => {
+        // Find the round in add queue, if exists
+        return db.addRoundQueue.get(round.roundUUID).then(result => {
+            // If the round was added in the queue
+            if(result) {
+                // Modify the add
+                result.date = round.date;
+                result.score = round.score;
+                return db.addRoundQueue.put(result);
             }
+            // Otherwise, see if there's a modify item in queue already
+            return db.modifyRoundQueue.get(round.roundUUID).then(result => {
+                // If there's a modify item
+                if(result) {
+                    result.date = round.date;
+                    result.score = round.score;
+                    return db.modifyRoundQueue.put(result);
+                }
+                // Otherwise, add a modification
+                return db.modifyRoundQueue.add(round);
+            });
         });
     }
 
