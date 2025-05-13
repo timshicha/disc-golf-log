@@ -20,11 +20,12 @@ class ServerQueue {
 
     }
 
-    static addCourse = (name, holes) => {
-        return;
+    static addCourse = (course) => {
         return db.addCourseQueue.add({
-            name: name,
-            holes: holes
+            courseUUID: course.courseUUID,
+            name: course.name,
+            holes: course.holes,
+            modified: course.modified
         });
     }
 
@@ -32,65 +33,51 @@ class ServerQueue {
     // 1) If a user created a, then deleted a, result: user did nothing
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
     static deleteCourse = (course) => {
-        return;
-        console.log(course.id)
-        // See if the course was added in the queue
-        return db.addCourseQueue.where("name").equals(course.name).first().then(async (result) => {
-            // Find all rounds that belong to this course
-            const rounds = await db.rounds.where("courseID").equals(course.id).toArray();
-            
-            for (let i = 0; i < rounds.length; i++) {
-                const round = rounds[i];
-                await db.addRoundQueue.where("roundID").equals(round.id).delete();
-                await db.modifyRoundQueue.where("roundID").equals(round.id).delete();
-                await db.deleteRoundQueue.where("roundID").equals(round.id).delete();
-            }
-            
-            // If the course was added in the queue, simply delete it from the queue
-            if(result) {
-                await db.addCourseQueue.delete(result.id);
-                return;
-            }
-            // See if a course was renamed to this name
-            await db.renameCourseQueue.where("newName").equals(course.name).first().then(async (result) => {
-                // If a course was renamed, remove the rename and delete original
-                if(result) {
-                    const oldName = result.oldName;
-                    await db.renameCourseQueue.delete(result.id);
-                }
-                // Delete the course
-                return db.deleteCourseQueue.add( {name: name });
-            })
+        // Delete all rounds and round modifications related to this course
+        return db.rounds.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+            return db.addRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                return db.deleteRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                    return db.modifyRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                        // Remove all course modifications
+                        return db.modifyCourseQueue.delete(course.courseUUID).then(() => {
+                            // Find if the course was added in the queue
+                            return db.addCourseQueue.get(course.courseUUID).then(result => {
+                                // If added in the queue, remove the add
+                                if(result) {
+                                    return db.addCourseQueue.delete(course.courseUUID);
+                                }
+                                // If not added in the queue, add the delete
+                                return db.deleteCourseQueue.add({ courseUUID: course.courseUUID });
+                            });
+                        });
+                    });
+                });
+            });
         });
     }
 
-    static renameCourse = (oldName, newName) => {
-        return;
-        // Challenges:
-        // 1) If a user created a, then renamed a-> b, result: user created b
-        // 2) If a user renames a-> b, then renamed a->c, result: user renamed a->c
-        //
-        // First see if the user created this course in the queue
-        return db.addCourseQueue.where("name").equals(oldName).first().then(result => {
-            // If the user created it in this queue, modify the creation
+    static modifyCourse = (course) => {
+        // See if the course was added in the queue
+        return db.addCourseQueue.get(course.courseUUID).then(result => {
+            // If the course was added in the queue, modify the add
             if(result) {
-                return db.addCourseQueue.update(result.id, { name: newName });
+                result.name = course.name;
+                result.holes = course.holes;
+                result.numberOfRounds = course.numberOfRounds;
+                return db.addCourseQueue.put(result);
             }
-            // See if the user already renamed this course in the queue
-            // If new old name is the old new name (reading this can cause a
-            // stroke... basically, the line below IS suppsed to be 
-            // ...where("newName").equals(oldName)... even though it may look weird)
-            return db.renameCourseQueue.where("newName").equals(oldName).first().then(result => {
-                // If already renamed once, modify renaming
+            // Otherwise, see if a modification already exists
+            return db.modifyCourseQueue.get(course.courseUUID).then(result => {
+                // If a modification exists, modify the modification
                 if(result) {
-                    return db.renameCourseQueue.update(result.id, { newName: newName });
+                    result.name = course.name;
+                    result.holes = course.holes;
+                    result.numberOfRounds = course.numberOfRounds;
+                    return db.modifyCourseQueue.put(result);
                 }
-                // If not renamed, add the rename to the queue
-                return db.renameCourseQueue.add({
-                    oldName: oldName,
-                    newName: newName
-                });
-            })
+                // Otherwise, add the modification
+                return db.modifyCourseQueue.add(course);
+            });
         });
     }
 

@@ -69,7 +69,7 @@ function LogComponent() {
         const newName = event.target.name.value;
         showOptionsCourse.name = newName;
         renameCourse(showOptionsCourse, newName).then(result => {
-            ServerQueue.renameCourse(oldName, newName);
+            ServerQueue.modifyCourse(showOptionsCourse);
             setShowRenameModal(false);
             // Also close options modal
             setShowOptionsCourse(null);
@@ -111,12 +111,12 @@ function LogComponent() {
                             // ServerQueue.deleteCourse must be called before deleteCourse
                             // because it depends on values still being in Dexie that are
                             // deleted by deleteCoruse
-                            deleteCourse(showOptionsCourse);
-                            // ServerQueue.deleteCourse(showOptionsCourse).then(() => {
-                            // })
+                            ServerQueue.deleteCourse(showOptionsCourse).then(() => {
+                                deleteCourse(showOptionsCourse);
+                                setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
+                                setShowOptionsCourse(null);
+                            });
                             // Update the list of courses
-                            setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
-                            setShowOptionsCourse(null);
                         }} className="full-width caution-button">Delete
                         </ModalButton>
                     </MenuModal> : null

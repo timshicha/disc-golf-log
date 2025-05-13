@@ -4,12 +4,12 @@ const db = new Dexie("BogeyPad");
 db.version(1).stores({
     courses: "&courseUUID, name, holes, numberOfRounds",
     rounds: "&roundUUID, courseUUID, score",
-    addCourseQueue: "&courseUUID, name, holes",
+    addCourseQueue: "&courseUUID, name, holes, modified",
     deleteCourseQueue: "&courseUUID",
-    renameCourseQueue: "&courseUUID, name",
+    modifyCourseQueue: "&courseUUID, name, holes, modified",
     addRoundQueue: "&roundUUID, courseUUID",
-    deleteRoundQueue: "&roundUUID",
-    modifyRoundQueue: "&roundUUID, score"
+    deleteRoundQueue: "&roundUUID, courseUUID",
+    modifyRoundQueue: "&roundUUID, courseUUID, score"
 });
 
 export default db;

@@ -36,13 +36,14 @@ class AddCourseForm extends React.Component {
         const course = {
             courseUUID: uuidv4(),
             name: name,
-            holes: holes
+            holes: holes,
+            modified: Date ()
         };
         addCourse(course).then(() => {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
-            ServerQueue.addCourse(name, holes);
+            ServerQueue.addCourse(course);
             this.callback();
         }).catch((error) => console.log(error));
     }
