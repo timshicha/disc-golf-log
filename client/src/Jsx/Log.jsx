@@ -111,11 +111,11 @@ function LogComponent() {
                             // ServerQueue.deleteCourse must be called before deleteCourse
                             // because it depends on values still being in Dexie that are
                             // deleted by deleteCoruse
-                            ServerQueue.deleteCourse(showOptionsCourse).then(() => {
-                                deleteCourse(showOptionsCourse);
-                            })
+                            deleteCourse(showOptionsCourse);
+                            // ServerQueue.deleteCourse(showOptionsCourse).then(() => {
+                            // })
                             // Update the list of courses
-                            setCourses(courses.filter((course, _) => course.id !== showOptionsCourse.id));
+                            setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
                             setShowOptionsCourse(null);
                         }} className="full-width caution-button">Delete
                         </ModalButton>

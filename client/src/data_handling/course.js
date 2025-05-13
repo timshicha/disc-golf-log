@@ -37,11 +37,12 @@ const renameCourse = (courseUUID, newName) => {
     });
 }
 
-const deleteCourse = (courseUUID) => {
+const deleteCourse = (course) => {
     // Delete all rounds for this course
-    deleteRoundsByCourseUUID(courseUUID);
-    db.courses.delete(courseUUID);
-    return uuid;
+    deleteRoundsByCourseUUID(course.courseUUID);
+    return db.courses.delete(course.courseUUID).then(() => {
+        return courseUUID;
+    })
 }
 
 // Find the number of times each course was played
