@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { addRound, deleteRound, getCourseRounds, updateRoundDate } from "../../data_handling/round";
+import { addRound, deleteRound, getCourseRounds, updateRound } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../Components/BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
@@ -9,6 +9,7 @@ import ModalButton from "../Modals/ModalComponents/ModalButton";
 import ModalTitle from "../Modals/ModalComponents/ModalTitle";
 import DateInputModal from "../Modals/DateInputModal";
 import ServerQueue from "../../serverCalls/ServerQueue";
+import { v4 as uuidv4 } from "uuid";
 
 class Course extends React.Component{
     constructor (props) {
@@ -38,7 +39,7 @@ class Course extends React.Component{
 
     // Get a list of rounds for this course
     reloadCourseRounds = () => {
-        getCourseRounds(this.state.course).then(result => {
+        getCourseRounds(this.state.course.courseUUID).then(result => {
             this.setState({rounds: result});
         });
     }
@@ -57,7 +58,9 @@ class Course extends React.Component{
                 <DateInputModal onSubmit={(newDate) => {
                         // Make sure new date is not null
                         if(newDate) {
-                            updateRoundDate(this.state.rounds[this.state.roundSelectedIndex], newDate);
+                            this.state.rounds[this.state.roundSelectedIndex].date = newDate;
+                            // Update the round (date)
+                            updateRound(this.state.rounds[this.state.roundSelectedIndex]);
                             this.setState({
                                 showDateInputModal: false,
                                 roundSelectedIndex: null
@@ -123,8 +126,14 @@ class Course extends React.Component{
                 })}
             </div>
             <BlueButton onClick={() => {
-                addRound(this.state.course).then(roundID => {
-                    ServerQueue.addRound(this.state.course.id, roundID);
+                const roundUUID = uuidv4();
+                const newRound = {
+                    courseUUID: this.state.course.courseUUID,
+                    roundUUID: roundUUID,
+                    holes: this.state.course.holes
+                };
+                addRound(newRound).then(() => {
+                    ServerQueue.addRound(this.state.course.courseUUID, roundUUID);
                     this.reloadCourseRounds();
                     // Scroll to bottom
                     this.scrollToBottom();

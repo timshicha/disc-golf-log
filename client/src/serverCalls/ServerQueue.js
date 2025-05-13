@@ -21,6 +21,7 @@ class ServerQueue {
     }
 
     static addCourse = (name, holes) => {
+        return;
         return db.addCourseQueue.add({
             name: name,
             holes: holes
@@ -31,6 +32,7 @@ class ServerQueue {
     // 1) If a user created a, then deleted a, result: user did nothing
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
     static deleteCourse = (course) => {
+        return;
         console.log(course.id)
         // See if the course was added in the queue
         return db.addCourseQueue.where("name").equals(course.name).first().then(async (result) => {
@@ -63,6 +65,7 @@ class ServerQueue {
     }
 
     static renameCourse = (oldName, newName) => {
+        return;
         // Challenges:
         // 1) If a user created a, then renamed a-> b, result: user created b
         // 2) If a user renames a-> b, then renamed a->c, result: user renamed a->c
@@ -92,6 +95,7 @@ class ServerQueue {
     }
 
     static addRound = (courseID, roundID) => {
+        return;
         return db.addRoundQueue.add({
             courseID: courseID,
             roundID: roundID
@@ -99,6 +103,7 @@ class ServerQueue {
     }
 
     static deleteRound = (roundID) => {
+        return;
         // See if this round was created in the queue
         return db.addRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
             console.log("here1");
@@ -122,6 +127,7 @@ class ServerQueue {
     }
 
     static modifyRound = (roundID, newScore) => {
+        return;
         // See if the round was already modified
         return db.modifyRoundQueue.where("roundID").equals(roundID).first().then(async (result) => {
             // If round was already modified, modify the modificaiton
@@ -139,6 +145,7 @@ class ServerQueue {
     }
 
     static getQueue = () => {
+        return;
         const queue = {};
         return db.addCourseQueue.toArray().then(result => {
             queue.addCourseQueue = result;

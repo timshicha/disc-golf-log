@@ -1,54 +1,47 @@
 import db from "./db";
-import { deleteRoundsByCourseID } from "./round";
+import { deleteRoundsByCourseUUID } from "./round";
 
 // Add a course to Dexie
-const addCourse = (name, holes) => {
+const addCourse = (course) => {
     // Don't allow duplicates
-    return db.courses.where("name").equals(name).first().then(result => {
-        // If name already exists
+    console.log(course)
+    return db.courses.get(course.courseUUID).then(result => {
+        // Don't allow duplicate course IDs
         if(result) {
             return new Promise((resolve, reject) => {
-                reject("A course with this name already exists!");
+                reject("A course with this UUID already exists!");
             });
         }
         return db.courses.add({
-            name: name,
-            holes: holes,
+            courseUUID: course.courseUUID,
+            name: course.name,
+            holes: course.holes,
             modified: Date (),
             rounds: 0
         });
     });
 }
 
-const getCourseByName = (name) => {
-    return db.courses.where("name").equals(name).first();
+const getCourseByUUID = (courseUUID) => {
+    return db.courses.get(courseUUID);
 }
 
 const getAllCourses = () => {
     return db.courses.toArray();
 }
 
-const renameCourse = (course, newName) => {
-    // Don't allow duplicates
-    return db.courses.where("name").equals(newName).first().then(result => {
-        // If name already exists
-        if(result) {
-            return new Promise((resolve, reject) => {
-                reject("A course with this name already exists!");
-            });
-        }
-        return db.courses.update(course.id, {
-            name: newName,
-            modified: Date ()
-        });
+const renameCourse = (courseUUID, newName) => {
+    return db.courses.update(courseUUID, {
+        name: newName,
+        modified: Date ()
     });
 }
 
-const deleteCourse = (course) => {
+const deleteCourse = (courseUUID) => {
     // Delete all rounds for this course
-    deleteRoundsByCourseID(course.id);
-    db.courses.delete(course.id);
-    return course.id;
+    deleteRoundsByCourseUUID(courseUUID);
+    db.courses.delete(courseUUID);
+    return uuid;
 }
 
 // Find the number of times each course was played
@@ -56,21 +49,21 @@ const updateRoundCounts = () => {
     const courses = {};
     // Go through each round
     return db.rounds.each((round) => {
-        const courseID = round.courseID;
+        const courseUUID = round.courseUUID;
         // If course was already added to dict, just add to it
-        if(courses[courseID]) {
-            courses[courseID]++;
+        if(courses[courseUUID]) {
+            courses[courseUUID]++;
         }
         // Otherwuse add the course
         else {
-            courses[courseID] = 1;
+            courses[courseUUID] = 1;
         }
     }).then(async () => {
         // Now go through each course and update it
         await db.courses.toCollection().modify(course => {
-            course.rounds = courses[course.id] || 0;
+            course.numberOfRounds = courses[course.courseUUID] || 0;
         });
     });
 }
 
-export { addCourse, getCourseByName, getAllCourses, renameCourse, deleteCourse, updateRoundCounts };
+export { addCourse, getCourseByUUID, getAllCourses, renameCourse, deleteCourse, updateRoundCounts };

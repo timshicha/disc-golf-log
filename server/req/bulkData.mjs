@@ -24,6 +24,14 @@ const consumeBulkData = async (userID, data) => {
             }
         }
     }
+    // For all courses that are being deleted
+    // if(Array.isArray(data.deleteCourseQueue)) {
+    //     for (let i = 0; i < data.deleteCourseQueue.length; i++) {
+    //         try {
+    //             const name = 
+    //         }
+    //     }
+    // }
     return updatesUploaded;
 }
 

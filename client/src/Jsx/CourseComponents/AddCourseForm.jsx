@@ -3,6 +3,7 @@ import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import ServerQueue from "../../serverCalls/ServerQueue";
+import { v4 as uuidv4 } from "uuid";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -32,7 +33,12 @@ class AddCourseForm extends React.Component {
             return;
         }
         // Add to Dexie
-        addCourse(name, holes).then(() => {
+        const course = {
+            courseUUID: uuidv4(),
+            name: name,
+            holes: holes
+        };
+        addCourse(course).then(() => {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
