@@ -4,7 +4,7 @@ import { getRoundTotal, updateRound } from "../../data_handling/round";
 import TripleDotButton from "../Components/TripleDotButton";
 import "../../css/general.css";
 import { formatDate } from "../../js_utils/formatting";
-import ServerQueue from "../../serverCalls/ServerQueue";
+import DataHandler from "../../data_handling/data_handler";
 
 class Round extends React.Component {
     constructor (props) {
@@ -100,9 +100,9 @@ class Round extends React.Component {
                                 <RoundBox onChange={(newValue) => {
                                     this.props.round.score[index] = newValue;
                                     // Update round (score)
-                                    updateRound(this.props.round);
-                                    ServerQueue.modifyRound(this.props.round, this.props.course);
-                                    this.recalculateTotal();
+                                    DataHandler.modifyRound(this.props.round, this.props.course, true).then(() => {
+                                        this.recalculateTotal();
+                                    });
                                 }}
                                 key={index}
                                 initialValue={scoreValue}

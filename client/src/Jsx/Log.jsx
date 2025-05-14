@@ -12,7 +12,7 @@ import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
-import ServerQueue from "../serverCalls/ServerQueue";
+import DataHandler from "../data_handling/data_handler";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI
 
@@ -65,11 +65,9 @@ function LogComponent() {
 
     const handleRenameCourse = (event) => {
         event.preventDefault();
-        const oldName= showOptionsCourse.name;
         const newName = event.target.name.value;
         showOptionsCourse.name = newName;
-        renameCourse(showOptionsCourse, newName).then(result => {
-            ServerQueue.modifyCourse(showOptionsCourse);
+        DataHandler.modifyCourse(showOptionsCourse, true).then(() => {
             setShowRenameModal(false);
             // Also close options modal
             setShowOptionsCourse(null);
@@ -83,16 +81,7 @@ function LogComponent() {
     return (
         <>
             <button onClick={() => {
-                ServerQueue.getQueue().then(result => {
-                    fetch(SERVER_URI + "/data", {
-                        method: "POST",
-                        credentials: "include",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(result)
-                    }).then(result => console.log(result));
-                });
+                DataHandler.getQueue().then(result => console.log(result));
             }}>upload to cloud</button>
             <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
@@ -108,11 +97,10 @@ function LogComponent() {
                         }} className="full-width black-text gray-background">Rename
                         </ModalButton>                    
                         <ModalButton onClick={() => {
-                            // ServerQueue.deleteCourse must be called before deleteCourse
+                            // DataHandler.deleteCourse must be called before deleteCourse
                             // because it depends on values still being in Dexie that are
                             // deleted by deleteCoruse
-                            ServerQueue.deleteCourse(showOptionsCourse).then(() => {
-                                deleteCourse(showOptionsCourse);
+                            DataHandler.deleteCourse(showOptionsCourse, true).then(() => {
                                 setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
                                 setShowOptionsCourse(null);
                             });

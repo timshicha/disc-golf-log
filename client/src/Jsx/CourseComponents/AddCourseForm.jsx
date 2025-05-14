@@ -2,7 +2,7 @@ import React, { createRef } from "react";
 import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
-import ServerQueue from "../../serverCalls/ServerQueue";
+import DataHandler from "../../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
@@ -39,13 +39,12 @@ class AddCourseForm extends React.Component {
             holes: holes,
             modified: Date ()
         };
-        addCourse(course).then(() => {
+        DataHandler.addCourse(course).then(() => {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
-            ServerQueue.addCourse(course);
-            this.callback();
-        }).catch((error) => console.log(error));
+        });
+        this.callback();
     }
 
     componentDidUpdate = () => {
@@ -86,6 +85,7 @@ class AddCourseForm extends React.Component {
                             }}></input>
                         </div>
                         <div>
+                            <input type="submit"></input>
                             <ModalButton onClick={this.onCancel} className="half-width-button gray-background mx-5">Cancel</ModalButton>
                             <ModalButton type="submit" className="half-width-button blue-background mx-5">Add course</ModalButton>
                         </div>

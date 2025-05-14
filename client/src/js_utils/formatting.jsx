@@ -11,7 +11,25 @@ const getDayOfWeek = (dateString) => {
     return date.toLocaleDateString(undefined, { weekday: "short"});
 }
 
-const formatDate = (dateString) => {
+const numberToDayOfWeek = (number) => {
+    switch (number) {
+        case(0): return "Mon";
+        case(1): return "Tue";
+        case(3): return "Wed";
+        case(4): return "Thu";
+        case(5): return "Fri";
+        case(6): return "Sat";
+        case(7): return "Sun";
+    };
+}
+
+const formatDate = (date) => {
+    const dateObj = new Date(date);
+    const formattedDate = dateToFormattedString(dateObj); // We now have YYYY-MM-DD string
+    return stringToFormattedDate(formattedDate); // Return ex: Tue, May 15, 2005
+}
+
+const stringToFormattedDate = (dateString) => {
     if(!dateString || typeof dateString !== "string") {
         return "";
     }

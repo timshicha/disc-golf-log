@@ -8,7 +8,7 @@ import MenuModal from "../Modals/Frames/MenuModal";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import ModalTitle from "../Modals/ModalComponents/ModalTitle";
 import DateInputModal from "../Modals/DateInputModal";
-import ServerQueue from "../../serverCalls/ServerQueue";
+import DataHandler from "../../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
 
 class Course extends React.Component{
@@ -59,11 +59,13 @@ class Course extends React.Component{
                         // Make sure new date is not null
                         if(newDate) {
                             this.state.rounds[this.state.roundSelectedIndex].date = newDate;
+                            console.log("here")
                             // Update the round (date)
-                            updateRound(this.state.rounds[this.state.roundSelectedIndex]);
-                            this.setState({
-                                showDateInputModal: false,
-                                roundSelectedIndex: null
+                            DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+                                this.setState({
+                                    showDateInputModal: false,
+                                    roundSelectedIndex: null
+                                });
                             });
                         }
                     }}
@@ -84,15 +86,13 @@ class Course extends React.Component{
                             }}>Adjust date
                         </ModalButton>
                         <ModalButton onClick={() => {
-                            console.log("index: " + this.state.roundSelectedIndex);
-                            ServerQueue.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course);
-                            deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
-                            this.setState({
-                                rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
-                                roundSelectedIndex: null
-                            });
-
-                            this.forceUpdate();
+                            DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+                                this.setState({
+                                    rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
+                                    roundSelectedIndex: null
+                                });
+                                this.forceUpdate();
+                            })
 
                         }} className="full-width caution-button">Delete round</ModalButton>
                     </MenuModal>
@@ -134,8 +134,7 @@ class Course extends React.Component{
                     score: Array(this.state.course.holes).fill(""),
                     date: Date()
                 };
-                addRound(newRound).then(() => {
-                    ServerQueue.addRound(newRound, this.state.course);
+                DataHandler.addRound(newRound, this.state.course, true).then(() => {
                     this.reloadCourseRounds();
                     // Scroll to bottom
                     this.scrollToBottom();
