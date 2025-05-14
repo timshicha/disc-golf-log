@@ -85,7 +85,7 @@ class Course extends React.Component{
                         </ModalButton>
                         <ModalButton onClick={() => {
                             console.log("index: " + this.state.roundSelectedIndex);
-                            ServerQueue.deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
+                            ServerQueue.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course);
                             deleteRound(this.state.rounds[this.state.roundSelectedIndex]);
                             this.setState({
                                 rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
@@ -112,7 +112,7 @@ class Course extends React.Component{
             <div id="rounds-div" ref={this.roundsDivRef}>
                 {this.state.rounds.map((round, index) => {
                     return (
-                        <Round round={round} key={round.id || index} index={index}
+                        <Round round={round} course={this.state.course} key={round.id || index} index={index}
                             // When the user clicks on the triple dot icon
                             // on this round
                             onOpenModal={(index) => {
@@ -135,7 +135,7 @@ class Course extends React.Component{
                     date: Date()
                 };
                 addRound(newRound).then(() => {
-                    ServerQueue.addRound(newRound);
+                    ServerQueue.addRound(newRound, this.state.course);
                     this.reloadCourseRounds();
                     // Scroll to bottom
                     this.scrollToBottom();

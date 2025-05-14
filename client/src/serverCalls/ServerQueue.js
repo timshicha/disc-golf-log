@@ -74,12 +74,19 @@ class ServerQueue {
         });
     }
 
-    static addRound = (round) => {
+    static addRound = (round, course) => {
+        console.log(course)
         // Add round to queue
-        return db.addRoundQueue.add(round);
+        return db.addRoundQueue.add(round).then(() => {
+            // Also course "modified" needs to be updated
+            if(course) {
+                return this.modifyCourse(course);
+            }
+            return Promise.resolve();
+        })
     }
 
-    static deleteRound = (round) => {
+    static deleteRound = (round, course) => {
         // Find the round if it was added in the queue
         return db.addRoundQueue.get(round.roundUUID).then(result => {
             // If added in the queue, delete the add
@@ -93,6 +100,12 @@ class ServerQueue {
                     courseUUID: round.courseUUID
                 });
             });
+        }).then(() => {
+            // Also course "modified" needs to be updated
+            if(course) {
+                return this.modifyCourse(course);
+            }
+            return Promise.resolve();
         });
         
     }
@@ -118,6 +131,12 @@ class ServerQueue {
                 // Otherwise, add a modification
                 return db.modifyRoundQueue.add(round);
             });
+        }).then(() => {
+            // Also course "modified" needs to be updated
+            if(course) {
+                return this.modifyCourse(course);
+            }
+            return Promise.resolve();
         });
     }
 

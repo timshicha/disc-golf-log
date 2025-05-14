@@ -101,7 +101,7 @@ class Round extends React.Component {
                                     this.props.round.score[index] = newValue;
                                     // Update round (score)
                                     updateRound(this.props.round);
-                                    ServerQueue.modifyRound(this.props.round);
+                                    ServerQueue.modifyRound(this.props.round, this.props.course);
                                     this.recalculateTotal();
                                 }}
                                 key={index}
