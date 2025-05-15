@@ -71,7 +71,7 @@ class DataHandler {
                         return db.addCourseQueue.put(course);
                     }
                     // Otherwise, add/modify the modification
-                    return db.modifyCourseQueue.add(course);
+                    return db.modifyCourseQueue.put(course);
                 });
             }
             return Promise.resolve(course.courseUUID);
@@ -141,8 +141,8 @@ class DataHandler {
                     }
                     // If not added in queue, modify
                     return db.modifyRoundQueue.put(round);
-                })
-            })
+                });
+            });
         });
     }
 

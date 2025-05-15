@@ -101,6 +101,8 @@ class Round extends React.Component {
                                     // Update round (score)
                                     DataHandler.modifyRound(this.props.round, this.props.course, true).then(() => {
                                         this.recalculateTotal();
+                                    }).catch(error => {
+                                        console.log(error);
                                     });
                                 }}
                                 key={index}
