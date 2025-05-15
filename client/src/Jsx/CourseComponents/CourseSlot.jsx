@@ -49,11 +49,11 @@ class CourseSlot extends React.Component{
                 <div style={{
                     fontSize: "12px"
                 }}>
-                    {this.props.rounds === 1
+                    {this.props.course.roundCount === 1
                     ?
                     <>Played 1 time</>
                     :
-                    <>Played {this.props.rounds} times</>
+                    <>Played {this.props.course.roundCount} times</>
                     }
                 </div>
             </div>

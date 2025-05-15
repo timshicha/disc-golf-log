@@ -86,7 +86,7 @@ class DataHandler {
         // Add the round
         return db.rounds.add(round).then(() => {
             // Update course "modified" time
-            course.rounds++;
+            course.roundCount++;
             course.modified = Date();
             // Now modify the course and propogate whether
             return this.modifyCourse(course, sendChangeToCloud).then(() => {
@@ -166,6 +166,21 @@ class DataHandler {
             total += Number(round.score[i]);
         }
         return total;
+    }
+
+    // Updates each course's rounds counts by counting the rounds
+    // belonging to each course
+    static updateCourseRoundCounts = () => {
+        // For each course, see how many rounds have this
+        // course's courseUUID
+        return db.transaction("rw", db.courses, db.rounds, () => {
+            return db.courses.each(course => {
+                return db.rounds.where("courseUUID").equals(course.courseUUID).count().then(count => {
+                    course.roundCount = count;
+                    return db.courses.put(course);
+                });
+            });
+        });
     }
 
     static getQueue = () => {

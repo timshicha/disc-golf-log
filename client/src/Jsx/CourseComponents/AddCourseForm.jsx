@@ -36,7 +36,8 @@ class AddCourseForm extends React.Component {
             courseUUID: uuidv4(),
             name: name,
             holes: holes,
-            modified: Date ()
+            modified: Date (),
+            roundCount: 0
         };
         DataHandler.addCourse(course).then(() => {
             nameElement.value = "";

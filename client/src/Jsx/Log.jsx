@@ -32,16 +32,13 @@ function LogComponent() {
     // Reload (load) on initial render
     // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
-        // If calculations for rounds per course haven't been made
-        if(!localStorage.getItem("updatedRoundCounts")) {
-            updateRoundCounts().then(() => {
-                localStorage.setItem("updatedRoundCounts", Date ());
-                reloadCourses();
-            });
-        }
-        else {
+        // When starting up the app, calculate each course's round counts.
+        // *** A better fix for this may be needed because brute forcing every
+        // time may take up resources especially when the user has a lot of
+        // rounds in many different courses.
+        DataHandler.updateCourseRoundCounts().then(() => {
             reloadCourses();
-        }
+        });
     }, [selectedCourse]);
 
     const reloadCourses = () => {
@@ -56,7 +53,7 @@ function LogComponent() {
             }
             else if(sortCourseBy.current === "Most played") {
                 // Update round counts
-                result = result.sort((a, b) => compareStrings(b.rounds, a.rounds));
+                result = result.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
             }
             setCourses(result);
         });
@@ -136,7 +133,6 @@ function LogComponent() {
                         return (
                             <CourseSlot course={course}
                                 key={course.name}
-                                rounds={course.rounds}
                                 onClick={() => {
                                     setSelectedCourse(course);
                                 }}
