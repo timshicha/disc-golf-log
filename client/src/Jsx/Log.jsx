@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import { deleteCourse, getAllCourses, renameCourse, updateRoundCounts } from "../data_handling/course";
 import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
@@ -14,7 +13,7 @@ import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import DataHandler from "../data_handling/data_handler";
 
-const SERVER_URI = import.meta.env.VITE_SERVER_URI
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 
 function LogComponent() {
@@ -27,7 +26,6 @@ function LogComponent() {
     // A callback is passed to a child component that depends on this value,
     // and ref allows the child to always have the current value.
     const sortCourseBy = useRef(localStorage.getItem("sortCoursesBy") || "Alphabetical");
-
     const sortByDropdownRef = useRef(null);
     const renameModalRef = useRef(null);
 
@@ -47,7 +45,8 @@ function LogComponent() {
     }, [selectedCourse]);
 
     const reloadCourses = () => {
-        getAllCourses().then(result => {
+        DataHandler.getAllCourses().then(result => {
+            console.log(result)
             // If sort alphabetically
             if(sortCourseBy.current === "Alphabetical") {
                 result = result.sort((a, b) => compareStrings(a.name, b.name));

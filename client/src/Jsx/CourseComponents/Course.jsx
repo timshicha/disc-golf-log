@@ -1,5 +1,4 @@
 import React, { createRef } from "react";
-import { addRound, deleteRound, getCourseRounds, updateRound } from "../../data_handling/round";
 import Round from "../RoundComponents/Round";
 import BlueButton from "../Components/BlueButton";
 import backCarrot from "../../assets/images/backCarrot.png";
@@ -39,7 +38,7 @@ class Course extends React.Component{
 
     // Get a list of rounds for this course
     reloadCourseRounds = () => {
-        getCourseRounds(this.state.course.courseUUID).then(result => {
+        DataHandler.getCourseRounds(this.state.course).then(result => {
             this.setState({rounds: result});
         });
     }
@@ -132,7 +131,7 @@ class Course extends React.Component{
                     roundUUID: roundUUID,
                     holes: this.state.course.holes,
                     score: Array(this.state.course.holes).fill(""),
-                    date: Date()
+                    date: (new Date()).toISOString()
                 };
                 DataHandler.addRound(newRound, this.state.course, true).then(() => {
                     this.reloadCourseRounds();

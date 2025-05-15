@@ -1,9 +1,8 @@
 import React from "react";
 import RoundBox from "./RoundBox";
-import { getRoundTotal, updateRound } from "../../data_handling/round";
 import TripleDotButton from "../Components/TripleDotButton";
 import "../../css/general.css";
-import { formatDate } from "../../js_utils/formatting";
+import { isoToVisualFormat } from "../../js_utils/formatting";
 import DataHandler from "../../data_handling/data_handler";
 
 class Round extends React.Component {
@@ -23,7 +22,7 @@ class Round extends React.Component {
 
     recalculateTotal = () => {
         // New total
-        const total = getRoundTotal(this.props.round);
+        const total = DataHandler.getRoundTotal(this.props.round);
         this.setState({
             total: total
         });
@@ -83,7 +82,7 @@ class Round extends React.Component {
                     <div style={{
                         float: "right",
                         marginRight: "4px"
-                    }}>{formatDate(this.props.round.date)}</div>
+                    }}>{isoToVisualFormat(this.props.round.date)}</div>
                 </div>
                 <div style={{
                     display: "inline-block",

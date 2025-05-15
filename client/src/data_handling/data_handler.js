@@ -146,6 +146,28 @@ class DataHandler {
         });
     }
 
+    static getCourseRounds = (course) => {
+        return db.rounds.where("courseUUID").equals(course.courseUUID).sortBy("date");
+    }
+
+    static getAllCourses = () => {
+        return db.courses.toArray();
+    }
+
+    // Given a round, return the total score for the round
+    // (Not exactly data handling but related and makes sense to be here)
+    static getRoundTotal = (round) => {
+        // Given a round, return the total score
+        if(!round || !round.score || !Array.isArray(round.score)) {
+            return 0;
+        }
+        let total = 0;
+        for (let i = 0; i < round.score.length; i++) {
+            total += Number(round.score[i]);
+        }
+        return total;
+    }
+
     static getQueue = () => {
         const queue = {};
         return db.addCourseQueue.toArray().then(result => {

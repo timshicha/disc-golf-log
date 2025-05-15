@@ -1,5 +1,4 @@
 import React, { createRef } from "react";
-import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import DataHandler from "../../data_handling/data_handler";
