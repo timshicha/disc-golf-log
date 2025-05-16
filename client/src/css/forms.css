@@ -74,3 +74,15 @@
 .adjust-date-input {
     width: 220px;
 }
+
+/* This is for hiding the type="submit" inputs in forms.
+    When forms have multiple text fields, enter doesn't submit
+    the form unless there is an input type="submit"
+*/
+.hidden-submit {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

@@ -12,11 +12,12 @@ import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import DataHandler from "../data_handling/data_handler";
+import NavBar from "./Components/NavBar";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 
-function LogComponent() {
+function LogComponent(props) {
     const [courses, setCourses] = useState([]);
     // By default, no course is selected, so show list of courses
     const [selectedCourse, setSelectedCourse] = useState(null);
@@ -74,8 +75,22 @@ function LogComponent() {
         });
     }
 
+    const navigateTo = (newPage) => {
+        if(props.navigateTo) {
+            props.navigateTo(newPage);
+        }
+        else {
+            alert("This feature is under construction!");
+        }
+    }
+
     return (
         <>
+            <>
+            {!selectedCourse &&
+                <NavBar navigateTo={navigateTo}></NavBar>
+            }
+            </>
             <button onClick={() => {
                 DataHandler.getQueue().then(result => console.log(result));
             }}>upload to cloud</button>

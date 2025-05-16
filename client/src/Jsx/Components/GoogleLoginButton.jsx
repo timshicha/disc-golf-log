@@ -1,26 +1,26 @@
 import React from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = (props) => {
 
     // Show Google login screen, and when user logs in, returns a code
     const login = useGoogleLogin({
         flow: "auth-code",
-        onSuccess: async (tokenResponse) => {
+        onSuccess: (tokenResponse) => {
             const { code } = tokenResponse;
 
             try {
-                const res = await fetch("http://localhost:3000/auth/google", {
+                fetch("http://localhost:3000/auth/google", {
                     method: "POST",
                     credentials: "include",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ code })
+                }).then(res => res.json()).then(data => {
+                    data = JSON.parse(data.message);
+                    props.onSuccess(data);
                 });
-
-                const data = await res.json();
-                console.log("User info:", data);
             } catch (error) {
                 console.log("Login failed:", error);
             }
@@ -33,7 +33,7 @@ const GoogleLoginButton = () => {
     });
 
     return (
-        <button onClick={login}>Sign in with Google</button>
+        <div onClick={login}>{props.children}</div>
     );
 }
 

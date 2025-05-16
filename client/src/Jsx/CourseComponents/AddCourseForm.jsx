@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import BlueButton from "../Components/BlueButton";
 import ModalButton from "../Modals/ModalComponents/ModalButton";
 import DataHandler from "../../data_handling/data_handler";
+import "../../css/general.css";
 import { v4 as uuidv4 } from "uuid";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
@@ -85,7 +86,7 @@ class AddCourseForm extends React.Component {
                             }}></input>
                         </div>
                         <div>
-                            <input type="submit"></input>
+                            <input type="submit" className="hidden-submit"></input>
                             <ModalButton onClick={this.onCancel} className="half-width-button gray-background mx-5">Cancel</ModalButton>
                             <ModalButton type="submit" className="half-width-button blue-background mx-5">Add course</ModalButton>
                         </div>

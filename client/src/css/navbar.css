@@ -1,0 +1,36 @@
+.navbar {
+    background-color: rgb(230, 95, 95);
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    padding-left: 0px;
+    padding-right: 8px;
+}
+
+.navbar-title-logo {
+    height: 40px;
+}
+
+.navbar-right-items {
+    display: flex;
+}
+
+.navbar-hamburger-button {
+    background-color: black;
+    margin-left: 5px;
+    border: none;
+    border-radius: 6px;
+    padding: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+    height: 42px;
+    cursor: pointer;
+}
+.navbar-hamburger-button > img {
+    height: 42px;
+}
+
+.login-button {
+    margin-top: 0px;
+    background-color: black;
+}
