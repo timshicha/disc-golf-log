@@ -1,16 +1,16 @@
 import React, { createRef } from "react";
-import Round from "../RoundComponents/Round";
-import BlueButton from "../Components/BlueButton";
-import backCarrot from "../../assets/images/backCarrot.png";
-import "../../css/general.css";
-import MenuModal from "../Modals/Frames/MenuModal";
-import ModalButton from "../Modals/ModalComponents/ModalButton";
-import ModalTitle from "../Modals/ModalComponents/ModalTitle";
-import DateInputModal from "../Modals/DateInputModal";
-import DataHandler from "../../data_handling/data_handler";
+import Round from "./RoundComponents/Round";
+import BlueButton from "./Components/BlueButton";
+import backCarrot from "../assets/images/backCarrot.png";
+import "../css/general.css";
+import MenuModal from "./Modals/Frames/MenuModal";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
+import ModalTitle from "./Modals/ModalComponents/ModalTitle";
+import DateInputModal from "./Modals/DateInputModal";
+import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
 
-class Course extends React.Component{
+class CoursePage extends React.Component{
     constructor (props) {
         super();
 
@@ -98,7 +98,9 @@ class Course extends React.Component{
                 }
                 </>
             }
-            <input type="image" onClick={this.onBackClick}
+            <input type="image" onClick={() => {
+                this.props.navigateTo("main");
+            }}
                 src={backCarrot} style={{
                 top: "10px",
                 width: "30px",
@@ -144,4 +146,4 @@ class Course extends React.Component{
     }
 }
 
-export default Course;
+export default CoursePage;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import AddCourseForm from "./CourseComponents/AddCourseForm";
-import Course from "./CourseComponents/Course";
 import CourseSlot from "./CourseComponents/CourseSlot";
 import "../css/general.css";
 import MenuModal from "./Modals/Frames/MenuModal";
@@ -12,15 +11,12 @@ import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import DataHandler from "../data_handling/data_handler";
-import NavBar from "./Components/NavBar";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 
-function LogComponent(props) {
+function MainPage (props) {
     const [courses, setCourses] = useState([]);
-    // By default, no course is selected, so show list of courses
-    const [selectedCourse, setSelectedCourse] = useState(null);
     const [showOptionsCourse, setShowOptionsCourse] = useState(null);
     const [showRenameModal, setShowRenameModal] = useState(false);
     // Using ref for state.
@@ -31,7 +27,6 @@ function LogComponent(props) {
     const renameModalRef = useRef(null);
 
     // Reload (load) on initial render
-    // Reload when selected course changes (if user goes back a page)
     useEffect(() => {
         // When starting up the app, calculate each course's round counts.
         // *** A better fix for this may be needed because brute forcing every
@@ -40,7 +35,7 @@ function LogComponent(props) {
         DataHandler.updateCourseRoundCounts().then(() => {
             reloadCourses();
         });
-    }, [selectedCourse]);
+    }, []);
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
@@ -77,7 +72,6 @@ function LogComponent(props) {
 
     return (
         <>
-            <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
@@ -105,56 +99,51 @@ function LogComponent(props) {
                 }
                 </>
             }
-            <>
-            {selectedCourse
-            ? // If a course is selected, show the course
-                <Course onBackClick={() => {setSelectedCourse(null)}} course={selectedCourse}></Course>
-            : // If no course selected, show list of courses
-                <>
-                <h1 className="h-main">My Courses</h1>
-                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
-                    const newSortBy = sortByDropdownRef.current?.getValue();
-                    if(newSortBy) {
-                        localStorage.setItem("sortCoursesBy", newSortBy);
-                        sortCourseBy.current = newSortBy;
-                        reloadCourses();
-                    }
-                }}>
-                    <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                    <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                    <DropdownOption value="Most played">Most played</DropdownOption>
-                </Dropdown>
-                {courses.length > 0
-                ? // If there are courses, show courses
-                    <>
-                    {courses.map(course => {
-                        return (
-                            <CourseSlot course={course}
-                                key={course.name}
-                                onClick={() => {
-                                    setSelectedCourse(course);
-                                }}
-                                onOpenOptionsList = {() => {
-                                    setShowOptionsCourse(course);
-                                }}>
-                            </CourseSlot>
-                        );
-                    })}
-                    </>
-                :   // If there are 0 courses, show a message saying there
-                    // are no courses
-                    <p style={{
-                        "textAlign": "center",
-                        "color": "gray",
-                        "margin": "25px"
-                    }}>You don't have any courses.</p>
+            <h1 className="h-main">My Courses</h1>
+            <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
+                const newSortBy = sortByDropdownRef.current?.getValue();
+                if(newSortBy) {
+                    localStorage.setItem("sortCoursesBy", newSortBy);
+                    sortCourseBy.current = newSortBy;
+                    reloadCourses();
                 }
-                <AddCourseForm callback={reloadCourses}></AddCourseForm>
+            }}>
+                <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
+                <DropdownOption value="Recently modified">Recently modified</DropdownOption>
+                <DropdownOption value="Most played">Most played</DropdownOption>
+            </Dropdown>
+            {courses.length > 0
+            ? // If there are courses, show courses
+                <>
+                {courses.map(course => {
+                    return (
+                        <CourseSlot course={course}
+                            key={course.name}
+                            onClick={() => {
+                                // If the user selects a course, tell App.jsx
+                                // to navigate to the Course Page and notify which
+                                // course was selected.
+                                props.setCurrentCourse(course);
+                                props.navigateTo("course");
+                            }}
+                            onOpenOptionsList = {() => {
+                                setShowOptionsCourse(course);
+                            }}>
+                        </CourseSlot>
+                    );
+                })}
                 </>
+            :   // If there are 0 courses, show a message saying there
+                // are no courses
+                <p style={{
+                    "textAlign": "center",
+                    "color": "gray",
+                    "margin": "25px"
+                }}>You don't have any courses.</p>
             }
-            </>
+            <AddCourseForm callback={reloadCourses}></AddCourseForm>
         </>
     );
 }
 
-export default LogComponent;
+export default MainPage;

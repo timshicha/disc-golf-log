@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import MainPage from "./MainPage";
-import SettingsPage from "./Settings";
+import SettingsPage from "./SettingsPage";
 import NavBar from "./Components/NavBar";
 import "../css/navbar.css";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
+import CoursePage from "./CoursePage";
 
 
 
@@ -14,9 +15,11 @@ function App() {
 
     const Pages = {
         MAIN: "main",
-        SETTINGS: "settings"
+        SETTINGS: "settings",
+        COURSE: "course"
     }
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
+    const [currentCourse, setCurrentCourse] = useState(null);
 
     useEffect(() => {
     }, []);
@@ -24,6 +27,9 @@ function App() {
     const navigateTo = (newPage) => {
         if(newPage === "settings") {
             setCurrentPage(Pages.SETTINGS);
+        }
+        else if(newPage === "course") {
+            setCurrentPage(Pages.COURSE);
         }
         else {
             setCurrentPage(Pages.MAIN);
@@ -55,15 +61,21 @@ function App() {
                         </button>
                     </div>
                 </NavBar>
-                <MainPage navigateTo={navigateTo}></MainPage>
+                <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
             </>
             }
             {currentPage === Pages.SETTINGS &&
                 <>
-                <NavBar></NavBar>
+                    <NavBar>
+
+                    </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
 
                 </>
+            }
+            {currentPage === Pages.COURSE &&
+                <CoursePage course={currentCourse} navigateTo={navigateTo}>
+                </CoursePage>
             }
         </>
     );
