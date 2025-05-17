@@ -44,8 +44,11 @@ class AddCourseForm extends React.Component {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
+        }).then(() => {
+            this.callback();
+        }).catch(error => {
+            console.log("Couldn't add course: " + error);
         });
-        this.callback();
     }
 
     componentDidUpdate = () => {

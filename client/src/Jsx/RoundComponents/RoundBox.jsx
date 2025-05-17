@@ -1,4 +1,5 @@
 import React from "react";
+import "../../css/round.css";
 
 class RoundBox extends React.Component {
     constructor (props) {
@@ -10,16 +11,26 @@ class RoundBox extends React.Component {
         this.onChange = props.onChange;
         this.index = props.index;
         this.state.value = props.initialValue;
+        this.backgroundClass = "round-box-gray-bg";
     }
 
     render () {
-        // If number is above 0, add + in front
-        if(this.state.value > 0) {
-            let numAsString = this.state.value.toString();
-            if(numAsString[0] !== "+") {
-                // this.state.value = "+" + numAsString;
+        // Determine background color
+        if(this.state.value !== "") {
+            if(this.state.value > 0) {
+                this.backgroundClass = "round-box-red-bg";
+            }
+            else if(this.state.value < 0) {
+                this.backgroundClass = "round-box-green-bg";
+            }
+            else {
+                this.backgroundClass = "round-box-gray-bg";
             }
         }
+        else {
+            this.backgroundClass = "";
+        }
+        console.log(this.backgroundClass)
         return (
             <div style={{
                 flex: "0 0 auto",
@@ -53,7 +64,7 @@ class RoundBox extends React.Component {
                     }} value={this.state.value} onChange={(self) => {
                         this.onChange(self.target.value);
                         this.setState({value: self.target.value});
-                    }}>
+                    }} className={this.backgroundClass}>
                     </input>
                 </div>
             </div>

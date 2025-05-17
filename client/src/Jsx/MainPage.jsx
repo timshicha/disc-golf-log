@@ -75,25 +75,8 @@ function LogComponent(props) {
         });
     }
 
-    const navigateTo = (newPage) => {
-        if(props.navigateTo) {
-            props.navigateTo(newPage);
-        }
-        else {
-            alert("This feature is under construction!");
-        }
-    }
-
     return (
         <>
-            <>
-            {!selectedCourse &&
-                <NavBar navigateTo={navigateTo}></NavBar>
-            }
-            </>
-            <button onClick={() => {
-                DataHandler.getQueue().then(result => console.log(result));
-            }}>upload to cloud</button>
             <GoogleLoginButton></GoogleLoginButton>
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
