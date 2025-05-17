@@ -19,8 +19,7 @@ class SettingsPage extends React.Component {
     render = () => {
         return (
             <>
-            settings
-            <button onClick={() => {this.navigateTo("main")}}>Back to home</button>
+                <button onClick={() => {this.navigateTo("main")}}>Back to home</button>
             </>
         );
     }

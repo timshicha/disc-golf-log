@@ -12,9 +12,13 @@
     display: inline-block;
     background-color: #dddddd;
     color: gray;
-    width: 140px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
 }
 
 .reorder-courses-dropdown {
-    margin-left: calc(100% - 150px);
+    justify-self: end;
+    width: 150px;
+    margin: 5px;
 }

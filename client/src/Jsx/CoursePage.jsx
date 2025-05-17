@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
-import Round from "./RoundComponents/Round";
+import Round from "./Components/Round";
 import BlueButton from "./Components/BlueButton";
-import backCarrot from "../assets/images/backCarrot.png";
 import "../css/general.css";
 import MenuModal from "./Modals/Frames/MenuModal";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
@@ -9,6 +8,8 @@ import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import DateInputModal from "./Modals/DateInputModal";
 import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
+import BackButton from "./Components/BackButton";
+import BlankSpace from "./Components/BlankSpace";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -51,7 +52,7 @@ class CoursePage extends React.Component{
 
     render = () => {
         return (
-        <>
+        <div className="course-page">
             {/* If the date input modal is shown */}
             {this.state.showDateInputModal ?
                 <DateInputModal onSubmit={(newDate) => {
@@ -98,17 +99,8 @@ class CoursePage extends React.Component{
                 }
                 </>
             }
-            <input type="image" onClick={() => {
-                this.props.navigateTo("main");
-            }}
-                src={backCarrot} style={{
-                top: "10px",
-                width: "30px",
-                position: "absolute",
-                backgroundColor: "#dddddd",
-                padding: "5px",
-                borderRadius: "7px"
-            }}></input>
+            <BackButton onClick={() => this.props.navigateTo("main")}></BackButton>
+
             <h1 className="h-main">{this.state.course.name}</h1>
             <div id="rounds-div" ref={this.roundsDivRef}>
                 {this.state.rounds.map((round, index) => {
@@ -126,6 +118,11 @@ class CoursePage extends React.Component{
                     );
                 })}
             </div>
+            {/* There is an "Add round" at the bottom of the page. This
+            may cover the rounds at the bottom, so add blank space at the
+            bottom. This way, the user can scroll all the way to the bottom
+            round and the blank space is what is covered under the button. */}
+            <BlankSpace height="150px"></BlankSpace>
             <BlueButton onClick={() => {
                 const roundUUID = uuidv4();
                 const newRound = {
@@ -141,7 +138,7 @@ class CoursePage extends React.Component{
                     this.scrollToBottom();
                 });
             }} className="margin-top-10 fixed-bottom-button">Add Round</BlueButton>
-        </>
+        </div>
         );
     }
 }

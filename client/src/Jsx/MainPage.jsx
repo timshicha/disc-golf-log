@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import AddCourseForm from "./CourseComponents/AddCourseForm";
-import CourseSlot from "./CourseComponents/CourseSlot";
+import AddCourseForm from "./Components/AddCourseForm";
+import CourseSlot from "./Components/CourseSlot";
 import "../css/general.css";
 import MenuModal from "./Modals/Frames/MenuModal";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
@@ -9,7 +9,6 @@ import RenameModal from "./Modals/RenameModal";
 import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
-import GoogleLoginButton from "./Components/GoogleLoginButton";
 import DataHandler from "../data_handling/data_handler";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
@@ -71,7 +70,7 @@ function MainPage (props) {
     }
 
     return (
-        <>
+        <div className="main-page">
             {showRenameModal ?
                 <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
@@ -142,7 +141,7 @@ function MainPage (props) {
                 }}>You don't have any courses.</p>
             }
             <AddCourseForm callback={reloadCourses}></AddCourseForm>
-        </>
+        </div>
     );
 }
 

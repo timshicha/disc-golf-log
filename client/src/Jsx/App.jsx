@@ -8,6 +8,8 @@ import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
+import BackButton from "./Components/BackButton";
+import BlankSpace from "./Components/BlankSpace";
 
 
 
@@ -54,20 +56,24 @@ function App() {
                         <GoogleLoginButton onSuccess={onGoogleLoginSuccess}>
                             <ModalButton className="login-button">Sign in</ModalButton>
                         </GoogleLoginButton>
-                        <button className="navbar-hamburger-button" onClick={() => {
+                        <button className="navbar-settings-button" onClick={() => {
                             navigateTo("settings");
                         }}>
                             <img src={cogwheel}></img>
                         </button>
                     </div>
                 </NavBar>
+                {/* Add spacer to account for navbar which doesn't
+                take up any space. */}
+                <BlankSpace height="50px"></BlankSpace>
                 <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
             </>
             }
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
-
+                        <BackButton onClick={() => navigateTo("main")}></BackButton>
+                        <div className="navbar-title">Settings</div>
                     </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
 

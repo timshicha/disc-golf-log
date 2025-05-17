@@ -32,13 +32,7 @@ class RoundBox extends React.Component {
         }
         console.log(this.backgroundClass)
         return (
-            <div style={{
-                flex: "0 0 auto",
-                width: "11%",
-                margin: "0px",
-                marginLeft: "0px",
-                marginTop: "-1px"
-            }}>
+            <div className="round-box">
                 <div style={{
                     position: "relative"
                 }}>

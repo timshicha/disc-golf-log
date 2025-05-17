@@ -52,10 +52,10 @@ class Round extends React.Component {
         return (
             <div className="margin-top-10" style={{
                 fontWeight: "bold",
-                width: "fit-content",
+                width: "100%",
             }}>
                 <div className="medium-text text-color-subtle" style={{
-                    width: "90%"
+                    width: "98%"
                 }}>
                     <div style={{
                         minWidth: "35px",
@@ -88,12 +88,7 @@ class Round extends React.Component {
                     display: "inline-block",
                     width: "fit-content"
                 }}>
-                    <div style={{
-                        width: "90%",
-                        display: "flex",
-                        flexWrap: "wrap",
-                        justifyContent: "start",
-                    }}>
+                    <div className="round-score-container">
                         {this.props.round.score.map((scoreValue, index) => {
                             return (
                                 <RoundBox onChange={(newValue) => {

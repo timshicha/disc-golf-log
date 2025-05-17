@@ -1,0 +1,21 @@
+
+.course-slot {
+    width: calc(100% - 20px);
+    background-color: #dddddd;
+    padding: 10px;
+    padding-right: 0px;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.triple-dot-button {
+    height: 20px;
+    float: right;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: -4px;
+}
