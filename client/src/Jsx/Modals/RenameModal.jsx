@@ -37,7 +37,7 @@ class RenameModal extends React.Component {
     render = () => {
         return (
             <>
-            <FormModal {...this.props}>
+            <FormModal {...this.props} autocomplete="off">
                 {this.props.children}
                 <label htmlFor="name"></label>
                 <input type="text" id="name" name="name" ref={this.nameInputRef} className="rename-input" value={this.state.inputValue} onChange={this.onChange}></input>

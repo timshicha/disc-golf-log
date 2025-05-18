@@ -1,4 +1,10 @@
 
+body, html {
+    margin: 0px;
+    padding: 0px;
+    background-color: white;
+}
+
 .h-main {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
@@ -115,9 +121,10 @@
 }
 
 #rounds-div {
-    height: calc(70vh);
     overflow-y: scroll;
     overflow-anchor: bottom;
+    overflow-x: hidden;
+    margin: 10px;
 }
 
 .fixed-bottom-button {
@@ -125,4 +132,8 @@
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.main-page {
+    padding: 10px;
 }

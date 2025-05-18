@@ -1,0 +1,66 @@
+.navbar {
+    background-color: rgb(255, 143, 143);
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    padding-left: 0px;
+    padding-right: 10px;
+    height: 42px;
+    position: fixed;
+    width: 100%;
+    top: 0px;
+}
+
+.navbar-title-logo {
+    height: 40px;
+}
+
+.navbar-right-items {
+    display: flex;
+}
+
+.login-button {
+    margin-top: 0px;
+    background-color: black;
+    height: 42px;
+    box-sizing: border-box;
+    width: fit-content;
+    overflow: hidden;
+}
+
+.navbar-settings-button {
+    background-color: black;
+    margin-left: 5px;
+    border: none;
+    border-radius: 6px;
+    padding: 0px;
+    height: 42px;
+    width: 42px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.navbar-settings-button > img {
+    height: 42px;
+    width: 42px;
+}
+
+.navbar-title {
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 7px;
+}
+
+.navbar-back-button {
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    background-color: #dddddd;
+    padding: 5px;
+    border-radius: 7px;
+}

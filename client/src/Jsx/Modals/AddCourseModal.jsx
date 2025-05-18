@@ -1,9 +1,13 @@
 import React, { createRef } from "react";
-import { addCourse } from "../../data_handling/course";
 import BlueButton from "../Components/BlueButton";
-import ModalButton from "../Modals/ModalComponents/ModalButton";
+import ModalButton from "./ModalComponents/ModalButton";
+import DataHandler from "../../data_handling/data_handler";
+import "../../css/general.css";
+import { v4 as uuidv4 } from "uuid";
 
-class AddCourseForm extends React.Component {
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
+
+class AddCourseModal extends React.Component {
     constructor (props) {
         super();
 
@@ -20,20 +24,35 @@ class AddCourseForm extends React.Component {
 
         const nameElement = e.target.name;
         const holesElement = e.target.holes;
+        const name = nameElement.value;
+        const holes = parseInt(holesElement.value);
 
         // Make sure they provided a valid number of holes (integer above 0)
-        const numberOfHoles = parseInt(holesElement.value);
-        if(!numberOfHoles || numberOfHoles < 0) {
+        if(!holes || holes < 0) {
             alert("Enter a valid number of holes.");
             return;
         }
+        
         // Add to Dexie
-        addCourse(nameElement.value, numberOfHoles).then(() => {
+        const course = {
+            courseUUID: uuidv4(),
+            name: name,
+            holes: holes,
+            modified: Date (),
+            roundCount: 0,
+            // Default hole labels are 1, 2, 3, ...
+            holeLabels: Array.from({ length: holes }, (_, i) => i + 1),
+            data: {}
+        };
+        DataHandler.addCourse(course).then(() => {
             nameElement.value = "";
             holesElement.value = "";
             this.setState({showForm: false});
+        }).then(() => {
             this.callback();
-        }).catch((error) => console.log(error));
+        }).catch(error => {
+            console.log("Couldn't add course: " + error);
+        });
     }
 
     componentDidUpdate = () => {
@@ -59,7 +78,8 @@ class AddCourseForm extends React.Component {
                         width: "90%",
                         marginLeft: "auto",
                         marginRight: "auto",
-                    }} className="form-main">
+                    }} className="form-main"
+                    autoComplete="off">
                         <div className="form-input-block">
                             <label htmlFor="name">Name: </label>
                             <input type="text" name="name" id="name" style={{
@@ -74,6 +94,7 @@ class AddCourseForm extends React.Component {
                             }}></input>
                         </div>
                         <div>
+                            <input type="submit" className="hidden-submit"></input>
                             <ModalButton onClick={this.onCancel} className="half-width-button gray-background mx-5">Cancel</ModalButton>
                             <ModalButton type="submit" className="half-width-button blue-background mx-5">Add course</ModalButton>
                         </div>
@@ -86,4 +107,4 @@ class AddCourseForm extends React.Component {
     }
 }
 
-export default AddCourseForm;
+export default AddCourseModal;

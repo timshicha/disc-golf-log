@@ -16,11 +16,12 @@ class DateInputModal extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         // If a valid date was provided, return the date
-        const dateInput = this.ref.current?.value;
-        if(dateInput) {
-            this.props.onSubmit(dateInput);
+        if(this.ref.current?.value) {
+            return this.props.onSubmit(this.ref.current?.value);
         }
-        this.props.onSubmit(null);
+        else {
+            this.props.onSubmit(null);
+        }
     }
 
     componentDidMount = () => {

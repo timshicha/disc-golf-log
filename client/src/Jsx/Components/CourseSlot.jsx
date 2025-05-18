@@ -1,5 +1,6 @@
 import React from "react";
 import TripleDotButton from "../Components/TripleDotButton";
+import "../../css/courseSlot.css";
 
 class CourseSlot extends React.Component{
     constructor (props) {
@@ -17,22 +18,9 @@ class CourseSlot extends React.Component{
 
     render = () => {
         return (
-            <div onClick={this.onClick} style={{
-                width: "90%",
-                backgroundColor: "#dddddd",
-                padding: "3%",
-                margin: "10px",
-                marginLeft: "auto",
-                marginRight: "auto",
-                borderRadius: "7px"
-            }}>
+            <div onClick={this.onClick} className="course-slot">
                 {/* Course settings button (triple dot icon) */}
-                <TripleDotButton style={{
-                    height: "20px",
-                    float: "right",
-                    cursor: "pointer",
-                    marginTop: "8px"
-                }} onClick={e => {
+                <TripleDotButton className="triple-dot-button" onClick={e => {
                     e.stopPropagation();
                     this.onOpenOptionsList();
                 }}></TripleDotButton>
@@ -49,11 +37,11 @@ class CourseSlot extends React.Component{
                 <div style={{
                     fontSize: "12px"
                 }}>
-                    {this.props.rounds === 1
+                    {this.props.course.roundCount === 1
                     ?
                     <>Played 1 time</>
                     :
-                    <>Played {this.props.rounds} times</>
+                    <>Played {this.props.course.roundCount} times</>
                     }
                 </div>
             </div>

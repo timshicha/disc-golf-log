@@ -61,6 +61,21 @@
     width: 90%;
 }
 
+.hole-label-input-container {
+    width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+
+.hole-label-input {
+    width: 10px;
+    margin: 0.5%;
+    margin-top: 10px;
+    flex: 0 0 19%;
+    box-sizing: border-box;
+}
+
 .caution-button {
     background-color: rgb(220, 0, 0);
     color: white;
@@ -73,4 +88,16 @@
 
 .adjust-date-input {
     width: 220px;
+}
+
+/* This is for hiding the type="submit" inputs in forms.
+    When forms have multiple text fields, enter doesn't submit
+    the form unless there is an input type="submit"
+*/
+.hidden-submit {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
