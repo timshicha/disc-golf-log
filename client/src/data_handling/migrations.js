@@ -31,8 +31,8 @@ export const migrate_v1_to_v2 = () => {
                         // the database
                         rounds[j].course = courses[i];
                         // Other round-related things
-                        rounds[i].roundUUID = uuidv4();
-                        rounds[i].data = {};
+                        rounds[j].roundUUID = uuidv4();
+                        rounds[j].data = {};
                         // Old dates may be poorly formatted, and...
                         //
                         // In the old database, rounds were simply added in order
@@ -55,7 +55,7 @@ export const migrate_v1_to_v2 = () => {
                         order /= 10;
                         const tens = order;
                         newDate = newDate.substring(0, newDate.length - 2) + tens + ones;
-                        rounds[i].date = newDate;
+                        rounds[j].date = newDate;
                     }
                 }
                 // rounds is now roundCount
@@ -66,10 +66,6 @@ export const migrate_v1_to_v2 = () => {
                 courses[i].holeLabels = Array.from({ length: courses[i].holes }, (_, i) => i + 1);
                 courses[i].data = {};
             }
-
-            // Display courses and rounds
-            console.log(courses);
-            console.log(rounds);
 
             // Now add these to the new db (v2)
             for (let i = 0; i < courses.length; i++) {
