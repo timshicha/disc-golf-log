@@ -10,14 +10,20 @@ import Dropdown from "./Modals/Frames/Dropdown";
 import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
+import HolesModal from "./Modals/HolesModal";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
+const Modals = {
+    COURSE_OPTIONS: "course options",
+    RENAME: "rename",
+    HOLE_LABELS: "hole labels"
+}
 
 function MainPage (props) {
     const [courses, setCourses] = useState([]);
-    const [showOptionsCourse, setShowOptionsCourse] = useState(null);
-    const [showRenameModal, setShowRenameModal] = useState(false);
+    const [currentCourse, setCurrentCourse] = useState(null);
+    const [currentModal, setCurrentModal] = useState(null);
     // Using ref for state.
     // A callback is passed to a child component that depends on this value,
     // and ref allows the child to always have the current value.
@@ -35,6 +41,10 @@ function MainPage (props) {
             reloadCourses();
         });
     }, []);
+
+    const showModal = (modalToShow) => {
+
+    }
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
@@ -57,11 +67,10 @@ function MainPage (props) {
     const handleRenameCourse = (event) => {
         event.preventDefault();
         const newName = event.target.name.value;
-        showOptionsCourse.name = newName;
-        DataHandler.modifyCourse(showOptionsCourse, true).then(() => {
-            setShowRenameModal(false);
-            // Also close options modal
-            setShowOptionsCourse(null);
+        currentCourse.name = newName;
+        DataHandler.modifyCourse(currentCourse, true).then(() => {
+            setCurrentModal(null);
+            setCurrentCourse(null);
             // Reload courses (order of courses may need to change)
             reloadCourses();
         }).catch(error => {
@@ -71,33 +80,46 @@ function MainPage (props) {
 
     return (
         <div className="main-page">
-            {showRenameModal ?
-                <RenameModal onSubmit={handleRenameCourse} onClose={() => setShowRenameModal(false)} defaultValue={showOptionsCourse.name} ref={renameModalRef}>
+
+            {currentModal === Modals.RENAME &&
+                // If the user clicks the X, bring them back to course options
+                <RenameModal onSubmit={handleRenameCourse} onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)} defaultValue={currentCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
-                </RenameModal> :
-                <>
-                {showOptionsCourse ?
-                    <MenuModal onClose={() => {setShowOptionsCourse(null)}}>
-                        <ModalTitle>{showOptionsCourse.name}</ModalTitle>
-                        <ModalButton onClick={() => {
-                            setShowRenameModal(true);
-                        }} className="full-width black-text gray-background">Rename
-                        </ModalButton>                    
-                        <ModalButton onClick={() => {
-                            // DataHandler.deleteCourse must be called before deleteCourse
-                            // because it depends on values still being in Dexie that are
-                            // deleted by deleteCoruse
-                            DataHandler.deleteCourse(showOptionsCourse, true).then(() => {
-                                setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
-                                setShowOptionsCourse(null);
-                            });
-                            // Update the list of courses
-                        }} className="full-width caution-button">Delete
-                        </ModalButton>
-                    </MenuModal> : null
-                }
-                </>
+                </RenameModal>
             }
+
+            {currentModal === Modals.COURSE_OPTIONS &&
+                <MenuModal onClose={() => setCurrentModal(null)}>
+                    <ModalTitle>{currentCourse.name}</ModalTitle>
+                    <ModalButton onClick={() => setCurrentModal(Modals.RENAME)} className="full-width black-text gray-background">
+                        Rename course
+                    </ModalButton>
+                    <ModalButton onClick={() => setCurrentModal(Modals.HOLE_LABELS)}className="full-width black-text gray-background">
+                        Modify hole labels
+                    </ModalButton>            
+                    <ModalButton onClick={() => {
+                        // DataHandler.deleteCourse must be called before deleteCourse
+                        // because it depends on values still being in Dexie that are
+                        // deleted by deleteCoruse
+                        DataHandler.deleteCourse(currentCourse, true).then(() => {
+                            setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
+                            setShowOptionsCourse(null);
+                        });
+                        // Update the list of courses
+                    }} className="full-width caution-button">
+                        Delete
+                    </ModalButton>
+                </MenuModal>
+            }
+
+            {currentModal === Modals.HOLE_LABELS &&
+                // If the user clicks the X, bring them back to course options.
+                // If the onClose happened because the user submitted, close all modals
+                <HolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
+                    
+                </HolesModal>
+            }
+
             <h1 className="h-main">My Courses</h1>
             <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
                 const newSortBy = sortByDropdownRef.current?.getValue();
@@ -126,7 +148,8 @@ function MainPage (props) {
                                 props.navigateTo("course");
                             }}
                             onOpenOptionsList = {() => {
-                                setShowOptionsCourse(course);
+                                setCurrentCourse(course);
+                                setCurrentModal(Modals.COURSE_OPTIONS);
                             }}>
                         </CourseSlot>
                     );

@@ -32,13 +32,16 @@ class AddCourseForm extends React.Component {
             alert("Enter a valid number of holes.");
             return;
         }
+        
         // Add to Dexie
         const course = {
             courseUUID: uuidv4(),
             name: name,
             holes: holes,
             modified: Date (),
-            roundCount: 0
+            roundCount: 0,
+            // Default hole labels are 1, 2, 3, ...
+            holeLabels: Array.from({ length: holes }, (_, i) => i + 1)
         };
         DataHandler.addCourse(course).then(() => {
             nameElement.value = "";

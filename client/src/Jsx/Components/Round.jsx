@@ -2,8 +2,8 @@ import React from "react";
 import RoundBox from "./RoundBox";
 import TripleDotButton from "../Components/TripleDotButton";
 import "../../css/general.css";
-import { isoToVisualFormat } from "../../js_utils/formatting";
-import DataHandler from "../../data_handling/data_handler";
+import { isoToVisualFormat } from "../../js_utils/dates";
+import ObjectTools from "../../js_utils/ObjectTools";
 
 class Round extends React.Component {
     constructor (props) {
@@ -22,7 +22,7 @@ class Round extends React.Component {
 
     recalculateTotal = () => {
         // New total
-        const total = DataHandler.getRoundTotal(this.props.round);
+        const total = ObjectTools.getRoundTotal(this.props.round);
         this.setState({
             total: total
         });
@@ -102,7 +102,7 @@ class Round extends React.Component {
                                 }}
                                 key={index}
                                 initialValue={scoreValue}
-                                index={index}/>
+                                index={this.props.course.holeLabels[index]}/>
                             );
                         })}
                     </div>

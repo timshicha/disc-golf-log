@@ -61,6 +61,21 @@
     width: 90%;
 }
 
+.hole-label-input-container {
+    width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+
+.hole-label-input {
+    width: 10px;
+    margin: 0.5%;
+    margin-top: 10px;
+    flex: 0 0 19%;
+    box-sizing: border-box;
+}
+
 .caution-button {
     background-color: rgb(220, 0, 0);
     color: white;
