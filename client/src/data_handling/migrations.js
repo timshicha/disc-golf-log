@@ -45,7 +45,7 @@ export const migrate_v1_to_v2 = () => {
                         // is preserved. This ensures that if a user played multiple
                         // rounds at the same course in one day, the order of the rounds
                         // is not messed up.
-                        let newDate = getSafeIso(rounds[i].date);
+                        let newDate = getSafeIso(rounds[j].date);
                         // Don't let it go past 59 so things don't break.
                         // Let's hope a user didn't play over 60 times at the same course
                         // in one day.
