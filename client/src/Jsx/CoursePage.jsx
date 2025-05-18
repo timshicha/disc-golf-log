@@ -10,6 +10,8 @@ import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
 import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
+import { compareStrings } from "../js_utils/sorting";
+import { toLocalIsoString } from "../js_utils/dates";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -40,6 +42,9 @@ class CoursePage extends React.Component{
     // Get a list of rounds for this course
     reloadCourseRounds = () => {
         DataHandler.getCourseRounds(this.state.course).then(result => {
+            // Sort the rounds by date
+            result.sort((a, b) => compareStrings(a.date, b.date));
+            console.log(result);
             this.setState({rounds: result});
         });
     }
@@ -129,7 +134,7 @@ class CoursePage extends React.Component{
                     roundUUID: roundUUID,
                     holes: this.state.course.holes,
                     score: Array(this.state.course.holes).fill(""),
-                    date: (new Date()).toISOString(),
+                    date: toLocalIsoString(), // Created an iso string of current local time
                     data: {}
                 };
                 DataHandler.addRound(newRound, this.state.course, true).then(() => {

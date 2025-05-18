@@ -1,6 +1,7 @@
 import Dexie from "dexie";
 import DataHandler from "./data_handler";
 import { v4 as uuidv4 } from "uuid";
+import { getSafeIso } from "../js_utils/dates";
 
 const dbv1 = new Dexie("BogeyPad");
 dbv1.version(1).stores({
@@ -29,6 +30,32 @@ export const migrate_v1_to_v2 = () => {
                         // as this will be required to upload to
                         // the database
                         rounds[j].course = courses[i];
+                        // Other round-related things
+                        rounds[i].roundUUID = uuidv4();
+                        rounds[i].data = {};
+                        // Old dates may be poorly formatted, and...
+                        //
+                        // In the old database, rounds were simply added in order
+                        // by roundID. This meant that their order was preserved in
+                        // the order that they were added. Since we are now sorting
+                        // by time and we only have the date (no time) of the old db
+                        // courses, we can't possible sort them properly off the date
+                        // alone. So, we will use the order the rounds come in and
+                        // just add a second to each round's date so that the order
+                        // is preserved. This ensures that if a user played multiple
+                        // rounds at the same course in one day, the order of the rounds
+                        // is not messed up.
+                        let newDate = getSafeIso(rounds[i].date);
+                        // Don't let it go past 59 so things don't break.
+                        // Let's hope a user didn't play over 60 times at the same course
+                        // in one day.
+                        let order = Math.min(j, 59);
+                        const ones = order % 10;
+                        order -= ones;
+                        order /= 10;
+                        const tens = order;
+                        newDate = newDate.substring(0, newDate.length - 2) + tens + ones;
+                        rounds[i].date = newDate;
                     }
                 }
                 // rounds is now roundCount
@@ -38,14 +65,6 @@ export const migrate_v1_to_v2 = () => {
                 // Add holeLabels field
                 courses[i].holeLabels = Array.from({ length: courses[i].holes }, (_, i) => i + 1);
                 courses[i].data = {};
-            }
-
-            // For each round
-            for (let i = 0; i < rounds.length; i++) {
-                // Assign each round a roundUUID
-                const roundUUID = uuidv4();
-                rounds[i].roundUUID = roundUUID;
-                rounds[i].data = {};
             }
 
             // Display courses and rounds
