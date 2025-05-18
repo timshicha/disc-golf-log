@@ -109,7 +109,7 @@ class CoursePage extends React.Component{
             <div id="rounds-div" ref={this.roundsDivRef}>
                 {this.state.rounds.map((round, index) => {
                     return (
-                        <Round round={round} course={this.state.course} key={round.id || index} index={index}
+                        <Round round={round} course={this.state.course} key={round.roundUUID} index={index}
                             // When the user clicks on the triple dot icon
                             // on this round
                             onOpenModal={(index) => {

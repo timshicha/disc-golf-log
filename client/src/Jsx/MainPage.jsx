@@ -114,7 +114,7 @@ function MainPage (props) {
                 {courses.map(course => {
                     return (
                         <CourseSlot course={course}
-                            key={course.name}
+                            key={course.courseUUID}
                             onClick={() => {
                                 // If the user selects a course, tell App.jsx
                                 // to navigate to the Course Page and notify which
