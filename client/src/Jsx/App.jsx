@@ -11,7 +11,18 @@ import CoursePage from "./CoursePage";
 import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
 import { Pages } from "../js_utils/Enums";
+import { migrate_v1_to_v2 } from "../data_handling/migrations";
 
+// v1.0.0 now uses DBv2. If v1.0.0 isn't set, migrate to DBv2
+if(!localStorage.getItem("version")) {
+    migrate_v1_to_v2().then(() => {
+        localStorage.setItem("version", "1.0.0");
+        alert("All data moved to new database successfully!");
+        window.location.reload();
+    }).catch(error => {
+        alert(error);
+    })
+}
 
 function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);

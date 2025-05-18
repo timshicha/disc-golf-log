@@ -129,7 +129,8 @@ class CoursePage extends React.Component{
                     roundUUID: roundUUID,
                     holes: this.state.course.holes,
                     score: Array(this.state.course.holes).fill(""),
-                    date: (new Date()).toISOString()
+                    date: (new Date()).toISOString(),
+                    data: {}
                 };
                 DataHandler.addRound(newRound, this.state.course, true).then(() => {
                     this.reloadCourseRounds();

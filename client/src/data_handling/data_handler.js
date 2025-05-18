@@ -85,8 +85,14 @@ class DataHandler {
         }
         // Add the round
         return db.rounds.add(round).then(() => {
+            // Incremenet round count
+            if(course.roundCount) {
+                course.roundCount++;
+            }
+            else {
+                course.roundCount = 1;
+            }
             // Update course "modified" time
-            course.roundCount++;
             course.modified = Date();
             // Now modify the course and propogate whether
             return this.modifyCourse(course, sendChangeToCloud).then(() => {
@@ -102,7 +108,9 @@ class DataHandler {
     static deleteRound = (round, course, sendChangeToCloud=true) => {
         // Delete the round
         return db.rounds.delete(round.roundUUID).then(() => {
-            course.rounds--;
+            if(course.roundCount) {
+                course.roundCount--;
+            }
             course.modified = Date();
             // Update the course
             return this.modifyCourse(course, sendChangeToCloud).then(() => {

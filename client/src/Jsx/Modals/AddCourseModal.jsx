@@ -41,7 +41,8 @@ class AddCourseModal extends React.Component {
             modified: Date (),
             roundCount: 0,
             // Default hole labels are 1, 2, 3, ...
-            holeLabels: Array.from({ length: holes }, (_, i) => i + 1)
+            holeLabels: Array.from({ length: holes }, (_, i) => i + 1),
+            data: {}
         };
         DataHandler.addCourse(course).then(() => {
             nameElement.value = "";
