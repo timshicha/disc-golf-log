@@ -10,16 +10,10 @@ import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
 import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
-
+import { Pages } from "../js_utils/Enums";
 
 
 function App() {
-
-    const Pages = {
-        MAIN: "main",
-        SETTINGS: "settings",
-        COURSE: "course"
-    }
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
     const [currentCourse, setCurrentCourse] = useState(null);
 

@@ -3,7 +3,7 @@ import "../../../css/OptionsList.css";
 import Backdrop from "../ModalComponents/BackDrop";
 import CloseX from "../ModalComponents/CloseX";
 
-class OptionsList extends React.Component {
+class MenuModal extends React.Component {
     constructor (props) {
         super();
 
@@ -33,4 +33,4 @@ class OptionsList extends React.Component {
     }
 }
 
-export default OptionsList;
+export default MenuModal;

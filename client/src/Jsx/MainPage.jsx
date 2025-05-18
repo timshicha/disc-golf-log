@@ -11,14 +11,10 @@ import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
 import HolesModal from "./Modals/HolesModal";
+import { Modals } from "../js_utils/Enums";
+import CourseOptionsModal from "./Modals/CourseOptionsModal";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
-
-const Modals = {
-    COURSE_OPTIONS: "course options",
-    RENAME: "rename",
-    HOLE_LABELS: "hole labels"
-}
 
 function MainPage (props) {
     const [courses, setCourses] = useState([]);
@@ -41,10 +37,6 @@ function MainPage (props) {
             reloadCourses();
         });
     }, []);
-
-    const showModal = (modalToShow) => {
-
-    }
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
@@ -89,27 +81,11 @@ function MainPage (props) {
             }
 
             {currentModal === Modals.COURSE_OPTIONS &&
-                <MenuModal onClose={() => setCurrentModal(null)}>
-                    <ModalTitle>{currentCourse.name}</ModalTitle>
-                    <ModalButton onClick={() => setCurrentModal(Modals.RENAME)} className="full-width black-text gray-background">
-                        Rename course
-                    </ModalButton>
-                    <ModalButton onClick={() => setCurrentModal(Modals.HOLE_LABELS)}className="full-width black-text gray-background">
-                        Modify hole labels
-                    </ModalButton>            
-                    <ModalButton onClick={() => {
-                        // DataHandler.deleteCourse must be called before deleteCourse
-                        // because it depends on values still being in Dexie that are
-                        // deleted by deleteCoruse
-                        DataHandler.deleteCourse(currentCourse, true).then(() => {
-                            setCourses(courses.filter((course, _) => course.courseUUID !== showOptionsCourse.courseUUID));
-                            setShowOptionsCourse(null);
-                        });
-                        // Update the list of courses
-                    }} className="full-width caution-button">
-                        Delete
-                    </ModalButton>
-                </MenuModal>
+                <CourseOptionsModal
+                    setModal={setCurrentModal}
+                    course={currentCourse}
+                    deleteCourseCallback={reloadCourses}>    
+                </CourseOptionsModal>
             }
 
             {currentModal === Modals.HOLE_LABELS &&
