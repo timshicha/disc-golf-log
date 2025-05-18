@@ -35,7 +35,6 @@ class RoundBox extends React.Component {
         else {
             this.backgroundClass = "";
         }
-        console.log(this.backgroundClass)
         return (
             <div className="round-box">
                 <div style={{

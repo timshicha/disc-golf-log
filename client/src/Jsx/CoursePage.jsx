@@ -59,7 +59,6 @@ class CoursePage extends React.Component{
                         // Make sure new date is not null
                         if(newDate) {
                             this.state.rounds[this.state.roundSelectedIndex].date = newDate;
-                            console.log("here")
                             // Update the round (date)
                             DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
                                 this.setState({

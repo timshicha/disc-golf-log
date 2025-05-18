@@ -33,11 +33,9 @@ const parseIso = (iso) => {
 
 const isoToVisualFormat = (iso) => {
     if(!iso) {
-        console.log(iso);
         return "";
     }
     const date = parseIso(iso);
-    console.log(iso)
     return `${date.day}, ${date.month}-${date.date}-${date.year}`;
 }
 

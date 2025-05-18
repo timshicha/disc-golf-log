@@ -1,13 +1,13 @@
 import React, { createRef } from "react";
-import BlueButton from "./BlueButton";
-import ModalButton from "../Modals/ModalComponents/ModalButton";
+import BlueButton from "../Components/BlueButton";
+import ModalButton from "./ModalComponents/ModalButton";
 import DataHandler from "../../data_handling/data_handler";
 import "../../css/general.css";
 import { v4 as uuidv4 } from "uuid";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
-class AddCourseForm extends React.Component {
+class AddCourseModal extends React.Component {
     constructor (props) {
         super();
 
@@ -77,7 +77,8 @@ class AddCourseForm extends React.Component {
                         width: "90%",
                         marginLeft: "auto",
                         marginRight: "auto",
-                    }} className="form-main">
+                    }} className="form-main"
+                    autoComplete="off">
                         <div className="form-input-block">
                             <label htmlFor="name">Name: </label>
                             <input type="text" name="name" id="name" style={{
@@ -105,4 +106,4 @@ class AddCourseForm extends React.Component {
     }
 }
 
-export default AddCourseForm;
+export default AddCourseModal;

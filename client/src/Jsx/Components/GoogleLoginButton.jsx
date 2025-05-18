@@ -33,7 +33,7 @@ const GoogleLoginButton = (props) => {
     });
 
     return (
-        <div onClick={login}>{props.children}</div>
+        <div onClick={() => alert("This feature is under construction!")}>{props.children}</div>
     );
 }
 

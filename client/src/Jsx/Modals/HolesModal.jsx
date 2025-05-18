@@ -55,7 +55,6 @@ const HolesModal = (props) => {
         for (let i = 0; i < holes; i++) {
             newLabels[i] = labelRefs.current[i].getValue();
         }
-        console.log(newLabels);
         props.course.holeLabels = newLabels;
         DataHandler.modifyCourse(props.course);
         // Pass true because the form was submitted.

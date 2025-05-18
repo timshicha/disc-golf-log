@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import AddCourseForm from "./Components/AddCourseForm";
+import AddCourseModal from "./Modals/AddCourseModal";
 import CourseSlot from "./Components/CourseSlot";
 import "../css/general.css";
 import MenuModal from "./Modals/Frames/MenuModal";
@@ -40,7 +40,6 @@ function MainPage (props) {
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
-            console.log(result)
             // If sort alphabetically
             if(sortCourseBy.current === "Alphabetical") {
                 result = result.sort((a, b) => compareStrings(a.name, b.name));
@@ -139,7 +138,7 @@ function MainPage (props) {
                     "margin": "25px"
                 }}>You don't have any courses.</p>
             }
-            <AddCourseForm callback={reloadCourses}></AddCourseForm>
+            <AddCourseModal callback={reloadCourses}></AddCourseModal>
         </div>
     );
 }
