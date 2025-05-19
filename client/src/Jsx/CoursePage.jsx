@@ -13,6 +13,8 @@ import BlankSpace from "./Components/BlankSpace";
 import { compareStrings } from "../js_utils/sorting";
 import { toLocalIsoString } from "../js_utils/dates";
 import StickyDiv from "./Components/StickyDiv";
+import { Modals } from "../js_utils/Enums";
+import CommentModal from "./Modals/CommentModal";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -29,7 +31,7 @@ class CoursePage extends React.Component{
             // Which round the options list is opened for,
             // if it is open
             roundSelectedIndex: null,
-            showDateInputModal: false,
+            currentModal: null,
         };
 
     }
@@ -59,8 +61,32 @@ class CoursePage extends React.Component{
     render = () => {
         return (
         <div className="course-page">
+            {this.state.currentModal === Modals.ROUND_OPTIONS &&
+                <MenuModal onClose={() => {
+                    this.setState({currentModal: null});
+                }}>
+                    <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
+                    <ModalButton className="full-width gray-background" onClick={() => {
+                        this.setState({currentModal: Modals.DATE_INPUT});
+                    }}>Adjust date
+                    </ModalButton>
+                    <ModalButton className="full-width gray-background" onClick={() => {
+                        this.setState({currentModal: Modals.COMMENTS});
+                    }}>Add comment</ModalButton>
+                    <ModalButton onClick={() => {
+                        DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+                            this.setState({
+                                rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
+                                roundSelectedIndex: null
+                            });
+                            this.forceUpdate();
+                        })
+                        
+                    }} className="full-width caution-button">Delete round</ModalButton>
+                </MenuModal>
+            }
             {/* If the date input modal is shown */}
-            {this.state.showDateInputModal ?
+            {this.state.currentModal === Modals.DATE_INPUT &&
                 <DateInputModal onSubmit={(newDate) => {
                         // Make sure new date is not null
                         if(newDate) {
@@ -68,45 +94,34 @@ class CoursePage extends React.Component{
                             // Update the round (date)
                             DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
                                 this.setState({
-                                    showDateInputModal: false,
+                                    currentModal: null,
                                     roundSelectedIndex: null
                                 });
                             });
                         }
                     }}
                     onClose={() => {
-                        this.setState({showDateInputModal: false});
+                        this.setState({currentModal: Modals.ROUND_OPTIONS});
                     }}
                 >
-                </DateInputModal> :
-                <>
-                {/* Otherwise, if a round is selected, show the option modal. */}
-                {this.state.roundSelectedIndex !== null &&
-                    <MenuModal onClose={() => {
-                        this.setState({roundSelectedIndex: null});
-                    }}>
-                        <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                        <ModalButton className="full-width black-text gray-background" onClick={() => {
-                                this.setState({showDateInputModal: true});
-                            }}>Adjust date
-                        </ModalButton>
-                        <ModalButton onClick={() => {
-                            DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
-                                this.setState({
-                                    rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
-                                    roundSelectedIndex: null
-                                });
-                                this.forceUpdate();
-                            })
-
-                        }} className="full-width caution-button">Delete round</ModalButton>
-                    </MenuModal>
-                }
-                </>
+                </DateInputModal>
             }
-            <BackButton onClick={() => this.props.navigateTo("main")}></BackButton>
-
-            <h1 className="h-main">{this.state.course.name}</h1>
+            {/* If the "add comments" modal is open */}
+            {this.state.currentModal === Modals.COMMENTS &&
+                <CommentModal onSubmit={(comments) => {
+                    this.state.rounds[this.state.roundSelectedIndex].comments = comments;
+                    DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+                        this.setState({
+                            currentModal: null,
+                            roundSelectedIndex: null
+                        });
+                    })
+                }} onClose={() => {
+                    this.setState({currentModal: Modals.ROUND_OPTIONS})
+                }} initialValue={this.state.rounds[this.state.roundSelectedIndex].comments}>
+                </CommentModal>
+            }
+            
             <div id="rounds-div" ref={this.roundsDivRef}>
                 {this.state.rounds.map((round, index) => {
                     return (
@@ -115,7 +130,8 @@ class CoursePage extends React.Component{
                             // on this round
                             onOpenModal={(index) => {
                                 this.setState({
-                                    roundSelectedIndex: index
+                                    roundSelectedIndex: index,
+                                    currentModal: Modals.ROUND_OPTIONS
                                 });
                             }}
                         >

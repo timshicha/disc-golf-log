@@ -82,12 +82,17 @@ function App() {
                         <div className="navbar-title">Settings</div>
                     </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
-
                 </>
             }
             {currentPage === Pages.COURSE &&
-                <CoursePage course={currentCourse} navigateTo={navigateTo}>
-                </CoursePage>
+                <>
+                    <NavBar>
+                        <BackButton onClick={() => navigateTo("main")}></BackButton>
+                        <div className="navbar-title">{currentCourse.name}</div>
+                    </NavBar>
+                    <CoursePage course={currentCourse} navigateTo={navigateTo}>
+                    </CoursePage>
+                </>
             }
         </div>
     );

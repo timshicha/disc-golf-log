@@ -114,7 +114,7 @@ class Round extends React.Component {
 
     render () {
         return (
-            <div className="margin-top-10" style={{
+            <div className="margin-top-15" style={{
                 fontWeight: "bold",
                 width: "100%",
             }}>
@@ -171,6 +171,7 @@ class Round extends React.Component {
                         })}
                     </div>
                 </div>
+                <div className="round-comments text-color-subtle">{this.props.round.comments}</div>
             </div>
         );
     }

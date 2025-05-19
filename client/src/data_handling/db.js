@@ -3,7 +3,7 @@ import Dexie from "dexie";
 const db = new Dexie("BogeyPadv2");
 db.version(2).stores({
     courses: "&courseUUID, name, holes, roundCount, modified, data, holeLabels",
-    rounds: "&roundUUID, courseUUID, date, score, data",
+    rounds: "&roundUUID, courseUUID, date, score, data, comments",
     addCourseQueue: "&courseUUID, name, holes, modified",
     deleteCourseQueue: "&courseUUID",
     modifyCourseQueue: "&courseUUID, name, holes, modified",
