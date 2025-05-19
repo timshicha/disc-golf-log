@@ -13,6 +13,9 @@ import DataHandler from "../data_handling/data_handler";
 import HolesModal from "./Modals/HolesModal";
 import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
+import BlankSpace from "./Components/BlankSpace";
+import StickyDiv from "./Components/StickyDiv";
+import BlueButton from "./Components/BlueButton";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -96,18 +99,20 @@ function MainPage (props) {
             }
 
             <h1 className="h-main">My Courses</h1>
-            <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
-                const newSortBy = sortByDropdownRef.current?.getValue();
-                if(newSortBy) {
-                    localStorage.setItem("sortCoursesBy", newSortBy);
-                    sortCourseBy.current = newSortBy;
-                    reloadCourses();
-                }
-            }}>
-                <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                <DropdownOption value="Most played">Most played</DropdownOption>
-            </Dropdown>
+            <div className="above-courses-container">
+                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
+                    const newSortBy = sortByDropdownRef.current?.getValue();
+                    if(newSortBy) {
+                        localStorage.setItem("sortCoursesBy", newSortBy);
+                        sortCourseBy.current = newSortBy;
+                        reloadCourses();
+                    }
+                }}>
+                    <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
+                    <DropdownOption value="Recently modified">Recently modified</DropdownOption>
+                    <DropdownOption value="Most played">Most played</DropdownOption>
+                </Dropdown>
+            </div>
             {courses.length > 0
             ? // If there are courses, show courses
                 <>
@@ -138,7 +143,13 @@ function MainPage (props) {
                     "margin": "25px"
                 }}>You don't have any courses.</p>
             }
-            <AddCourseModal callback={reloadCourses}></AddCourseModal>
+            <BlankSpace height="100px"></BlankSpace>
+            <StickyDiv>
+                <BlueButton onClick={() => setCurrentModal(Modals.ADD_COURSE)}>Add course</BlueButton>
+            </StickyDiv>
+            {currentModal === Modals.ADD_COURSE &&
+                <AddCourseModal onClose={() => setCurrentModal(null)} callback={reloadCourses} className="add-course-modal"></AddCourseModal>
+            }
         </div>
     );
 }

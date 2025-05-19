@@ -12,6 +12,7 @@ import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
 import { compareStrings } from "../js_utils/sorting";
 import { toLocalIsoString } from "../js_utils/dates";
+import StickyDiv from "./Components/StickyDiv";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -127,22 +128,24 @@ class CoursePage extends React.Component{
             bottom. This way, the user can scroll all the way to the bottom
             round and the blank space is what is covered under the button. */}
             <BlankSpace height="150px"></BlankSpace>
-            <BlueButton onClick={() => {
-                const roundUUID = uuidv4();
-                const newRound = {
-                    courseUUID: this.state.course.courseUUID,
-                    roundUUID: roundUUID,
-                    holes: this.state.course.holes,
-                    score: Array(this.state.course.holes).fill(""),
-                    date: toLocalIsoString(), // Created an iso string of current local time
-                    data: {}
-                };
-                DataHandler.addRound(newRound, this.state.course, true).then(() => {
-                    this.reloadCourseRounds();
-                    // Scroll to bottom
-                    this.scrollToBottom();
-                });
-            }} className="margin-top-10 fixed-bottom-button">Add Round</BlueButton>
+            <StickyDiv>
+                <BlueButton onClick={() => {
+                    const roundUUID = uuidv4();
+                    const newRound = {
+                        courseUUID: this.state.course.courseUUID,
+                        roundUUID: roundUUID,
+                        holes: this.state.course.holes,
+                        score: Array(this.state.course.holes).fill(""),
+                        date: toLocalIsoString(), // Created an iso string of current local time
+                        data: {}
+                    };
+                    DataHandler.addRound(newRound, this.state.course, true).then(() => {
+                        this.reloadCourseRounds();
+                        // Scroll to bottom
+                        this.scrollToBottom();
+                    });
+                }}>Add Round</BlueButton>
+            </StickyDiv>
         </div>
         );
     }

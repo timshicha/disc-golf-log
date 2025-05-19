@@ -1,0 +1,20 @@
+
+.sticky-div-gradient {
+    width: 100%;
+    height: 20px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255, 255, 1));
+}
+
+.sticky-div {
+    left: 0px;
+    pointer-events: none;
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+}
+
+.sticky-div-bg {
+    pointer-events: all;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

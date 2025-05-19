@@ -42,7 +42,6 @@ class RoundBox extends React.Component {
                 }}>
                     <div style={{
                         position: "absolute",
-                        zIndex: "1",
                         marginLeft: "2px",
                         marginTop: "0px",
                         color: "#aaaaaa",
