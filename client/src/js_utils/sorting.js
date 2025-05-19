@@ -12,6 +12,9 @@ const compareStrings = (string1, string2) => {
 // 0 if same
 // 1 if the second date comes first (or if first is null)
 const compareDates = (date1, date2) => {
+    // Convert dates to dates
+    date1 = new Date(date1);
+    date2 = new Date(date2);
     if(!date1 || date1 < date2) return -1;
     if(date1 === date2) return 0;
     return 1;
