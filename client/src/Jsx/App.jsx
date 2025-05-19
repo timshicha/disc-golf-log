@@ -3,6 +3,7 @@ import MainPage from "./MainPage";
 import SettingsPage from "./SettingsPage";
 import NavBar from "./Components/NavBar";
 import "../css/navbar.css";
+import "../css/general.css";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
@@ -52,7 +53,7 @@ function App() {
     }
 
     return (
-        <>
+        <div className="app">
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>
@@ -88,7 +89,7 @@ function App() {
                 <CoursePage course={currentCourse} navigateTo={navigateTo}>
                 </CoursePage>
             }
-        </>
+        </div>
     );
 }
 

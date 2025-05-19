@@ -29,7 +29,7 @@ class CoursePage extends React.Component{
             // Which round the options list is opened for,
             // if it is open
             roundSelectedIndex: null,
-            showDateInputModal: false
+            showDateInputModal: false,
         };
 
     }
@@ -122,12 +122,12 @@ class CoursePage extends React.Component{
                         </Round>
                     );
                 })}
+                <BlankSpace height="200px"></BlankSpace>
             </div>
             {/* There is an "Add round" at the bottom of the page. This
             may cover the rounds at the bottom, so add blank space at the
             bottom. This way, the user can scroll all the way to the bottom
             round and the blank space is what is covered under the button. */}
-            <BlankSpace height="150px"></BlankSpace>
             <StickyDiv>
                 <BlueButton onClick={() => {
                     const roundUUID = uuidv4();

@@ -115,26 +115,27 @@ function MainPage (props) {
             </div>
             {courses.length > 0
             ? // If there are courses, show courses
-                <>
-                {courses.map(course => {
-                    return (
-                        <CourseSlot course={course}
-                            key={course.courseUUID}
-                            onClick={() => {
-                                // If the user selects a course, tell App.jsx
-                                // to navigate to the Course Page and notify which
-                                // course was selected.
-                                props.setCurrentCourse(course);
-                                props.navigateTo("course");
-                            }}
-                            onOpenOptionsList = {() => {
-                                setCurrentCourse(course);
-                                setCurrentModal(Modals.COURSE_OPTIONS);
-                            }}>
-                        </CourseSlot>
-                    );
-                })}
-                </>
+                <div className="courses-div">
+                    {courses.map(course => {
+                        return (
+                            <CourseSlot course={course}
+                                key={course.courseUUID}
+                                onClick={() => {
+                                    // If the user selects a course, tell App.jsx
+                                    // to navigate to the Course Page and notify which
+                                    // course was selected.
+                                    props.setCurrentCourse(course);
+                                    props.navigateTo("course");
+                                }}
+                                onOpenOptionsList = {() => {
+                                    setCurrentCourse(course);
+                                    setCurrentModal(Modals.COURSE_OPTIONS);
+                                }}>
+                            </CourseSlot>
+                        );
+                    })}
+                    <BlankSpace height="200px"></BlankSpace>
+                </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
                 <p style={{
@@ -143,7 +144,6 @@ function MainPage (props) {
                     "margin": "25px"
                 }}>You don't have any courses.</p>
             }
-            <BlankSpace height="100px"></BlankSpace>
             <StickyDiv>
                 <BlueButton onClick={() => setCurrentModal(Modals.ADD_COURSE)}>Add course</BlueButton>
             </StickyDiv>

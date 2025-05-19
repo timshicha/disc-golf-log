@@ -5,6 +5,10 @@ body, html {
     background-color: white;
 }
 
+.app {
+    overflow: hidden;
+}
+
 .h-main {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
@@ -135,6 +139,11 @@ body, html {
     overflow-anchor: bottom;
     overflow-x: hidden;
     margin: 10px;
+    max-height: calc(100dvh - 100px);
+}
+
+.courses-div {
+    /* max-height: calc(100dvh - 800px); */
 }
 
 .fixed-bottom-button {
@@ -146,4 +155,11 @@ body, html {
 
 .main-page {
     padding: 10px;
+    height: calc(100dvh - 120px);
+    overflow: scroll;
+}
+
+.course-page {
+    height: 100dvh;
+    overflow: hidden;
 }

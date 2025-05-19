@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import "../../../css/OptionsList.css";
 import Backdrop from "../ModalComponents/BackDrop";
 import CloseX from "../ModalComponents/CloseX";
+import { createPortal } from "react-dom";
 
 class MenuModal extends React.Component {
     constructor (props) {
@@ -20,7 +21,7 @@ class MenuModal extends React.Component {
     }
 
     render = () => {
-        return (
+        return createPortal(
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
                 <div {...this.props} className="form-main options-modal" ref={this.ref}>
@@ -28,7 +29,8 @@ class MenuModal extends React.Component {
                     <CloseX onClick={this.props.onClose}></CloseX>
                     {this.props.children}  
                 </div>
-            </>
+            </>,
+            document.body
         );
     }
 }

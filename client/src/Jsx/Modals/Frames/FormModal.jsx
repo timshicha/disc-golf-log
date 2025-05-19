@@ -1,4 +1,5 @@
 import React, { createRef } from "react";
+import { createPortal } from "react-dom";
 import "../../../css/OptionsList.css";
 import Backdrop from "../ModalComponents/BackDrop";
 import CloseX from "../ModalComponents/CloseX";
@@ -21,7 +22,7 @@ class FormModal extends React.Component {
     }
 
     render = () => {
-        return (
+        return createPortal(
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
                 <form {...this.props} className="form-main options-modal" ref={this.ref}>
@@ -29,7 +30,8 @@ class FormModal extends React.Component {
                     <CloseX onClick={this.props.onClose}></CloseX>
                     {this.props.children}  
                 </form>
-            </>
+            </>,
+            document.body
         );
     }
 }
