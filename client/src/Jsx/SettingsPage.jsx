@@ -1,4 +1,9 @@
 import React from "react";
+import "../css/settingsPage.css";
+import DataHandler from "../data_handling/data_handler";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
+import db from "../data_handling/db";
+import { download } from "../js_utils/downloads";
 
 class SettingsPage extends React.Component {
     constructor (props) {
@@ -6,6 +11,7 @@ class SettingsPage extends React.Component {
 
         this.props = props;
     }
+
 
     navigateTo = (newPage) => {
         if(this.props.navigateTo) {
@@ -16,11 +22,23 @@ class SettingsPage extends React.Component {
         }
     }
 
+    downloadData = () => {
+        return DataHandler.getAllData().then(result => {
+            download(result, "bogey_pad_data.json", true);
+        });
+    }
+
     render = () => {
         return (
-            <>
-                <button onClick={() => {this.navigateTo("main")}}>Back to home</button>
-            </>
+            <div className="settings-page">
+                <p className="settings-text version-text">Version: {localStorage.getItem("version")}</p>
+                <div className="settings-block">
+                    <ModalButton className="gray-background download-button" onClick={this.downloadData}>Download data</ModalButton>
+                    <div className="settings-text">
+                        Download all your courses and rounds into a JSON file.
+                    </div>
+                </div>
+            </div>
         );
     }
 }

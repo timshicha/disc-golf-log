@@ -143,11 +143,11 @@ body, html {
     overflow-anchor: bottom;
     overflow-x: hidden;
     margin: 10px;
-    max-height: calc(100dvh - 100px);
+    height: calc(100dvh - 100px);
 }
 
 .courses-div {
-    /* max-height: calc(100dvh - 800px); */
+    min-height: 100dvh;
 }
 
 .fixed-bottom-button {
@@ -164,7 +164,10 @@ body, html {
 }
 
 .course-page {
-    height: 100dvh;
     margin-top: 50px;
     overflow: hidden;
+}
+
+.settings-page {
+    margin-top: 50px;
 }
