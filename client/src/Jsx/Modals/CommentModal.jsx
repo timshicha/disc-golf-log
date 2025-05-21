@@ -10,7 +10,14 @@ const CommentModal = (props) => {
 
     useEffect(() => {
         if(textAreaRef.current) {
-            textAreaRef.current.value = props.initialValue;
+            // Required because JS will literally put "undefined" in the
+            // text box if field is empty
+            if(!props.initialValue) {
+                textAreaRef.current.value = "";
+            }
+            else {
+                textAreaRef.current.value = props.initialValue;
+            }
             textAreaRef.current.focus();
         }
     }, []);
