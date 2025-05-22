@@ -1,4 +1,5 @@
 import React from "react";
+import "../../../css/general.css";
 
 class ModalButton extends React.Component {
     constructor (props) {
@@ -9,7 +10,7 @@ class ModalButton extends React.Component {
 
     render = () => {
         return (
-            <button {...this.props} className={"form-button " + this.props.className}>
+            <button {...this.props} className={"form-button black-text " + this.props.className}>
                 {this.props.children}
             </button>
         );

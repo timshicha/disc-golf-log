@@ -1,3 +1,4 @@
+@import "tailwindcss";
 
 body, html {
     margin: 0px;
@@ -93,6 +94,10 @@ body, html {
 
 .black-text {
     color: black;
+}
+
+.white-text {
+    color: white;
 }
 
 .red-background {

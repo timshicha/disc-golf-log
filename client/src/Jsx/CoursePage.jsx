@@ -66,11 +66,11 @@ class CoursePage extends React.Component{
                     this.setState({currentModal: null});
                 }}>
                     <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                    <ModalButton className="full-width gray-background margin-top-10" onClick={() => {
+                    <ModalButton className="full-width gray-background margin-top-10 white-text" onClick={() => {
                         this.setState({currentModal: Modals.DATE_INPUT});
                     }}>Adjust date
                     </ModalButton>
-                    <ModalButton className="full-width gray-background margin-top-10" onClick={() => {
+                    <ModalButton className="full-width gray-background margin-top-10 white-text" onClick={() => {
                         this.setState({currentModal: Modals.COMMENTS});
                     }}>Add comment</ModalButton>
                     <ModalButton onClick={() => {
@@ -82,7 +82,7 @@ class CoursePage extends React.Component{
                             this.forceUpdate();
                         })
                         
-                    }} className="full-width caution-button margin-top-10">Delete round</ModalButton>
+                    }} className="full-width caution-button margin-top-10 white-text">Delete round</ModalButton>
                 </MenuModal>
             }
             {/* If the date input modal is shown */}

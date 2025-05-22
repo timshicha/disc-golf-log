@@ -64,3 +64,10 @@
     padding: 5px;
     border-radius: 7px;
 }
+
+.settings-save-button {
+    float: right;
+    left: 100%;
+    transform: translate(calc(-100% - 15px));
+    position: absolute;
+}

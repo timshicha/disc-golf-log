@@ -60,7 +60,7 @@ function App() {
                     <img src={titleLogo} className="navbar-title-logo"></img>
                     <div className="navbar-right-items">
                         <GoogleLoginButton onSuccess={onGoogleLoginSuccess}>
-                            <ModalButton className="login-button">Sign in</ModalButton>
+                            <ModalButton className="login-button white-text">Sign in</ModalButton>
                         </GoogleLoginButton>
                         <button className="navbar-settings-button" onClick={() => {
                             navigateTo("settings");
@@ -78,8 +78,9 @@ function App() {
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
-                        <BackButton onClick={() => navigateTo("main")}></BackButton>
+                        <ModalButton className="settings-save-button">Save</ModalButton>
                         <div className="navbar-title">Settings</div>
+                        <BackButton onClick={() => navigateTo("main")}></BackButton>
                     </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
                 </>

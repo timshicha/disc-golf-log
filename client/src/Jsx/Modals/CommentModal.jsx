@@ -41,9 +41,9 @@ const CommentModal = (props) => {
         <FormModal onSubmit={onSubmit} onClose={props.onClose}>
             <ModalTitle>Comments</ModalTitle>
             <textarea ref={textAreaRef}></textarea>
-            <div>
-                <ModalButton onClick={clearTextarea} className="half-width-button gray-background mx-5">Clear</ModalButton>
-                <ModalButton type="submit" className="half-width-button blue-background mx-5">Submit</ModalButton>
+            <div className="margin-top-10">
+                <ModalButton onClick={clearTextarea} className="half-width-button gray-background mx-5 white-text">Clear</ModalButton>
+                <ModalButton type="submit" className="half-width-button blue-background mx-5 white-text">Submit</ModalButton>
             </div>
         </FormModal>
     )

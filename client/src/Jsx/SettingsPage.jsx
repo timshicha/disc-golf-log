@@ -33,9 +33,15 @@ class SettingsPage extends React.Component {
             <div className="settings-page">
                 <p className="settings-text version-text">Version: {localStorage.getItem("version")}</p>
                 <div className="settings-block">
-                    <ModalButton className="gray-background download-button" onClick={this.downloadData}>Download data</ModalButton>
+                    <ModalButton className="gray-background download-button white-text" onClick={this.downloadData}>Download data</ModalButton>
                     <div className="settings-text">
                         Download all your courses and rounds into a JSON file.
+                    </div>
+                </div>
+                <div className="settings-block">
+                    <input type="checkbox" className="settings-checkbox"></input>
+                    <div className="settings-text">
+                        Ask for confirmation before deleting courses or rounds.
                     </div>
                 </div>
             </div>
