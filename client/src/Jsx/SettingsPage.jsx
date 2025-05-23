@@ -5,7 +5,7 @@ import { download } from "../js_utils/downloads";
 
 const SettingsBlock = (props) => {
     return (
-        <div className={"w-[90%] bg-gray-light mx-auto rounded-[7px] p-[10px] mb-[10px] "
+        <div className={"w-[90%] bg-gray-light mx-auto rounded-[7px] p-[10px] mb-[10px] min-h-[62px] "
             + props.className}>
             {props.children}
         </div>

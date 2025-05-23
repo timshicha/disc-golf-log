@@ -182,12 +182,3 @@ body, html {
     height: calc(100dvh - 120px);
     overflow: scroll;
 }
-
-.course-page {
-    margin-top: 50px;
-    overflow: hidden;
-}
-
-.settings-page {
-    margin-top: 50px;
-}

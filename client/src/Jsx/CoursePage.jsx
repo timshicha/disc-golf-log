@@ -59,7 +59,7 @@ class CoursePage extends React.Component{
 
     render = () => {
         return (
-        <div className="course-page">
+        <div className="mt-[54px]">
             {this.state.currentModal === Modals.ROUND_OPTIONS &&
                 <MenuModal onClose={() => {
                     this.setState({currentModal: null});

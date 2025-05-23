@@ -2,12 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import AddCourseModal from "./Modals/AddCourseModal";
 import CourseSlot from "./Components/CourseSlot";
 import "../css/general.css";
-import MenuModal from "./Modals/Frames/MenuModal";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
-import Dropdown from "./Modals/Frames/Dropdown";
-import DropdownOption from "./Modals/ModalComponents/DropdownOption";
+import Dropdown, { DropdownOption } from "./Modals/Frames/Dropdown";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
 import HolesModal from "./Modals/HolesModal";
@@ -100,7 +97,7 @@ function MainPage (props) {
 
             <h1 className="h-main">My Courses</h1>
             <div className="above-courses-container">
-                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
+                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} onChange={() => {
                     const newSortBy = sortByDropdownRef.current?.getValue();
                     if(newSortBy) {
                         localStorage.setItem("sortCoursesBy", newSortBy);
