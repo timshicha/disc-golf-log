@@ -1,15 +1,3 @@
-.navbar {
-    background-color: rgb(255, 143, 143);
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-    padding-left: 0px;
-    padding-right: 10px;
-    height: 42px;
-    position: fixed;
-    width: 100%;
-    top: 0px;
-}
 
 .navbar-title-logo {
     height: 40px;

@@ -31,19 +31,6 @@
     padding: 5px;
 }
 
-/* The submit button of the form */
-.form-button {
-    /* margin-top: 10px; */
-    font-weight: bold;
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    display: inline-block;
-}
-
 .mx-auto {
     margin-left: auto;
     margin-right: auto;

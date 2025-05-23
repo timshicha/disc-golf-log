@@ -78,7 +78,9 @@ function App() {
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
-                        <ModalButton className="settings-save-button">Save</ModalButton>
+                        <div className="absolute ml-[100%] translate-x-[calc(-100%-7px)] absolute">
+                            <ModalButton className="gray-btn">Save</ModalButton>
+                        </div>
                         <div className="navbar-title">Settings</div>
                         <BackButton onClick={() => navigateTo("main")}></BackButton>
                     </NavBar>

@@ -10,7 +10,7 @@ class ModalButton extends React.Component {
 
     render = () => {
         return (
-            <button {...this.props} className={"form-button black-text " + this.props.className}>
+            <button {...this.props} className={"inline-block p-[10px] text-[18px] font-bold font-sans rounded-[7px] cursor-pointer " + this.props.className}>
                 {this.props.children}
             </button>
         );
