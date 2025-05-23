@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./Jsx/App";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import "./css/general.css";
 
 const VERSION = import.meta.env.VITE_VERSION;
 

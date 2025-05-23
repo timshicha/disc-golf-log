@@ -26,7 +26,7 @@ if(localStorage.getItem("version") !== "1.0.0") {
 }
 
 function App() {
-    const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
+    const [currentPage, setCurrentPage] =  useState(Pages.SETTINGS);
     const [currentCourse, setCurrentCourse] = useState(null);
 
     useEffect(() => {

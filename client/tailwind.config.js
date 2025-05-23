@@ -1,4 +1,3 @@
-
 export default {
     content: [
         "./index.html",
@@ -7,7 +6,10 @@ export default {
     theme: {
         extend: {
             colors: {
-                special: "#444444"
+                "gray-dark": "#444444",
+                "gray-mild": "#666666",
+                "gray-subtle": "#aaaaaa",
+                "gray-light": "#dddddd"
             }
         }
     },
