@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import AddCourseModal from "./Modals/AddCourseModal";
 import CourseSlot from "./Components/CourseSlot";
-import "../css/general.css";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
 import Dropdown, { DropdownOption } from "./Modals/Frames/Dropdown";
