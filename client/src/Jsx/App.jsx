@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import MainPage from "./MainPage";
 import SettingsPage from "./SettingsPage";
-import NavBar from "./Components/NavBar";
-import "../css/navbar.css";
+import NavBar, { NavBarBackButton, NavBarTitle } from "./Components/NavBar";
 import "../css/general.css";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
-import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
 import { Pages } from "../js_utils/Enums";
 import { migrate_v1_to_v2 } from "../data_handling/migrations";
@@ -57,15 +55,15 @@ function App() {
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>
-                    <img src={titleLogo} className="navbar-title-logo"></img>
-                    <div className="navbar-right-items">
+                    <img src={titleLogo} className="h-[40px]"></img>
+                    <div className="flex">
                         <GoogleLoginButton onSuccess={onGoogleLoginSuccess}>
-                            <ModalButton className="login-button white-text">Sign in</ModalButton>
+                            <ModalButton className="mt-0 bg-black h-[42px] box-border overflow-hidden text-white">Sign in</ModalButton>
                         </GoogleLoginButton>
-                        <button className="navbar-settings-button" onClick={() => {
+                        <button className="w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
                         }}>
-                            <img src={cogwheel}></img>
+                            <img className="h-[42px] w-[42px]" src={cogwheel}></img>
                         </button>
                     </div>
                 </NavBar>
@@ -79,10 +77,10 @@ function App() {
                 <>
                     <NavBar>
                         <div className="absolute ml-[100%] translate-x-[calc(-100%-7px)] absolute">
-                            <ModalButton className="gray-btn">Save</ModalButton>
+                            <ModalButton className="bg-black text-white">Save</ModalButton>
                         </div>
-                        <div className="navbar-title">Settings</div>
-                        <BackButton onClick={() => navigateTo("main")}></BackButton>
+                        <NavBarTitle>Settings</NavBarTitle>
+                        <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
                     </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
                 </>
@@ -90,8 +88,8 @@ function App() {
             {currentPage === Pages.COURSE &&
                 <>
                     <NavBar>
-                        <BackButton onClick={() => navigateTo("main")}></BackButton>
-                        <div className="navbar-title">{currentCourse.name}</div>
+                        <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
+                        <NavBarTitle>{currentCourse.name}</NavBarTitle>
                     </NavBar>
                     <CoursePage course={currentCourse} navigateTo={navigateTo}>
                     </CoursePage>

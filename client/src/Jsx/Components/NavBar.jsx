@@ -1,6 +1,22 @@
 import React from "react";
-import "../../css/navbar.css";
 import { createPortal } from "react-dom";
+import backCarrot from "../../assets/images/backCarrot.png";
+
+const NavBarBackButton = (props) => {
+    return (
+        <input type="image" onClick={props.onClick}
+            src={backCarrot} className="h-[42px] absolute bg-black p-[5px] rounded-[7px] ml-[5px]">
+        </input>
+    );
+}
+
+const NavBarTitle = (props) => {
+    return (
+        <div className="mx-auto mt-[7px] text-black font-sans font-bold text-[25px]">
+            {props.children}
+        </div>
+    );
+}
 
 const NavBar = (props) => {
 
@@ -11,3 +27,4 @@ const NavBar = (props) => {
 }
 
 export default NavBar;
+export { NavBarTitle, NavBarBackButton };

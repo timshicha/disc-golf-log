@@ -8,7 +8,6 @@ import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import DateInputModal from "./Modals/DateInputModal";
 import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
-import BackButton from "./Components/BackButton";
 import BlankSpace from "./Components/BlankSpace";
 import { compareStrings } from "../js_utils/sorting";
 import { toLocalIsoString } from "../js_utils/dates";
