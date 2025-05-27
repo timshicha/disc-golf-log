@@ -9,7 +9,9 @@ export default {
                 "gray-dark": "#444444",
                 "gray-mild": "#666666",
                 "gray-subtle": "#aaaaaa",
-                "gray-light": "#dddddd"
+                "gray-light": "#dddddd",
+
+                "blue-basic": "#4a86e8",
             }
         }
     },

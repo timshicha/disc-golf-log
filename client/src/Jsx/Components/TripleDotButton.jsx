@@ -3,16 +3,14 @@ import tripleDotImg from "../../assets/images/tripleDot.svg";
 
 class TripleDotButton extends React.Component {
     constructor (props) {
-        super();
+        super(props);
 
         this.props = props;
     }
 
     render = () => {
         return (
-            <img src={tripleDotImg}
-            {...this.props}
-            >
+            <img src={tripleDotImg} {...this.props} className={this.props.className}>
             </img>
         );
     }
