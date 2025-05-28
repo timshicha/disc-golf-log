@@ -32,7 +32,7 @@ class DateInputModal extends React.Component {
             <FormModal onSubmit={this.handleSubmit} onClose={this.props.onClose}>
                 <ModalTitle>Adjust Date</ModalTitle>
                 <input type="date" className="w-[220px]" ref={this.ref}></input>
-                <ModalButton type="submit" className="w-[150px] mx-5 blue-background margin-top-10 text-white">Apply</ModalButton>
+                <ModalButton type="submit" className="w-[150px] mx-[5px] bg-blue-basic text-white mt-[10px]">Apply</ModalButton>
             </FormModal>
         );
     }

@@ -2,6 +2,7 @@ import React from "react";
 import DataHandler from "../data_handling/data_handler";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
 
 const SettingsBlock = (props) => {
     return (
@@ -17,6 +18,10 @@ class SettingsPage extends React.Component {
         super(props);
 
         this.props = props;
+        // Pull user settings from local storage
+        this.state = {
+            confirmDelete: localStorage.getItem("confirm-delete") === "true"
+        };
     }
 
 
@@ -35,6 +40,11 @@ class SettingsPage extends React.Component {
         });
     }
 
+    handleConfirmDeleteToggle = (event) => {
+        this.setState({ confirmDelete: event.target.checked });
+        localStorage.setItem("confirm-delete", event.target.checked);
+    }
+
     render = () => {
         return (
             <div className="settings-page">
@@ -46,7 +56,7 @@ class SettingsPage extends React.Component {
                     </div>
                 </SettingsBlock>
                 <SettingsBlock className="min-h-[60px] bg-special">
-                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark"></input>
+                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle} checked={this.state.confirmDelete}></input>
                     <div className="text-desc">
                         Ask for confirmation before deleting courses or rounds.
                     </div>

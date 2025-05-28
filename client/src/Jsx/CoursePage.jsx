@@ -1,7 +1,5 @@
 import React, { createRef } from "react";
 import Round from "./Components/Round";
-import BlueButton from "./Components/BlueButton";
-import "../css/general.css";
 import MenuModal from "./Modals/Frames/MenuModal";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
@@ -13,6 +11,7 @@ import { toLocalIsoString } from "../js_utils/dates";
 import StickyDiv from "./Components/StickyDiv";
 import { Modals } from "../js_utils/Enums";
 import CommentModal from "./Modals/CommentModal";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -56,6 +55,17 @@ class CoursePage extends React.Component{
         }
     }
 
+    deleteSelectedRound = () => {
+        DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+            this.setState({
+                rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
+                roundSelectedIndex: null,
+                currentModal: null
+            });
+            this.forceUpdate();
+        });
+    }
+
     render = () => {
         return (
         <div className="mt-[60px]">
@@ -72,14 +82,13 @@ class CoursePage extends React.Component{
                         this.setState({currentModal: Modals.COMMENTS});
                     }}>Add comment</ModalButton>
                     <ModalButton onClick={() => {
-                        DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
-                            this.setState({
-                                rounds: this.state.rounds.filter((_, index) => index !== this.state.roundSelectedIndex),
-                                roundSelectedIndex: null
-                            });
-                            this.forceUpdate();
-                        })
-                        
+                        // If confirm delete, show modal first
+                        if(localStorage.getItem("confirm-delete") === "true") {
+                            this.setState({ currentModal: Modals.CONFIRM_ROUND_DELETE });                     
+                        }
+                        else {
+                            this.deleteSelectedRound();
+                        }
                     }} className="w-[95%] bg-red-caution text-white mt-[10px]">Delete round</ModalButton>
                 </MenuModal>
             }
@@ -118,6 +127,16 @@ class CoursePage extends React.Component{
                     this.setState({currentModal: Modals.ROUND_OPTIONS})
                 }} initialValue={this.state.rounds[this.state.roundSelectedIndex].comments}>
                 </CommentModal>
+            }
+            {/* If "confirm delete" modal is open */}
+            {this.state.currentModal === Modals.CONFIRM_ROUND_DELETE &&
+                <ConfirmDeleteModal modalTitle={`Delete Round ${this.state.roundSelectedIndex + 1}?`}
+                    onSubmit={this.deleteSelectedRound}
+                    onClose={() => {
+                    this.setState({ currentModal: Modals.ROUND_OPTIONS });
+                }}>
+
+                </ConfirmDeleteModal>
             }
             
             <div className="overflow-y-scroll overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>

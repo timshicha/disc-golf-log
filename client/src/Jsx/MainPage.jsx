@@ -10,8 +10,8 @@ import ModifyHolesModal from "./Modals/ModifyHolesModal";
 import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
 import StickyDiv from "./Components/StickyDiv";
-import BlueButton from "./Components/BlueButton";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 

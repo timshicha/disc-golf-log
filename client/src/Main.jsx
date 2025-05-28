@@ -6,9 +6,6 @@ import "./css/general.css";
 
 const VERSION = import.meta.env.VITE_VERSION;
 
-// Set version number
-localStorage.setItem("version", VERSION);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <App />

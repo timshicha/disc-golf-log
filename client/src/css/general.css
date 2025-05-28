@@ -35,6 +35,6 @@ body, html {
     background-color: white;
 }
 
-input {
+input, textarea {
     color: #666666;
 }
