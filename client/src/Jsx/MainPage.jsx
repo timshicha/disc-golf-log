@@ -6,11 +6,12 @@ import RenameModal from "./Modals/RenameModal";
 import Dropdown, { DropdownOption } from "./Modals/Frames/Dropdown";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
-import HolesModal from "./Modals/HolesModal";
+import ModifyHolesModal from "./Modals/ModifyHolesModal";
 import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
 import StickyDiv from "./Components/StickyDiv";
 import BlueButton from "./Components/BlueButton";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -68,7 +69,7 @@ function MainPage (props) {
     }
 
     return (
-        <div className="main-page">
+        <div className="p-[10px] height-[calc(100dvh-120px] overflow-scroll">
 
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
@@ -88,13 +89,12 @@ function MainPage (props) {
             {currentModal === Modals.HOLE_LABELS &&
                 // If the user clicks the X, bring them back to course options.
                 // If the onClose happened because the user submitted, close all modals
-                <HolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
-                    
-                </HolesModal>
+                <ModifyHolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
+                </ModifyHolesModal>
             }
 
-            <h1 className="h-main">My Courses</h1>
-            <div className="above-courses-container">
+            <h1 className="font-sans text-[25px] font-bold text-center">My Courses</h1>
+            <div className="flex justify-end w-full">
                 <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} onChange={() => {
                     const newSortBy = sortByDropdownRef.current?.getValue();
                     if(newSortBy) {
@@ -110,7 +110,7 @@ function MainPage (props) {
             </div>
             {courses.length > 0
             ? // If there are courses, show courses
-                <div className="courses-div">
+                <div className="min-h-[100dvh]">
                     {courses.map(course => {
                         return (
                             <CourseSlot course={course}
@@ -139,8 +139,8 @@ function MainPage (props) {
                     "margin": "25px"
                 }}>You don't have any courses.</p>
             }
-            <StickyDiv>
-                <BlueButton onClick={() => setCurrentModal(Modals.ADD_COURSE)}>Add course</BlueButton>
+            <StickyDiv className="text-center">
+                <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>
             </StickyDiv>
             {currentModal === Modals.ADD_COURSE &&
                 <AddCourseModal onClose={() => setCurrentModal(null)} callback={reloadCourses} className="add-course-modal"></AddCourseModal>

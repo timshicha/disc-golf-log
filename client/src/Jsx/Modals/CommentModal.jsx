@@ -40,10 +40,10 @@ const CommentModal = (props) => {
     return (
         <FormModal onSubmit={onSubmit} onClose={props.onClose}>
             <ModalTitle>Comments</ModalTitle>
-            <textarea ref={textAreaRef}></textarea>
-            <div className="margin-top-10">
-                <ModalButton onClick={clearTextarea} className="half-width-button gray-background mx-5 white-text">Clear</ModalButton>
-                <ModalButton type="submit" className="half-width-button blue-background mx-5 white-text">Submit</ModalButton>
+            <textarea ref={textAreaRef} className="w-[90%]"></textarea>
+            <div className="mt-[10px]">
+                <ModalButton onClick={clearTextarea} className="w-[45%] bg-gray-dark mx-[5px] text-white">Clear</ModalButton>
+                <ModalButton type="submit" className="w-[45%] bg-blue-basic mx-[5px] text-white">Submit</ModalButton>
             </div>
         </FormModal>
     )

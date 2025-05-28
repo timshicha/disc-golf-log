@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
 import ModalButton from "./ModalComponents/ModalButton";
 import DataHandler from "../../data_handling/data_handler";
-import "../../css/general.css";
 import { v4 as uuidv4 } from "uuid";
 import FormModal from "./Frames/FormModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
@@ -70,23 +69,18 @@ class AddCourseModal extends React.Component {
         return (
             <FormModal onClose={this.onClose} onSubmit={this.onAddCourseSubmit}>
                 <ModalTitle>Add course</ModalTitle>
-                <div className="form-input-block">
+                <div className="text-left">
                     <label htmlFor="name">Name: </label>
-                    <input type="text" name="name" id="name" style={{
-                        marginRight: "10px",
-                        marginBottom: "10px"
-                    }} ref={this.nameInputRef}></input>
+                    <input type="text" name="name" id="name" className="mb-[10px]" ref={this.nameInputRef}></input>
                 </div>
-                <div className="form-input-block">
+                <div className="text-left">
                     <label htmlFor="holes">Holes: </label>
-                    <input type="number" name="holes" id="holes" style={{
-                        width: "40px",
-                    }}></input>
+                    <input type="number" name="holes" id="holes" className="w-[60px] mb-[10px]"></input>
                 </div>
-                <div>
+                <div className="mt-[10px]">
                     <input type="submit" className="hidden-submit"></input>
-                    <ModalButton onClick={this.onClose} className="half-width-button gray-background mx-5">Cancel</ModalButton>
-                    <ModalButton type="submit" className="half-width-button blue-background mx-5">Add course</ModalButton>
+                    <ModalButton onClick={this.onClose} className="w-[45%] bg-gray-dark text-white mx-[5px]">Cancel</ModalButton>
+                    <ModalButton type="submit" className="w-[45%] bg-blue-basic text-white mx-[5px]">Add course</ModalButton>
                 </div>
             </FormModal>
         );

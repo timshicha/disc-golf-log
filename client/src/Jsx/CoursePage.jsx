@@ -58,7 +58,7 @@ class CoursePage extends React.Component{
 
     render = () => {
         return (
-        <div className="mt-[54px]">
+        <div className="mt-[60px]">
             {this.state.currentModal === Modals.ROUND_OPTIONS &&
                 <MenuModal onClose={() => {
                     this.setState({currentModal: null});
@@ -120,7 +120,7 @@ class CoursePage extends React.Component{
                 </CommentModal>
             }
             
-            <div id="rounds-div" ref={this.roundsDivRef}>
+            <div className="overflow-y-scroll overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>
                 {this.state.rounds.map((round, index) => {
                     return (
                         <Round round={round} course={this.state.course} key={round.roundUUID} index={index}
@@ -142,8 +142,8 @@ class CoursePage extends React.Component{
             may cover the rounds at the bottom, so add blank space at the
             bottom. This way, the user can scroll all the way to the bottom
             round and the blank space is what is covered under the button. */}
-            <StickyDiv>
-                <BlueButton onClick={() => {
+            <StickyDiv className="text-center">
+                <ModalButton className="bg-blue-basic text-white mx-auto" onClick={() => {
                     const roundUUID = uuidv4();
                     const newRound = {
                         courseUUID: this.state.course.courseUUID,
@@ -158,7 +158,7 @@ class CoursePage extends React.Component{
                         // Scroll to bottom
                         this.scrollToBottom();
                     });
-                }}>Add Round</BlueButton>
+                }}>Add Round</ModalButton>
             </StickyDiv>
         </div>
         );

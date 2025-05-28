@@ -50,7 +50,7 @@ function App() {
     }
 
     return (
-        <div className="app">
+        <div className="overflow-hidden">
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>

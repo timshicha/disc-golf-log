@@ -8,26 +8,24 @@
 }
 
 @layer components {
-    .black-btn {
-        background-color: black;
-        color: white;
-    }
-
-    .gray-btn {
-        background-color: #444444;
-        color: white;
-    }
-
-    .red-btn {
-        background-color: red;
-        color: white;
-    }
 
     .text-desc {
         font-size: 15px;
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
         color: gray;
+    }
+
+    /* This is for hiding the type="submit" inputs in forms.
+        When forms have multiple text fields, enter doesn't submit
+        the form unless there is an input type="submit"
+    */
+    .hidden-submit {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
     }
 }
 
@@ -37,116 +35,6 @@ body, html {
     background-color: white;
 }
 
-.app {
-    overflow: hidden;
-}
-
-.h-main {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.backdrop {
-    top: 0px;
-    left: 0px;
-    width: 100dvw;
-    height: 100dvh;
-    background-color: white;
-    opacity: 0.6;
-    position: fixed;
-    z-index: 1000;
-}
-
-.blue-button {
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #4a86e8;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    width: fit-content;
-    display: block;
-}
-
-.blue-bg {
-    background-color: #4a86e8;
-}
-
-.gray-bg {
-    background-color: #dddddd;
-}
-
-.margin-top-5 {
-    margin-top: 5px;
-}
-
-.margin-top-10 {
-    margin-top: 10px;
-}
-
-.margin-top-15 {
-    margin-top: 15px;
-}
-
-.blue-background {
-    background-color: #4a86e8;
-}
-
-.gray-background {
-    background-color: rgb(70, 70, 70);
-}
-
-.white-background {
-    background-color: white;
-}
-
-.full-width {
-    width: 95%;
-}
-
-.half-width-button {
-    width: 45%;
-}
-
-.mx-5 {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.above-courses-container {
-    display: flex;
-    justify-content: end;
-    width: 100%;
-}
-
-#rounds-div {
-    overflow-y: scroll;
-    overflow-anchor: bottom;
-    overflow-x: hidden;
-    margin: 10px;
-    height: calc(100dvh - 100px);
-}
-
-.courses-div {
-    min-height: 100dvh;
-}
-
-.fixed-bottom-button {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.main-page {
-    padding: 10px;
-    height: calc(100dvh - 120px);
-    overflow: scroll;
+input {
+    color: #666666;
 }
