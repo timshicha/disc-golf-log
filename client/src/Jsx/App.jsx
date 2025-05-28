@@ -8,7 +8,6 @@ import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
-import BlankSpace from "./Components/BlankSpace";
 import { Pages } from "../js_utils/Enums";
 import { migrate_v1_to_v2 } from "../data_handling/migrations";
 
@@ -69,7 +68,7 @@ function App() {
                 </NavBar>
                 {/* Add spacer to account for navbar which doesn't
                 take up any space. */}
-                <BlankSpace height="50px"></BlankSpace>
+                <div className="h-[70px]"></div>
                 <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
             </>
             }

@@ -11,10 +11,10 @@ const CourseOptionsModal = (props) => {
     return (
         <MenuModal onClose={() => props.setModal(null)}>
             <ModalTitle>{props.course.name}</ModalTitle>
-            <ModalButton onClick={() => props.setModal(Modals.RENAME)} className="full-width black-text gray-background margin-top-10 white-text">
+            <ModalButton onClick={() => props.setModal(Modals.RENAME)} className="w-[95%] text-white bg-gray-dark mt-[10px]">
                 Rename course
             </ModalButton>
-            <ModalButton onClick={() => props.setModal(Modals.HOLE_LABELS)}className="full-width black-text gray-background margin-top-10 white-text">
+            <ModalButton onClick={() => props.setModal(Modals.HOLE_LABELS)}className="w-[95%] text-white bg-gray-dark mt-[10px]">
                 Modify hole labels
             </ModalButton>            
             <ModalButton onClick={() => {
@@ -26,7 +26,7 @@ const CourseOptionsModal = (props) => {
                     props.deleteCourseCallback();
                 }).catch(err => console.log(err));
                 // Update the list of courses
-            }} className="full-width caution-button margin-top-10 white-text">
+            }} className="w-[95%] bg-red-caution text-white mt-[10px]">
                 Delete
             </ModalButton>
         </MenuModal>

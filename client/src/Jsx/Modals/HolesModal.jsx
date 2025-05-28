@@ -27,9 +27,7 @@ class HoleModalInput extends React.Component {
 
     render = () => {
         return (
-            <>
-                <input className="hole-label-input" value={this.state.inputValue} onChange={event => this.onChange(event)}></input>
-            </>
+                <input className="w-[10px] m-[0.5%] mt-[10px] flex-[0_0_19%] box-border" value={this.state.inputValue} onChange={event => this.onChange(event)}></input>
         );
     }
 }
@@ -65,7 +63,7 @@ const HolesModal = (props) => {
     return (
         <FormModal onClose={() => props.onClose(false)} onSubmit={applyLabels}>
             <ModalTitle>Modify holes</ModalTitle>
-            <div className="hole-label-input-container">
+            <div className="flex flex-wrap justify-start">
             {
                 ObjectTools.getCourseHoleLabels(props.course).map((label, index) => {
                     return <HoleModalInput ref={element => labelRefs.current[index] = element} value={label} key={index}></HoleModalInput>;

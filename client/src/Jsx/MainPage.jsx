@@ -9,7 +9,6 @@ import DataHandler from "../data_handling/data_handler";
 import HolesModal from "./Modals/HolesModal";
 import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
-import BlankSpace from "./Components/BlankSpace";
 import StickyDiv from "./Components/StickyDiv";
 import BlueButton from "./Components/BlueButton";
 
@@ -130,7 +129,7 @@ function MainPage (props) {
                             </CourseSlot>
                         );
                     })}
-                    <BlankSpace height="200px"></BlankSpace>
+                    <div className="h-[200px]"></div>
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses

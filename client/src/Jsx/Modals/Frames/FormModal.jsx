@@ -24,7 +24,12 @@ class FormModal extends React.Component {
         return createPortal(
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
-                <form {...this.props} className="form-main w-[250px] h-[fit-content]" ref={this.ref}>
+                <form {...this.props} className="fixed top-[50%] left-[50%] z-1000
+                    bg-gray-subtle rounded-[10px] p-[10px] text-center
+                    translate-x-[-50%] translate-y-[-50%] w-[350px] max-w-[95%] h-[fit-content]
+                    text-[20px] font-sans font-bold
+                    [&_input]:inline-block [&_input]:p-[5px] [&_input]:bg-gray-lighter" 
+                ef={this.ref}>
                     {/* X-button closes the options list window */}
                     <CloseX onClick={this.props.onClose}></CloseX>
                     {this.props.children}  

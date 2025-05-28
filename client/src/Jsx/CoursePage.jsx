@@ -8,7 +8,6 @@ import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import DateInputModal from "./Modals/DateInputModal";
 import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
-import BlankSpace from "./Components/BlankSpace";
 import { compareStrings } from "../js_utils/sorting";
 import { toLocalIsoString } from "../js_utils/dates";
 import StickyDiv from "./Components/StickyDiv";
@@ -65,11 +64,11 @@ class CoursePage extends React.Component{
                     this.setState({currentModal: null});
                 }}>
                     <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                    <ModalButton className="full-width gray-background margin-top-10 white-text" onClick={() => {
+                    <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
                         this.setState({currentModal: Modals.DATE_INPUT});
                     }}>Adjust date
                     </ModalButton>
-                    <ModalButton className="full-width gray-background margin-top-10 white-text" onClick={() => {
+                    <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
                         this.setState({currentModal: Modals.COMMENTS});
                     }}>Add comment</ModalButton>
                     <ModalButton onClick={() => {
@@ -81,7 +80,7 @@ class CoursePage extends React.Component{
                             this.forceUpdate();
                         })
                         
-                    }} className="full-width caution-button margin-top-10 white-text">Delete round</ModalButton>
+                    }} className="w-[95%] bg-red-caution text-white mt-[10px]">Delete round</ModalButton>
                 </MenuModal>
             }
             {/* If the date input modal is shown */}
@@ -137,7 +136,7 @@ class CoursePage extends React.Component{
                         </Round>
                     );
                 })}
-                <BlankSpace height="200px"></BlankSpace>
+                <div className="h-[200px]"></div>
             </div>
             {/* There is an "Add round" at the bottom of the page. This
             may cover the rounds at the bottom, so add blank space at the
