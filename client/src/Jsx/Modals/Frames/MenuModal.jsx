@@ -1,5 +1,4 @@
 import React, { createRef } from "react";
-import "../../../css/OptionsList.css";
 import Backdrop from "../ModalComponents/BackDrop";
 import CloseX from "../ModalComponents/CloseX";
 import { createPortal } from "react-dom";

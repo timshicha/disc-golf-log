@@ -11,8 +11,8 @@ class CloseX extends React.Component {
 
     render = () => {
         return (
-            <button type="button" onClick={this.props.onClick} className="close-x-button">
-                <img src={whiteX} className="close-x-img"></img>
+            <button type="button" onClick={this.props.onClick} className="absolute right-[10px] top-[5px] p-[5px] bg-transparent cursor-pointer">
+                <img src={whiteX} className="w-[20px]"></img>
             </button>
         );
     }

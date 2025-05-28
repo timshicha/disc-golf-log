@@ -1,5 +1,4 @@
 import React, { createRef } from "react";
-import BlueButton from "../Components/BlueButton";
 import ModalButton from "./ModalComponents/ModalButton";
 import DataHandler from "../../data_handling/data_handler";
 import "../../css/general.css";
