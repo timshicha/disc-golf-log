@@ -1,0 +1,72 @@
+import React, { useState } from "react";
+import MenuModal from "./Frames/MenuModal";
+import ModalTitle from "./ModalComponents/ModalTitle";
+import ModalButton from "./ModalComponents/ModalButton";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import DateInputModal from "./DateInputModal";
+import CommentModal from "./CommentModal";
+import { Modals } from "../../js_utils/Enums";
+
+
+const RoundOptionsModal = (props) => {
+
+    const [currentModal, setCurrentModal] = useState(Modals.ROUND_OPTIONS);
+
+    return (
+        <>
+        {currentModal === Modals.ROUND_OPTIONS &&
+            <MenuModal onClose={() => {
+                setCurrentModal(Modals.ROUND_OPTIONS);
+                props.onClose();
+            }}>
+                <ModalTitle>Round {props.roundIndex + 1}</ModalTitle>
+                <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
+                    setCurrentModal(Modals.DATE_INPUT);
+                }}>Adjust date
+                </ModalButton>
+                <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
+                    setCurrentModal(Modals.COMMENTS);
+                }}>Add comment</ModalButton>
+                <ModalButton onClick={() => {
+                    // If confirm delete, show modal first
+                    if(localStorage.getItem("confirm-delete") === "true") {
+                        setCurrentModal(Modals.CONFIRM_ROUND_DELETE);                
+                    }
+                    else {
+                        props.onDeleteRound();
+                    }
+                }} className="w-[95%] bg-red-caution text-white mt-[10px]">Delete round</ModalButton>
+            </MenuModal>
+        }
+
+        {currentModal === Modals.DATE_INPUT &&
+            <DateInputModal onSubmit={props.onUpdateDate}
+            onClose={() => {
+                setCurrentModal(Modals.ROUND_OPTIONS);
+            }}
+        >
+        </DateInputModal>
+        }
+
+        {currentModal === Modals.COMMENTS &&
+            <CommentModal onSubmit={props.onUpdateComments}
+                onClose={() => {
+                    setCurrentModal(Modals.ROUND_OPTIONS);
+                }}
+                initialValue={props.round.comments}>
+            </CommentModal>
+        }
+
+        {currentModal === Modals.CONFIRM_ROUND_DELETE &&
+            <ConfirmDeleteModal modalTitle={`Delete Round ${props.roundIndex + 1}?`}
+                onSubmit={props.onDeleteRound}
+                onClose={() => {
+                    setCurrentModal(Modals.ROUND_OPTIONS);
+            }}>
+            </ConfirmDeleteModal>
+        }
+        </>
+    );
+}
+
+export default RoundOptionsModal;

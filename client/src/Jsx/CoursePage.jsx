@@ -1,17 +1,13 @@
 import React, { createRef } from "react";
 import Round from "./Components/Round";
-import MenuModal from "./Modals/Frames/MenuModal";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
-import ModalTitle from "./Modals/ModalComponents/ModalTitle";
-import DateInputModal from "./Modals/DateInputModal";
 import DataHandler from "../data_handling/data_handler";
 import { v4 as uuidv4 } from "uuid";
 import { compareStrings } from "../js_utils/sorting";
 import { toLocalIsoString } from "../js_utils/dates";
 import StickyDiv from "./Components/StickyDiv";
 import { Modals } from "../js_utils/Enums";
-import CommentModal from "./Modals/CommentModal";
-import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+import RoundOptionsModal from "./Modals/RoundOptionsModal";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -55,6 +51,30 @@ class CoursePage extends React.Component{
         }
     }
 
+    updateRoundDate = (newDate) => {
+        // Make sure new date is not null
+        if(newDate) {
+            this.state.rounds[this.state.roundSelectedIndex].date = newDate;
+            // Update the round (date)
+            DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+                this.setState({
+                    currentModal: null,
+                    roundSelectedIndex: null
+                });
+            });
+        }
+    }
+
+    updateRoundComments = (comments) => {
+        this.state.rounds[this.state.roundSelectedIndex].comments = comments;
+        DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
+            this.setState({
+                currentModal: null,
+                roundSelectedIndex: null
+            });
+        })
+    }
+
     deleteSelectedRound = () => {
         DataHandler.deleteRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
             this.setState({
@@ -70,73 +90,14 @@ class CoursePage extends React.Component{
         return (
         <div className="mt-[60px]">
             {this.state.currentModal === Modals.ROUND_OPTIONS &&
-                <MenuModal onClose={() => {
-                    this.setState({currentModal: null});
-                }}>
-                    <ModalTitle>Round {this.state.roundSelectedIndex + 1}</ModalTitle>
-                    <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
-                        this.setState({currentModal: Modals.DATE_INPUT});
-                    }}>Adjust date
-                    </ModalButton>
-                    <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
-                        this.setState({currentModal: Modals.COMMENTS});
-                    }}>Add comment</ModalButton>
-                    <ModalButton onClick={() => {
-                        // If confirm delete, show modal first
-                        if(localStorage.getItem("confirm-delete") === "true") {
-                            this.setState({ currentModal: Modals.CONFIRM_ROUND_DELETE });                     
-                        }
-                        else {
-                            this.deleteSelectedRound();
-                        }
-                    }} className="w-[95%] bg-red-caution text-white mt-[10px]">Delete round</ModalButton>
-                </MenuModal>
-            }
-            {/* If the date input modal is shown */}
-            {this.state.currentModal === Modals.DATE_INPUT &&
-                <DateInputModal onSubmit={(newDate) => {
-                        // Make sure new date is not null
-                        if(newDate) {
-                            this.state.rounds[this.state.roundSelectedIndex].date = newDate;
-                            // Update the round (date)
-                            DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
-                                this.setState({
-                                    currentModal: null,
-                                    roundSelectedIndex: null
-                                });
-                            });
-                        }
-                    }}
-                    onClose={() => {
-                        this.setState({currentModal: Modals.ROUND_OPTIONS});
-                    }}
+                <RoundOptionsModal roundIndex={this.state.roundSelectedIndex}
+                    round={this.state.rounds[this.state.roundSelectedIndex]}
+                    onClose={() => this.setState({ currentModal: null })}
+                    onUpdateDate={this.updateRoundDate}
+                    onUpdateComments={this.updateRoundComments}
+                    onDeleteRound={this.deleteSelectedRound}
                 >
-                </DateInputModal>
-            }
-            {/* If the "add comments" modal is open */}
-            {this.state.currentModal === Modals.COMMENTS &&
-                <CommentModal onSubmit={(comments) => {
-                    this.state.rounds[this.state.roundSelectedIndex].comments = comments;
-                    DataHandler.modifyRound(this.state.rounds[this.state.roundSelectedIndex], this.state.course, true).then(() => {
-                        this.setState({
-                            currentModal: null,
-                            roundSelectedIndex: null
-                        });
-                    })
-                }} onClose={() => {
-                    this.setState({currentModal: Modals.ROUND_OPTIONS})
-                }} initialValue={this.state.rounds[this.state.roundSelectedIndex].comments}>
-                </CommentModal>
-            }
-            {/* If "confirm delete" modal is open */}
-            {this.state.currentModal === Modals.CONFIRM_ROUND_DELETE &&
-                <ConfirmDeleteModal modalTitle={`Delete Round ${this.state.roundSelectedIndex + 1}?`}
-                    onSubmit={this.deleteSelectedRound}
-                    onClose={() => {
-                    this.setState({ currentModal: Modals.ROUND_OPTIONS });
-                }}>
-
-                </ConfirmDeleteModal>
+                </RoundOptionsModal>
             }
             
             <div className="overflow-y-scroll overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>
