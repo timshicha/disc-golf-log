@@ -83,7 +83,7 @@ function App() {
                 </NavBar>
                 {/* Add spacer to account for navbar which doesn't
                 take up any space. */}
-                <div className="h-[70px]"></div>
+                <div className="h-[42px]"></div>
                 <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
             </>
             }

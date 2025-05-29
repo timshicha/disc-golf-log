@@ -67,7 +67,7 @@ class AddCourseModal extends React.Component {
 
     render () {
         return (
-            <FormModal onClose={this.onClose} onSubmit={this.onAddCourseSubmit}>
+            <FormModal replaceImg={this.props.replaceImg} onClose={this.onClose} onSubmit={this.onAddCourseSubmit}>
                 <ModalTitle>Add course</ModalTitle>
                 <div className="text-left">
                     <label htmlFor="name">Name: </label>

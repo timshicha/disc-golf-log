@@ -38,7 +38,7 @@ const CommentModal = (props) => {
     }
 
     return (
-        <FormModal onSubmit={onSubmit} onClose={props.onClose}>
+        <FormModal replaceImg={props.replaceImg} onSubmit={onSubmit} onClose={props.onClose}>
             <ModalTitle>Comments</ModalTitle>
             <textarea ref={textAreaRef} className="w-[90%] h-[200px]"></textarea>
             <div className="mt-[10px]">

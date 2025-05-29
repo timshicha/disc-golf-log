@@ -77,7 +77,7 @@ function MainPage (props) {
 
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
-                <RenameModal onSubmit={handleRenameCourse} onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)} defaultValue={currentCourse.name} ref={renameModalRef}>
+                <RenameModal replaceImg="back-arrow" onSubmit={handleRenameCourse} onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)} defaultValue={currentCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
                 </RenameModal>
             }
@@ -93,18 +93,20 @@ function MainPage (props) {
             {currentModal === Modals.HOLE_LABELS &&
                 // If the user clicks the X, bring them back to course options.
                 // If the onClose happened because the user submitted, close all modals
-                <ModifyHolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
+                <ModifyHolesModal replaceImg="back-arrow"course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
                 </ModifyHolesModal>
             }
             
             {courses.length > 0
             ? // If there are courses, show courses
             <div className="min-h-[100dvh]">
-                <div className="w-full h-[50px]">
+                <div className="fixed left-0 bg-white w-full h-[50px] p-[10px]">
                     <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
                     <SearchBar className="inline-block float-right" onChange={setSearchString}></SearchBar>
                 </div>
-
+                <div className="fixed left-0 mt-[49px] w-[100%] h-[20px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
+                
+                <div className="h-[60px]"></div>
                     {courses.filter(course => course.name.toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
@@ -127,11 +129,9 @@ function MainPage (props) {
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p style={{
-                    "textAlign": "center",
-                    "color": "gray",
-                    "margin": "25px"
-                }}>You don't have any courses.</p>
+                <p className="text-center text-gray-mild m-[25px]">
+                    You don't have any courses.
+                </p>
             }
             <StickyDiv className="text-center">
                 <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>

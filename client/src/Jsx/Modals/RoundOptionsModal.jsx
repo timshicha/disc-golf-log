@@ -40,7 +40,7 @@ const RoundOptionsModal = (props) => {
         }
 
         {currentModal === Modals.DATE_INPUT &&
-            <DateInputModal onSubmit={props.onUpdateDate}
+            <DateInputModal replaceImg="back-arrow" onSubmit={props.onUpdateDate}
             onClose={() => {
                 setCurrentModal(Modals.ROUND_OPTIONS);
             }}
@@ -49,7 +49,7 @@ const RoundOptionsModal = (props) => {
         }
 
         {currentModal === Modals.COMMENTS &&
-            <CommentModal onSubmit={props.onUpdateComments}
+            <CommentModal replaceImg="back-arrow" onSubmit={props.onUpdateComments}
                 onClose={() => {
                     setCurrentModal(Modals.ROUND_OPTIONS);
                 }}
@@ -58,7 +58,7 @@ const RoundOptionsModal = (props) => {
         }
 
         {currentModal === Modals.CONFIRM_ROUND_DELETE &&
-            <ConfirmDeleteModal modalTitle={`Delete Round ${props.roundIndex + 1}?`}
+            <ConfirmDeleteModal replaceImg="back-arrow" modalTitle={`Delete Round ${props.roundIndex + 1}?`}
                 onSubmit={props.onDeleteRound}
                 onClose={() => {
                     setCurrentModal(Modals.ROUND_OPTIONS);
