@@ -11,7 +11,7 @@ import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
 import StickyDiv from "./Components/StickyDiv";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
-import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+import SearchBar from "./Components/SearchBar";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -19,6 +19,7 @@ function MainPage (props) {
     const [courses, setCourses] = useState([]);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
+    const [searchString, setSearchString] = useState("");
     // Using ref for state.
     // A callback is passed to a child component that depends on this value,
     // and ref allows the child to always have the current value.
@@ -92,26 +93,27 @@ function MainPage (props) {
                 <ModifyHolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
                 </ModifyHolesModal>
             }
-
-            <h1 className="font-sans text-[25px] font-bold text-center">My Courses</h1>
-            <div className="flex justify-end w-full">
-                <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} onChange={() => {
-                    const newSortBy = sortByDropdownRef.current?.getValue();
-                    if(newSortBy) {
-                        localStorage.setItem("sortCoursesBy", newSortBy);
-                        sortCourseBy.current = newSortBy;
-                        reloadCourses();
-                    }
-                }}>
-                    <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                    <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                    <DropdownOption value="Most played">Most played</DropdownOption>
-                </Dropdown>
-            </div>
+            
             {courses.length > 0
             ? // If there are courses, show courses
-                <div className="min-h-[100dvh]">
-                    {courses.map(course => {
+            <div className="min-h-[100dvh]">
+                <div className="w-full h-[50px]">
+                    <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} onChange={() => {
+                        const newSortBy = sortByDropdownRef.current?.getValue();
+                        if(newSortBy) {
+                            localStorage.setItem("sortCoursesBy", newSortBy);
+                            sortCourseBy.current = newSortBy;
+                            reloadCourses();
+                        }
+                    }}>
+                        <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
+                        <DropdownOption value="Recently modified">Recently modified</DropdownOption>
+                        <DropdownOption value="Most played">Most played</DropdownOption>
+                    </Dropdown>
+                    <SearchBar onChange={setSearchString}></SearchBar>
+                </div>
+
+                    {courses.filter(course => course.name.toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
                                 key={course.courseUUID}

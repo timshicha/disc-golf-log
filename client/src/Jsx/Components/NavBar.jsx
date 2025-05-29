@@ -12,7 +12,7 @@ const NavBarBackButton = (props) => {
 
 const NavBarTitle = (props) => {
     return (
-        <div className="mx-auto mt-[7px] text-black font-sans font-bold text-[25px]">
+        <div className="absolute ml-[50%] translate-x-[-50%] mt-[5px] text-black font-sans font-bold text-[25px]">
             {props.children}
         </div>
     );

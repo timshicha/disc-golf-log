@@ -5,7 +5,7 @@ import React from "react";
 const StickyDiv = (props) => {
 
     return (
-        <div className={"fixed w-full bottom-[0px] " + props.className}>
+        <div className={"fixed w-full left-[0px] bottom-[0px] " + props.className}>
             {/* The gradient makes it so the top part of the screen isn't
             cut off suddenly. */}
             <div className="w-[100%] h-[20px] bg-linear-to-b from-[#ffffff00] to-[#ffffff]"></div>

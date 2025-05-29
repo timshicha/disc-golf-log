@@ -71,11 +71,9 @@ function App() {
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>
+                    <NavBarTitle>My Courses</NavBarTitle>
                     <img src={titleLogo} className="h-[40px]"></img>
                     <div className="flex">
-                        <GoogleLoginButton onSuccess={onGoogleLoginSuccess}>
-                            <ModalButton className="mt-0 bg-black h-[42px] box-border overflow-hidden text-white">Sign in</ModalButton>
-                        </GoogleLoginButton>
                         <button className="w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
                         }}>

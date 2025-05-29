@@ -31,7 +31,7 @@ class Dropdown extends React.Component {
 
     render = () => {
         return (
-            <select type="select" ref={this.selectRef} {...this.props} className={"w-[150px] bg-gray-light text-desc text-[12px] p-[7px] mr-[10px] rounded-[7px] cursor-pointer " + this.props.className}>
+            <select type="select" ref={this.selectRef} {...this.props} className={"w-[fit-content] bg-gray-mild text-desc text-white text-[12px] p-[7px] mr-[10px] rounded-[7px] cursor-pointer " + this.props.className}>
                 {this.props.children}
             </select>
         );
