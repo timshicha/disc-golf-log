@@ -56,7 +56,9 @@ class SettingsPage extends React.Component {
                     </div>
                 </SettingsBlock>
                 <SettingsBlock className="min-h-[60px] bg-special">
-                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle} checked={this.state.confirmDelete}></input>
+                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle}
+                        id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
+                    </input>
                     <div className="text-desc">
                         Ask for confirmation before deleting courses or rounds.
                     </div>

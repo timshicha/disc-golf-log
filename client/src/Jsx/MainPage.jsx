@@ -108,7 +108,7 @@ function MainPage (props) {
             <div className="min-h-[100dvh]">
                 <div className="fixed left-0 bg-white w-full h-[50px] p-[10px]">
                     <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
-                    <SearchBar className="inline-block float-right" onChange={setSearchString}></SearchBar>
+                    <SearchBar id="course-search-bar" className="inline-block float-right" onChange={setSearchString}></SearchBar>
                 </div>
                 <div className="fixed left-0 mt-[49px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
