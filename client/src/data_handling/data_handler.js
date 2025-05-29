@@ -177,6 +177,16 @@ class DataHandler {
         });
     }
 
+    static getAllData = () => {
+        return db.courses.toArray().then(result => {
+            const data = { courses: result };
+            return db.rounds.toArray().then(result => {
+                data.rounds = result;
+                return data;
+            });
+        });
+    }
+
     static getQueue = () => {
         const queue = {};
         return db.addCourseQueue.toArray().then(result => {

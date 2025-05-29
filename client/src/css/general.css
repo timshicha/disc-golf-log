@@ -1,3 +1,33 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@theme {
+}
+
+@layer components {
+
+    .text-desc {
+        font-size: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        color: gray;
+    }
+
+    /* This is for hiding the type="submit" inputs in forms.
+        When forms have multiple text fields, enter doesn't submit
+        the form unless there is an input type="submit"
+    */
+    .hidden-submit {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+}
 
 body, html {
     margin: 0px;
@@ -5,135 +35,6 @@ body, html {
     background-color: white;
 }
 
-.h-main {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.backdrop {
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
-    background-color: white;
-    opacity: 0.6;
-    position: fixed;
-    z-index: 1000;
-}
-
-.blue-button {
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #4a86e8;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 10px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    width: fit-content;
-    display: block;
-}
-
-.blue-bg {
-    background-color: #4a86e8;
-}
-
-.gray-bg {
-    background-color: #dddddd;
-}
-
-.small-text {
-    font-size: 10px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.medium-text {
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Text color for subtle text */
-.text-color-subtle {
-    color: #aaaaaa;
-}
-
-/* Text color for background text */
-.text-color-semi-subtle {
+input, textarea {
     color: #666666;
-}
-
-.margin-top-5 {
-    margin-top: 5px;
-}
-
-.margin-top-10 {
-    margin-top: 10px;
-}
-
-.red-text {
-    color: red;
-}
-
-.green-text {
-    color: green;
-}
-
-.black-text {
-    color: black;
-}
-
-.red-background {
-    background-color: red;
-}
-
-.green-background {
-    background-color: green;
-}
-
-.black-background {
-    background-color: black;
-}
-
-.blue-background {
-    background-color: #4a86e8;
-}
-
-.gray-background {
-    background-color: rgb(70, 70, 70);
-}
-
-.full-width {
-    width: 95%;
-}
-
-.half-width-button {
-    width: 45%;
-}
-
-.mx-5 {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-#rounds-div {
-    overflow-y: scroll;
-    overflow-anchor: bottom;
-    overflow-x: hidden;
-    margin: 10px;
-}
-
-.fixed-bottom-button {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.main-page {
-    padding: 10px;
 }

@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import AddCourseModal from "./Modals/AddCourseModal";
 import CourseSlot from "./Components/CourseSlot";
-import "../css/general.css";
-import MenuModal from "./Modals/Frames/MenuModal";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
-import Dropdown from "./Modals/Frames/Dropdown";
-import DropdownOption from "./Modals/ModalComponents/DropdownOption";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
-import HolesModal from "./Modals/HolesModal";
+import ModifyHolesModal from "./Modals/ModifyHolesModal";
 import { Modals } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
+import StickyDiv from "./Components/StickyDiv";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
+import SearchBar from "./Components/SearchBar";
+import SortCoursesDropdown from "./Components/SortCoursesDropdown";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -20,11 +19,9 @@ function MainPage (props) {
     const [courses, setCourses] = useState([]);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
-    // Using ref for state.
-    // A callback is passed to a child component that depends on this value,
-    // and ref allows the child to always have the current value.
-    const sortCourseBy = useRef(localStorage.getItem("sortCoursesBy") || "Alphabetical");
-    const sortByDropdownRef = useRef(null);
+    const [searchString, setSearchString] = useState("");
+    let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
+
     const renameModalRef = useRef(null);
 
     // Reload (load) on initial render
@@ -41,13 +38,13 @@ function MainPage (props) {
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
             // If sort alphabetically
-            if(sortCourseBy.current === "Alphabetical") {
+            if(sortCourseBy === "Alphabetically") {
                 result = result.sort((a, b) => compareStrings(a.name, b.name));
             }
-            else if(sortCourseBy.current === "Recently modified") {
+            else if(sortCourseBy === "Recently modified") {
                 result = result.sort((a, b) => compareDates(b.modified, a.modified));
             }
-            else if(sortCourseBy.current === "Most played") {
+            else if(sortCourseBy === "Most played") {
                 // Update round counts
                 result = result.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
             }
@@ -57,6 +54,7 @@ function MainPage (props) {
 
     const handleRenameCourse = (event) => {
         event.preventDefault();
+        event.stopPropagation();
         const newName = event.target.name.value;
         currentCourse.name = newName;
         DataHandler.modifyCourse(currentCourse, true).then(() => {
@@ -69,12 +67,21 @@ function MainPage (props) {
         });
     }
 
+    const onSortByChange = (sortBy) => {
+        sortCourseBy = sortBy;
+        localStorage.setItem("sort-courses-by", sortBy);
+        reloadCourses();
+    }
+
     return (
-        <div className="main-page">
+        <div className="p-[10px] height-[calc(100dvh-120px] overflow-scroll">
 
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
-                <RenameModal onSubmit={handleRenameCourse} onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)} defaultValue={currentCourse.name} ref={renameModalRef}>
+                <RenameModal replaceImg="back-arrow" onSubmit={handleRenameCourse}
+                    onClose={() => setCurrentModal(null)}
+                    onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}
+                    defaultValue={currentCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
                 </RenameModal>
             }
@@ -90,55 +97,54 @@ function MainPage (props) {
             {currentModal === Modals.HOLE_LABELS &&
                 // If the user clicks the X, bring them back to course options.
                 // If the onClose happened because the user submitted, close all modals
-                <HolesModal course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
-                    
-                </HolesModal>
+                <ModifyHolesModal replaceImg="back-arrow"course={currentCourse}
+                    onClose={() => setCurrentModal(null)}
+                    onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}>
+                </ModifyHolesModal>
             }
-
-            <h1 className="h-main">My Courses</h1>
-            <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} className="reorder-courses-dropdown" onChange={() => {
-                const newSortBy = sortByDropdownRef.current?.getValue();
-                if(newSortBy) {
-                    localStorage.setItem("sortCoursesBy", newSortBy);
-                    sortCourseBy.current = newSortBy;
-                    reloadCourses();
-                }
-            }}>
-                <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                <DropdownOption value="Most played">Most played</DropdownOption>
-            </Dropdown>
+            
             {courses.length > 0
             ? // If there are courses, show courses
-                <>
-                {courses.map(course => {
-                    return (
-                        <CourseSlot course={course}
-                            key={course.courseUUID}
-                            onClick={() => {
-                                // If the user selects a course, tell App.jsx
-                                // to navigate to the Course Page and notify which
-                                // course was selected.
-                                props.setCurrentCourse(course);
-                                props.navigateTo("course");
-                            }}
-                            onOpenOptionsList = {() => {
-                                setCurrentCourse(course);
-                                setCurrentModal(Modals.COURSE_OPTIONS);
-                            }}>
-                        </CourseSlot>
-                    );
-                })}
-                </>
+            <div className="min-h-[100dvh]">
+                <div className="fixed left-0 bg-white w-full h-[50px] p-[10px]">
+                    <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
+                    <SearchBar className="inline-block float-right" onChange={setSearchString}></SearchBar>
+                </div>
+                <div className="fixed left-0 mt-[49px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
+                
+                <div className="h-[46px]"></div>
+                    {courses.filter(course => course.name.toLowerCase().includes(searchString.toLowerCase())).map(course => {
+                        return (
+                            <CourseSlot course={course}
+                                key={course.courseUUID}
+                                onClick={() => {
+                                    // If the user selects a course, tell App.jsx
+                                    // to navigate to the Course Page and notify which
+                                    // course was selected.
+                                    props.setCurrentCourse(course);
+                                    props.navigateTo("course");
+                                }}
+                                onOpenOptionsList = {() => {
+                                    setCurrentCourse(course);
+                                    setCurrentModal(Modals.COURSE_OPTIONS);
+                                }}>
+                            </CourseSlot>
+                        );
+                    })}
+                    <div className="h-[200px]"></div>
+                </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p style={{
-                    "textAlign": "center",
-                    "color": "gray",
-                    "margin": "25px"
-                }}>You don't have any courses.</p>
+                <p className="text-center text-gray-mild m-[25px]">
+                    You don't have any courses.
+                </p>
             }
-            <AddCourseModal callback={reloadCourses}></AddCourseModal>
+            <StickyDiv className="text-center">
+                <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>
+            </StickyDiv>
+            {currentModal === Modals.ADD_COURSE &&
+                <AddCourseModal onClose={() => setCurrentModal(null)} callback={reloadCourses} className="add-course-modal"></AddCourseModal>
+            }
         </div>
     );
 }

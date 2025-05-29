@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import FormModal from "./Frames/FormModal";
 import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
@@ -27,14 +27,12 @@ class HoleModalInput extends React.Component {
 
     render = () => {
         return (
-            <>
-                <input className="hole-label-input" value={this.state.inputValue} onChange={event => this.onChange(event)}></input>
-            </>
+                <input className="w-[10px] m-[1%] mt-[10px] flex-[0_0_18%] box-border" value={this.state.inputValue} onChange={event => this.onChange(event)}></input>
         );
     }
 }
 
-const HolesModal = (props) => {
+const ModifyHolesModal = (props) => {
 
     const labelRefs = useRef([]);
 
@@ -63,9 +61,12 @@ const HolesModal = (props) => {
     }
 
     return (
-        <FormModal onClose={() => props.onClose(false)} onSubmit={applyLabels}>
+        <FormModal replaceImg={props.replaceImg}
+            onClose={props.onClose}
+            onBack={props.onBack}
+            onSubmit={applyLabels}>
             <ModalTitle>Modify holes</ModalTitle>
-            <div className="hole-label-input-container">
+            <div className="flex flex-wrap justify-start mb-[15px]">
             {
                 ObjectTools.getCourseHoleLabels(props.course).map((label, index) => {
                     return <HoleModalInput ref={element => labelRefs.current[index] = element} value={label} key={index}></HoleModalInput>;
@@ -75,15 +76,15 @@ const HolesModal = (props) => {
 
 
             <div>
-                <ModalButton className="half-width-button mx-5 gray-background" type="button" onClick={() => {
+                <ModalButton className="w-[45%] mx-[5px] bg-gray-dark text-white" type="button" onClick={() => {
                     resetLabels();
                 }}>
                     Reset
                 </ModalButton>
-                <ModalButton className="half-width-button mx-5 blue-background">Apply</ModalButton>
+                <ModalButton className="w-[45%] mx-[5px] bg-blue-basic text-white">Apply</ModalButton>
             </div>
         </FormModal>
     );
 }
 
-export default HolesModal;
+export default ModifyHolesModal;

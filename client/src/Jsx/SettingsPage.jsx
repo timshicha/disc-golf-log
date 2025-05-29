@@ -1,11 +1,29 @@
 import React from "react";
+import DataHandler from "../data_handling/data_handler";
+import ModalButton from "./Modals/ModalComponents/ModalButton";
+import { download } from "../js_utils/downloads";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+
+const SettingsBlock = (props) => {
+    return (
+        <div className={"w-[90%] bg-gray-light mx-auto rounded-[7px] p-[10px] mb-[10px] min-h-[62px] "
+            + props.className}>
+            {props.children}
+        </div>
+    );
+}
 
 class SettingsPage extends React.Component {
     constructor (props) {
         super(props);
 
         this.props = props;
+        // Pull user settings from local storage
+        this.state = {
+            confirmDelete: localStorage.getItem("confirm-delete") === "true"
+        };
     }
+
 
     navigateTo = (newPage) => {
         if(this.props.navigateTo) {
@@ -16,11 +34,34 @@ class SettingsPage extends React.Component {
         }
     }
 
+    downloadData = () => {
+        return DataHandler.getAllData().then(result => {
+            download(result, "bogey_pad_data.json", true);
+        });
+    }
+
+    handleConfirmDeleteToggle = (event) => {
+        this.setState({ confirmDelete: event.target.checked });
+        localStorage.setItem("confirm-delete", event.target.checked);
+    }
+
     render = () => {
         return (
-            <>
-                <button onClick={() => {this.navigateTo("main")}}>Back to home</button>
-            </>
+            <div className="settings-page">
+                <p className="text-desc mt-[70px] mb-[10px] text-center">Version: {localStorage.getItem("version")}</p>
+                <SettingsBlock>
+                    <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
+                    <div className="text-desc text-gray">
+                        Download all your courses and rounds into a JSON file.
+                    </div>
+                </SettingsBlock>
+                <SettingsBlock className="min-h-[60px] bg-special">
+                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle} checked={this.state.confirmDelete}></input>
+                    <div className="text-desc">
+                        Ask for confirmation before deleting courses or rounds.
+                    </div>
+                </SettingsBlock>
+            </div>
         );
     }
 }

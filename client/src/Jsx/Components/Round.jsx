@@ -1,9 +1,7 @@
 import React from "react";
 import TripleDotButton from "../Components/TripleDotButton";
-import "../../css/general.css";
 import { isoToVisualFormat } from "../../js_utils/dates";
 import ObjectTools from "../../js_utils/ObjectTools";
-import "../../css/round.css";
 import DataHandler from "../../data_handling/data_handler";
 
 class RoundBox extends React.Component {
@@ -16,53 +14,36 @@ class RoundBox extends React.Component {
         this.onChange = props.onChange;
         this.holeabel = props.holeLabel;
         this.state.value = props.initialValue;
-        this.backgroundClass = "round-box-gray-bg";
+        this.backgroundClass = "";
     }
 
     render () {
         // Determine background color
         if(this.state.value !== "") {
             if(this.state.value > 0) {
-                this.backgroundClass = "round-box-red-bg";
+                this.backgroundClass = "bg-[#ffd2d2]"; // Red background for +
             }
             else if(this.state.value < 0) {
-                this.backgroundClass = "round-box-green-bg";
+                this.backgroundClass = "bg-[#d2ffd2]"; // Green background for -
             }
             else {
-                this.backgroundClass = "round-box-gray-bg";
+                this.backgroundClass = "bg-[#e6e6e6]"; // Light gray for 0
             }
         }
         else {
             this.backgroundClass = "";
         }
         return (
-            <div className="round-box">
-                <div style={{
-                    position: "relative"
-                }}>
-                    <div style={{
-                        position: "absolute",
-                        zIndex: "1",
-                        marginLeft: "2px",
-                        marginTop: "0px",
-                        color: "#aaaaaa",
-                    }} className="small-text">
+            <div className="flex-[0_0_auto] w-[11.1%]">
+                <div className="relative">
+                    <div className="text-[10px] absolute ml-[2px] mt-[0px] text-gray-subtle">
                         {this.holeabel}
                     </div>
                     <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"
-                        style={{
-                            borderRadius: "0px",
-                            width: "100%",
-                            padding: "0px",
-                            margin: "0px",
-                            height: "35px",
-                            fontSize: "20px",
-                            textAlign: "center",
-                            border: "1px #cccccc solid",
-                    }} value={this.state.value} onChange={(self) => {
+                    value={this.state.value} onChange={(self) => {
                         this.onChange(self.target.value);
                         this.setState({value: self.target.value});
-                    }} className={this.backgroundClass}>
+                    }} className={"w-[100%] p-[0px] m-[0px] h-[35px] text-[20px] text-center border-[1px] border-solid border-[#cccccc] " + this.backgroundClass}>
                     </input>
                 </div>
             </div>
@@ -76,10 +57,6 @@ class Round extends React.Component {
 
         this.state = {
             total: 0,
-            // Component showing total score for the round.
-            // The logic for styling it is more complicated,
-            // so using a state for it.
-            totalComponent: <span>(0)</span>,
         }
         this.props = props;
         this.onOpenModal = props.onOpenModal;
@@ -92,20 +69,7 @@ class Round extends React.Component {
             total: total
         });
 
-        // Generate new total component
-        let newTotalComponent;
-        if(total < 0) {
-            newTotalComponent = <span className="green-text">({total})</span>;
-        }
-        else if(total === 0) {
-            newTotalComponent = <span className="black-text">(0)</span>;
-        }
-        else {
-            newTotalComponent = <span className="red-text">(+{total})</span>
-        }
-        this.setState({
-            totalComponent: newTotalComponent
-        });
+
     }
 
     componentDidMount = () => {
@@ -115,45 +79,20 @@ class Round extends React.Component {
 
     render () {
         return (
-            <div className="margin-top-10" style={{
-                fontWeight: "bold",
-                width: "100%",
-            }}>
-                <div className="medium-text text-color-subtle" style={{
-                    width: "98%"
-                }}>
-                    <div style={{
-                        minWidth: "35px",
-                        display: "inline-block",
-                        color: "white",
-                        textAlign: "center",
-                        margiLeft: "3px",
-                        marginRight: "3px",
-                        fontWeight: "bold"
-                    }} className={
-                        this.state.total < 0 ? "green-background" :
-                        this.state.total === 0 ? "black-background" :
-                        "red-background"
-                    }>
+            <div className="mt-[15px] font-bold w-[100%]">
+                <div className="text-[16px] text-gray-subtle w-[98%]">
+                    <div className={"min-w-[35px] inline-block text-white text-center mr-[3px] font-bold " +
+                    (this.state.total < 0 ? "bg-[green]" : this.state.total === 0 ? "bg-black" : "bg-[red]")}>
                         {this.state.total > 0 ? "+" : ""}{this.state.total}
                     </div>
                     Round {this.props.index + 1}
-                    <TripleDotButton style={{
-                        height: "15px",
-                        float: "right"
-                    }} onClick={() => {
+                    <TripleDotButton className="h-[15px] float-right" onClick={() => {
                         this.onOpenModal(this.props.index);
                     }}></TripleDotButton>
-                    <div style={{
-                        float: "right",
-                        marginRight: "4px"
-                    }}>{isoToVisualFormat(this.props.round.date)}</div>
+                    <div className="float-right mr-[4px]">{isoToVisualFormat(this.props.round.date)}</div>
                 </div>
-                <div style={{
-                    display: "inline-block",
-                    width: "fit-content"
-                }}>
-                    <div className="round-score-container">
+                <div className="inline-block">
+                    <div className="w-[98%] flex flex-wrap justify-start">
                         {this.props.round.score.map((scoreValue, index) => {
                             return (
                                 <RoundBox onChange={(newValue) => {
@@ -172,6 +111,7 @@ class Round extends React.Component {
                         })}
                     </div>
                 </div>
+                <div className="text-[12px] font-normal text-gray-subtle">{this.props.round.comments}</div>
             </div>
         );
     }

@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from "react";
 import MainPage from "./MainPage";
 import SettingsPage from "./SettingsPage";
-import NavBar from "./Components/NavBar";
-import "../css/navbar.css";
+import NavBar, { NavBarBackButton, NavBarTitle } from "./Components/NavBar";
+import "../css/general.css";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
-import BackButton from "./Components/BackButton";
-import BlankSpace from "./Components/BlankSpace";
 import { Pages } from "../js_utils/Enums";
 import { migrate_v1_to_v2 } from "../data_handling/migrations";
+import { version as currentVersion } from "../../package.json";
+import { isVersionBehind } from "../js_utils/sorting";
+
+// See what version of the software the user currently has. If they haven't
+// used the app, simply give then the current version
+let version = localStorage.getItem("version") || currentVersion;
+console.log(version);
 
 // v1.0.0 now uses DBv2. If v1.0.0 isn't set, migrate to DBv2
-if(localStorage.getItem("version") !== "1.0.0") {
+if(isVersionBehind(version, "1.0.0")) {
     migrate_v1_to_v2().then(() => {
         localStorage.setItem("version", "1.0.0");
         alert("All data moved to new database successfully!");
+        version = "1.0.0";
         window.location.reload();
     }).catch(error => {
         alert(error);
     });
+}
+
+// v1.0.1 update
+if(isVersionBehind(version, "1.0.1")) {
+    console.log("here")
+    // In this version, we are adding some setting preferences
+    localStorage.setItem("confirm-delete", true);
+    localStorage.setItem("version", "1.0.1");
+    version = "1.0.1";
 }
 
 function App() {
@@ -52,43 +67,49 @@ function App() {
     }
 
     return (
-        <>
+        <div className="overflow-hidden">
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>
-                    <img src={titleLogo} className="navbar-title-logo"></img>
-                    <div className="navbar-right-items">
-                        <GoogleLoginButton onSuccess={onGoogleLoginSuccess}>
-                            <ModalButton className="login-button">Sign in</ModalButton>
-                        </GoogleLoginButton>
-                        <button className="navbar-settings-button" onClick={() => {
+                    <NavBarTitle>My Courses</NavBarTitle>
+                    <img src={titleLogo} className="h-[40px]"></img>
+                    <div className="flex">
+                        <button className="w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
                         }}>
-                            <img src={cogwheel}></img>
+                            <img className="h-[42px] w-[42px]" src={cogwheel}></img>
                         </button>
                     </div>
                 </NavBar>
                 {/* Add spacer to account for navbar which doesn't
                 take up any space. */}
-                <BlankSpace height="50px"></BlankSpace>
+                <div className="h-[42px]"></div>
                 <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
             </>
             }
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
-                        <BackButton onClick={() => navigateTo("main")}></BackButton>
-                        <div className="navbar-title">Settings</div>
+                        <div className="absolute ml-[100%] translate-x-[calc(-100%-7px)] absolute">
+                            {/* <ModalButton className="bg-black text-white">Save</ModalButton> */}
+                        </div>
+                        <NavBarTitle>Settings</NavBarTitle>
+                        <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
                     </NavBar>
                     <SettingsPage navigateTo={navigateTo}></SettingsPage>
-
                 </>
             }
             {currentPage === Pages.COURSE &&
-                <CoursePage course={currentCourse} navigateTo={navigateTo}>
-                </CoursePage>
+                <>
+                    <NavBar>
+                        <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
+                        <NavBarTitle>{currentCourse.name}</NavBarTitle>
+                    </NavBar>
+                    <CoursePage course={currentCourse} navigateTo={navigateTo}>
+                    </CoursePage>
+                </>
             }
-        </>
+        </div>
     );
 }
 

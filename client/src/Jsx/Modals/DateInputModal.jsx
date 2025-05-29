@@ -1,7 +1,6 @@
 import React, { createRef } from "react";
 import FormModal from "./Frames/FormModal";
 import ModalButton from "./ModalComponents/ModalButton";
-import "../../css/forms.css";
 import ModalTitle from "./ModalComponents/ModalTitle";
 
 class DateInputModal extends React.Component {
@@ -30,10 +29,13 @@ class DateInputModal extends React.Component {
 
     render = () => {
         return (
-            <FormModal onSubmit={this.handleSubmit} onClose={this.props.onClose}>
+            <FormModal replaceImg={this.props.replaceImg} onSubmit={this.handleSubmit}
+                onClose={this.props.onClose}
+                onBack={this.props.onBack}
+            >
                 <ModalTitle>Adjust Date</ModalTitle>
-                <input type="date" className="adjust-date-input" ref={this.ref}></input>
-                <ModalButton type="submit" className="full-width mx-5 blue-background">Apply</ModalButton>
+                <input type="date" className="w-[220px]" ref={this.ref}></input>
+                <ModalButton type="submit" className="w-[150px] mx-[5px] bg-blue-basic text-white mt-[10px]">Apply</ModalButton>
             </FormModal>
         );
     }
