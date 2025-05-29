@@ -25,7 +25,9 @@ const CourseOptionsModal = (props) => {
     return (
         <>
         {currentModal === Modals.COURSE_OPTIONS &&
-            <MenuModal onClose={() => props.setModal(null)}>
+            <MenuModal
+                onClose={() => props.setModal(null)}
+            >
                 <ModalTitle>{props.course.name}</ModalTitle>
                 <ModalButton onClick={() => props.setModal(Modals.RENAME)} className="w-[95%] text-white bg-gray-dark mt-[10px]">
                     Rename course
@@ -49,7 +51,8 @@ const CourseOptionsModal = (props) => {
             <ConfirmDeleteModal modalTitle={`Delete "${props.course.name}"?`}
             replaceImg="back-arrow"
             onSubmit={deleteCourse}
-            onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)}
+            onClose={() => setCurrentModal(null)}
+            onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}
             >
             </ConfirmDeleteModal>
         }

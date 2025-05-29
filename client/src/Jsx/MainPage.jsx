@@ -54,6 +54,7 @@ function MainPage (props) {
 
     const handleRenameCourse = (event) => {
         event.preventDefault();
+        event.stopPropagation();
         const newName = event.target.name.value;
         currentCourse.name = newName;
         DataHandler.modifyCourse(currentCourse, true).then(() => {
@@ -77,7 +78,10 @@ function MainPage (props) {
 
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
-                <RenameModal replaceImg="back-arrow" onSubmit={handleRenameCourse} onClose={() => setCurrentModal(Modals.COURSE_OPTIONS)} defaultValue={currentCourse.name} ref={renameModalRef}>
+                <RenameModal replaceImg="back-arrow" onSubmit={handleRenameCourse}
+                    onClose={() => setCurrentModal(null)}
+                    onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}
+                    defaultValue={currentCourse.name} ref={renameModalRef}>
                     <ModalTitle>Rename</ModalTitle>
                 </RenameModal>
             }
@@ -93,7 +97,9 @@ function MainPage (props) {
             {currentModal === Modals.HOLE_LABELS &&
                 // If the user clicks the X, bring them back to course options.
                 // If the onClose happened because the user submitted, close all modals
-                <ModifyHolesModal replaceImg="back-arrow"course={currentCourse} onClose={submitted => submitted ? setCurrentModal(null) : setCurrentModal(Modals.COURSE_OPTIONS)}>
+                <ModifyHolesModal replaceImg="back-arrow"course={currentCourse}
+                    onClose={() => setCurrentModal(null)}
+                    onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}>
                 </ModifyHolesModal>
             }
             

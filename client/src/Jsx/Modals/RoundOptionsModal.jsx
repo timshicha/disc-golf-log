@@ -12,13 +12,15 @@ const RoundOptionsModal = (props) => {
 
     const [currentModal, setCurrentModal] = useState(Modals.ROUND_OPTIONS);
 
+    const onClose = () => {
+        setCurrentModal(Modals.ROUND_OPTIONS);
+        props.onClose();
+    }
+
     return (
         <>
         {currentModal === Modals.ROUND_OPTIONS &&
-            <MenuModal onClose={() => {
-                setCurrentModal(Modals.ROUND_OPTIONS);
-                props.onClose();
-            }}>
+            <MenuModal onClose={onClose}>
                 <ModalTitle>Round {props.roundIndex + 1}</ModalTitle>
                 <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
                     setCurrentModal(Modals.DATE_INPUT);
@@ -41,18 +43,20 @@ const RoundOptionsModal = (props) => {
 
         {currentModal === Modals.DATE_INPUT &&
             <DateInputModal replaceImg="back-arrow" onSubmit={props.onUpdateDate}
-            onClose={() => {
+            onBack={() => {
                 setCurrentModal(Modals.ROUND_OPTIONS);
             }}
+            onClose={onClose}
         >
         </DateInputModal>
         }
 
         {currentModal === Modals.COMMENTS &&
             <CommentModal replaceImg="back-arrow" onSubmit={props.onUpdateComments}
-                onClose={() => {
+                onBack={() => {
                     setCurrentModal(Modals.ROUND_OPTIONS);
                 }}
+                onClose={onClose}
                 initialValue={props.round.comments}>
             </CommentModal>
         }
@@ -60,9 +64,11 @@ const RoundOptionsModal = (props) => {
         {currentModal === Modals.CONFIRM_ROUND_DELETE &&
             <ConfirmDeleteModal replaceImg="back-arrow" modalTitle={`Delete Round ${props.roundIndex + 1}?`}
                 onSubmit={props.onDeleteRound}
-                onClose={() => {
+                onBack={() => {
                     setCurrentModal(Modals.ROUND_OPTIONS);
-            }}>
+                }}
+                onClose={onClose}
+            >
             </ConfirmDeleteModal>
         }
         </>

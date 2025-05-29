@@ -61,7 +61,10 @@ const ModifyHolesModal = (props) => {
     }
 
     return (
-        <FormModal replaceImg={props.replaceImg} onClose={() => props.onClose(false)} onSubmit={applyLabels}>
+        <FormModal replaceImg={props.replaceImg}
+            onClose={props.onClose}
+            onBack={props.onBack}
+            onSubmit={applyLabels}>
             <ModalTitle>Modify holes</ModalTitle>
             <div className="flex flex-wrap justify-start mb-[15px]">
             {
