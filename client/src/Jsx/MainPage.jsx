@@ -3,7 +3,6 @@ import AddCourseModal from "./Modals/AddCourseModal";
 import CourseSlot from "./Components/CourseSlot";
 import ModalTitle from "./Modals/ModalComponents/ModalTitle";
 import RenameModal from "./Modals/RenameModal";
-import Dropdown, { DropdownOption } from "./Modals/Frames/Dropdown";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
 import ModifyHolesModal from "./Modals/ModifyHolesModal";
@@ -12,6 +11,7 @@ import CourseOptionsModal from "./Modals/CourseOptionsModal";
 import StickyDiv from "./Components/StickyDiv";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import SearchBar from "./Components/SearchBar";
+import SortCoursesDropdown from "./Components/SortCoursesDropdown";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -20,11 +20,8 @@ function MainPage (props) {
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
     const [searchString, setSearchString] = useState("");
-    // Using ref for state.
-    // A callback is passed to a child component that depends on this value,
-    // and ref allows the child to always have the current value.
-    const sortCourseBy = useRef(localStorage.getItem("sortCoursesBy") || "Alphabetical");
-    const sortByDropdownRef = useRef(null);
+    let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
+
     const renameModalRef = useRef(null);
 
     // Reload (load) on initial render
@@ -41,13 +38,13 @@ function MainPage (props) {
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
             // If sort alphabetically
-            if(sortCourseBy.current === "Alphabetical") {
+            if(sortCourseBy === "Alphabetically") {
                 result = result.sort((a, b) => compareStrings(a.name, b.name));
             }
-            else if(sortCourseBy.current === "Recently modified") {
+            else if(sortCourseBy === "Recently modified") {
                 result = result.sort((a, b) => compareDates(b.modified, a.modified));
             }
-            else if(sortCourseBy.current === "Most played") {
+            else if(sortCourseBy === "Most played") {
                 // Update round counts
                 result = result.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
             }
@@ -67,6 +64,12 @@ function MainPage (props) {
         }).catch(error => {
             console.log(error);
         });
+    }
+
+    const onSortByChange = (sortBy) => {
+        sortCourseBy = sortBy;
+        localStorage.setItem("sort-courses-by", sortBy);
+        reloadCourses();
     }
 
     return (
@@ -98,19 +101,8 @@ function MainPage (props) {
             ? // If there are courses, show courses
             <div className="min-h-[100dvh]">
                 <div className="w-full h-[50px]">
-                    <Dropdown ref={sortByDropdownRef} defaultValue={sortCourseBy.current} onChange={() => {
-                        const newSortBy = sortByDropdownRef.current?.getValue();
-                        if(newSortBy) {
-                            localStorage.setItem("sortCoursesBy", newSortBy);
-                            sortCourseBy.current = newSortBy;
-                            reloadCourses();
-                        }
-                    }}>
-                        <DropdownOption value="Alphabetical">Alphabetical</DropdownOption>
-                        <DropdownOption value="Recently modified">Recently modified</DropdownOption>
-                        <DropdownOption value="Most played">Most played</DropdownOption>
-                    </Dropdown>
-                    <SearchBar onChange={setSearchString}></SearchBar>
+                    <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
+                    <SearchBar className="inline-block float-right" onChange={setSearchString}></SearchBar>
                 </div>
 
                     {courses.filter(course => course.name.toLowerCase().includes(searchString.toLowerCase())).map(course => {
