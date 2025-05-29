@@ -8,7 +8,7 @@ const StickyDiv = (props) => {
         <div className={"fixed w-full left-[0px] bottom-[0px] " + props.className}>
             {/* The gradient makes it so the top part of the screen isn't
             cut off suddenly. */}
-            <div className="w-[100%] h-[20px] bg-linear-to-b from-[#ffffff00] to-[#ffffff]"></div>
+            <div className="w-[100%] h-[5px] bg-linear-to-b from-[#ffffff00] to-[#ffffff]"></div>
             <div className="py-[10px] bg-white">
                 {props.children}
             </div>
