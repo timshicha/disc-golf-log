@@ -2,7 +2,8 @@ import React from "react";
 import DataHandler from "../data_handling/data_handler";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
-import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+import { Modals } from "../js_utils/Enums";
+import MainLoginModal from "./Modals/MainLoginModal";
 
 const SettingsBlock = (props) => {
     return (
@@ -20,7 +21,9 @@ class SettingsPage extends React.Component {
         this.props = props;
         // Pull user settings from local storage
         this.state = {
-            confirmDelete: localStorage.getItem("confirm-delete") === "true"
+            confirmDelete: localStorage.getItem("confirm-delete") === "true",
+            email: localStorage.getItem("email") || null,
+            currentModal: null
         };
     }
 
@@ -45,10 +48,49 @@ class SettingsPage extends React.Component {
         localStorage.setItem("confirm-delete", event.target.checked);
     }
 
+    onLogin = (email) => {
+        this.setState({
+            email: email,
+            currentModal: null
+        });
+        localStorage.setItem("email", email);
+    }
+
+    onLogout = () => {
+        this.setState({ email: null });
+        localStorage.removeItem("email");
+    }
+
     render = () => {
         return (
             <div className="settings-page">
-                <p className="text-desc mt-[70px] mb-[10px] text-center">Version: {localStorage.getItem("version")}</p>
+                {/* Spacer for navbar */}
+                <div className="h-[70px]"></div>
+
+                {/* If the user is not logged in */}
+                {!this.state.email &&
+                    <SettingsBlock>
+                        <ModalButton className="bg-gray-dark text-white float-right" onClick={() => this.setState({ currentModal: Modals.MAIN_LOGIN })}>Log in</ModalButton>
+                        <div className="text-desc text-gray">You are not logged in. Log in to save your data to the cloud.</div>
+                    </SettingsBlock>
+                }
+
+                {/* If the user is logged in */}
+                {this.state.email &&
+                    <SettingsBlock>
+                        <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
+                        <div className="text-desc text-gray">You are logged in as</div>
+                        <div className="text-desc text-gray italic">{this.state.email}</div>
+                    </SettingsBlock>
+                }
+
+                {this.state.currentModal === Modals.MAIN_LOGIN &&
+                    <MainLoginModal onLogin={this.onLogin} onClose={() => {this.setState({ currentModal: null })}}>
+                    </MainLoginModal>
+                }
+
+                <div className="w-[100%] h-[2px] bg-gray-light"></div>
+                <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
                 <SettingsBlock>
                     <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
                     <div className="text-desc text-gray">
