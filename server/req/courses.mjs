@@ -1,12 +1,12 @@
 import db from "../db/db_setup.mjs"
 
-const addCourse = (userID, courseName, courseHoles) => {
-    return db`INSERT INTO courses (user_id, name, holes) VALUES (${userID}, ${courseName}, ${courseHoles})`;
+const addCourse = (userUUID, courseUUID, data) => {
+    return db`INSERT INTO courses (courseuuid, useruuid, data) VALUES (${courseUUID}, ${userUUID}, ${data})`;
 }
 
-const modifyCourse = (userID, courseName, newCourseName) => {
-    return db`UPDATE courses SET name = ${newCourseName}
-        WHERE user_id = ${userID} AND name = ${courseName}`;
+const modifyCourse = (userUUID, courseUUID, data) => {
+    return db`UPDATE courses SET data = ${data}
+        WHERE useruuid = ${userUUID} AND courseuuid = ${courseUUID}`;
 }
 
 export { addCourse, modifyCourse };

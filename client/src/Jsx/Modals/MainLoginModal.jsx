@@ -17,7 +17,6 @@ const MainLoginModal = (props) => {
     }
 
     const onError = (error) => {
-        console.log(error);
         setErrorMessage("Could not log in: " + error);
     }
 

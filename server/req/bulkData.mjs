@@ -1,38 +1,31 @@
 
 
-// If the user sends a bunch of modifications, go through the lists
-
 import db from "../db/db_setup.mjs";
+import { addCourse } from "./courses.mjs";
 
+// If the user sends a bunch of modifications, go through the lists
 // and update their data
-const consumeBulkData = async (userID, data) => {
+const uploadBulkData = async (user, data) => {
     // Make sure body is defined
     if(!data) return null;
-    let updatesUploaded = 0;
     console.log(data);
+    let updatesSucceeded = 0;
+    let updatesFailed = 0;
     // For all courses that are being added
     if(Array.isArray(data.addCourseQueue)) {
         for (let i = 0; i < data.addCourseQueue.length; i++) {
             try {
-                const name = data.addCourseQueue[i].name;
-                const holes = data.addCourseQueue[i].holes;
-                await db`INSERT INTO courses (user_id, name, holes) VALUES
-                    (${userID}, ${name}, ${holes})`;
-                updatesUploaded++;
+                const courseUUID = data.addCourseQueue[i].courseUUID;
+                const courseData = JSON.stringify(data.addCourseQueue[i]);
+                await addCourse(user.useruuid, courseUUID, courseData);
+                updatesSucceeded++;
             } catch (error) {
                 console.log(`Could not add course ${data.addCourseQueue[i].name}: ${error}`);
+                updatesFailed++;
             }
         }
     }
-    // For all courses that are being deleted
-    // if(Array.isArray(data.deleteCourseQueue)) {
-    //     for (let i = 0; i < data.deleteCourseQueue.length; i++) {
-    //         try {
-    //             const name = 
-    //         }
-    //     }
-    // }
-    return updatesUploaded;
+    return { updatesSucceeded, updatesFailed };
 }
 
-export { consumeBulkData };
+export { uploadBulkData };

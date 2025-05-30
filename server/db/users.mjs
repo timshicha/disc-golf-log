@@ -1,4 +1,5 @@
 import db from "./db_setup.mjs";
+import { randomUUID } from "crypto";
 
 // Find a user with a certain email.
 // May fail so be sure to wrap in try block!
@@ -8,8 +9,13 @@ const findUserByEmail = async (email) => {
 }
 
 // Add a user with email
-const addUser = async (email, name) => {
-    return await db`INSERT INTO users (email, name) VALUES (${email}, ${name})`;
+const addUser = async (email, userData) => {
+    // Create a userUUID
+    const userUUID = randomUUID();
+    // Stringigy all data
+    const safeEmail = String(email);
+    const safeUserData = JSON.stringify(userData);
+    return await db`INSERT INTO users (email, useruuid, data) VALUES (${safeEmail}, ${userUUID}, ${safeUserData})`;
 }
 
 export { findUserByEmail, addUser };

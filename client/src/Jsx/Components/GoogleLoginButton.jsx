@@ -23,17 +23,18 @@ const GoogleLoginButton = (props) => {
                     }
                     return res.json();
                 }).then(data => {
-                    data = JSON.parse(data.message);
-                    props.onSuccess(data);
+                    props.onSuccess(data)
                 }).catch(error => {
+                    console.log(error);
                     props.onError("Server Error");
                 })
             } catch (error) {
+                console.log(error);
                 props.onError(error);
             }
         },
-        onError: () => {
-            console.log("Login failed.");
+        onError: (error) => {
+            console.log(error);
             props.onError();
         },
         // redirect_uri: "postmessage",

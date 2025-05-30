@@ -7,9 +7,9 @@ const generateToken = async (email) => {
     // Attempt to create a token
     try {
         const token = randomUUID();
-        await db`INSERT INTO tokens (user_id, token)
+        await db`INSERT INTO tokens (token, userUUID)
             VALUES (
-                (SELECT id FROM users WHERE email = ${email}), ${token}
+                ${token}, (SELECT useruuid FROM users WHERE email = ${email})
             )`;
         return token;
     } catch (error) {
@@ -25,13 +25,14 @@ const validateToken = async (token) => {
     }
     try {
         console.log("Validating token: " + token);
-        const userObj = await db`SELECT user_id FROM tokens WHERE token = ${token}`;
-        const userID = userObj[0]?.user_id;
-        if(!userID) {
+        // User token to find token that maps to the user
+        let user = await db`SELECT * FROM users WHERE useruuid = (SELECT useruuid FROM tokens WHERE token = ${token})`;
+        user = user[0];
+        if(!user) {
             throw("Can't map token to a user.");
         }
-        console.log("Token validated! User ID: " + userID);
-        return userID;
+        console.log("Token validated! User:", user.email);
+        return user;
     }
     catch (error) {
         console.log("Error validating token: " + error);

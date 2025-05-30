@@ -4,6 +4,7 @@ import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
+import { uploadChangesToCloud } from "../serverCalls/data.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -90,6 +91,16 @@ class SettingsPage extends React.Component {
                 }
 
                 <div className="w-[100%] h-[2px] bg-gray-light"></div>
+                <button className="bg-red-600 text-white block mx-auto" onClick={() => {
+                    DataHandler.getQueue().then(data => {
+                        console.log(data);
+                        uploadChangesToCloud(this.state.email, data).then(result => {
+                            console.log(result);
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                    })
+                }}>upload data to cloud</button>
                 <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
                 <SettingsBlock>
                     <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
