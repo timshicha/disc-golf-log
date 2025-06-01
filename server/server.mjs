@@ -76,6 +76,7 @@ app.post("/data", async (req, res) => {
         try {
             const updateResults = await uploadBulkData(user, req.body.data);
             console.log(`${user.email}: Updated: ${updateResults.updatesSucceeded} (${updateResults.updatesFailed} failed)`);
+            console.log("Errors: ", updateResults.errors);
             res.status(200);
         } catch (error) {
             res.status(400).send(error);
