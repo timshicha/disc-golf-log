@@ -52,10 +52,9 @@ function MainPage (props) {
         });
     }
 
-    const handleRenameCourse = (event) => {
+    const handleRenameCourse = (newName) => {
         event.preventDefault();
         event.stopPropagation();
-        const newName = event.target.name.value;
         currentCourse.name = newName;
         DataHandler.modifyCourse(currentCourse, true).then(() => {
             setCurrentModal(null);
