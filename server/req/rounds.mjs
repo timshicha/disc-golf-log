@@ -5,10 +5,25 @@ const addRound = async (userUUID, roundUUID, courseUUID, data) => {
     const courseUserUUID = (await db`SELECT useruuid FROM courses WHERE courseuuid = ${courseUUID} LIMIT 1`)?.[0]?.useruuid;
     // If user ID's match, add the round
     if(courseUserUUID === userUUID) {
-        return await db`INSERT INTO rounds (rounduuid, courseuuid, data) VALUES (${roundUUID}, ${courseUUID}, ${data})`;
+        const result = await db`INSERT INTO rounds (rounduuid, courseuuid, data) VALUES (${roundUUID}, ${courseUUID}, ${data})`;
+        return result.count > 0;
     }
     // If not the right user, return false
-    throw("Can't add round to a course that does not belong to this user.");
+    return false;
 }
 
-export { addRound };
+const modifyRound = async (userUUID, roundUUID, data) => {
+    // Make sure this round belongs to this user. Do this by getting the course ID of this round,
+    // and then seeing if the user ID of that course is this user's ID.
+    const roundUserUUID = (await db`SELECT useruuid FROM courses WHERE courseuuid =
+        (SELECT courseuuid FROM rounds WHERE rounduuid = ${roundUUID}) LIMIT 1`)?.[0]?.useruuid;
+        // If the user ID's match, proceed
+        if(roundUserUUID === userUUID) {
+            const result = await db`UPDATE rounds SET data = ${data} WHERE rounduuid = ${roundUUID}`;
+            return result.count > 0;
+        }
+        return false;
+}
+
+
+export { addRound, modifyRound };
