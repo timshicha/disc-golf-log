@@ -36,7 +36,7 @@ const uploadBulkData = async (user, data) => {
             try {
                 const roundUUID = data.addRoundQueue[i].roundUUID;
                 const courseUUID = data.addRoundQueue[i].courseUUID;
-                const roundData = data.addRoundQueue[i].data;
+                const roundData = JSON.stringify(data.addRoundQueue[i]);
                 if(await addRound(user.useruuid, roundUUID, courseUUID, roundData)) {
                     updatesSucceeded++;
                 }
