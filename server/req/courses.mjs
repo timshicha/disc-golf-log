@@ -11,4 +11,10 @@ const modifyCourse = async (userUUID, courseUUID, data) => {
     return result.count > 0;
 }
 
-export { addCourse, modifyCourse };
+const deleteCourse = async (userUUID, courseUUID) => {
+    console.log(courseUUID, userUUID);
+    const result = await db`DELETE FROM courses WHERE courseuuid = ${courseUUID} AND useruuid = ${userUUID}`;
+    return result.count > 0;
+}
+
+export { addCourse, modifyCourse, deleteCourse };

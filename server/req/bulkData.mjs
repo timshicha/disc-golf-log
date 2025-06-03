@@ -1,7 +1,7 @@
 
 
 import db from "../db/db_setup.mjs";
-import { addCourse, modifyCourse } from "./courses.mjs";
+import { addCourse, deleteCourse, modifyCourse } from "./courses.mjs";
 import { addRound, modifyRound } from "./rounds.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
@@ -23,6 +23,7 @@ const uploadBulkData = async (user, data) => {
                 }
                 else {
                     updatesFailed++;
+                    errors.push("Could not add course: A course with this ID already exists");
                 }
             } catch (error) {
                 errors.push(`Could not add course: ${error}`);
@@ -40,10 +41,29 @@ const uploadBulkData = async (user, data) => {
                     updatesSucceeded++;
                 }
                 else {
+                    errors.push("Cound not modify course: Course not found");
                     updatesFailed++;
                 }
             } catch (error) {
                 errors.push(`Could not modify course: ${error}`);
+                updatesFailed++;
+            }
+        }
+    }
+    // Courses being deleted
+    if(Array.isArray(data.deleteCourseQueue)) {
+        for (let i = 0; i < data.deleteCourseQueue.length; i++) {
+            try {
+                const courseUUID = data.deleteCourseQueue[i].courseUUID;
+                if(await deleteCourse(user.useruuid, courseUUID)) {
+                    updatesSucceeded++;
+                }
+                else {
+                    errors.push("Could not delete course: Course not found");
+                    updatesFailed++;
+                }
+            } catch (error) {
+                errors.push(`Could not delete course: ${error}`);
                 updatesFailed++;
             }
         }
@@ -60,6 +80,7 @@ const uploadBulkData = async (user, data) => {
                     updatesSucceeded++;
                 }
                 else {
+                    errors.push("Could not add round: (Likely issue) User does not have a course with the provided course ID");
                     updatesFailed++;
                 }
                 
@@ -80,6 +101,7 @@ const uploadBulkData = async (user, data) => {
                     updatesSucceeded++;
                 }
                 else {
+                    errors.push("Could not modify round: Round not found");
                     updatesFailed++;
                 }
             } catch (error) {
