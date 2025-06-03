@@ -2,7 +2,7 @@
 
 import db from "../db/db_setup.mjs";
 import { addCourse, deleteCourse, modifyCourse } from "./courses.mjs";
-import { addRound, modifyRound } from "./rounds.mjs";
+import { addRound, deleteRound, modifyRound } from "./rounds.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
@@ -90,14 +90,13 @@ const uploadBulkData = async (user, data) => {
             }
         }
     }
-
     // For all rounds that are being modified
     if(Array.isArray(data.modifyRoundQueue)) {
         for (let i = 0; i < data.modifyRoundQueue.length; i++) {
             try {
                 const roundUUID = data.modifyRoundQueue[i].roundUUID;
                 const roundData = JSON.stringify(data.modifyRoundQueue[i]);
-                if(modifyRound(user.useruuid, roundUUID, roundData)) {
+                if(await modifyRound(user.useruuid, roundUUID, roundData)) {
                     updatesSucceeded++;
                 }
                 else {
@@ -105,11 +104,31 @@ const uploadBulkData = async (user, data) => {
                     updatesFailed++;
                 }
             } catch (error) {
-                errors.push(`"Cound not modify round: ${error}`);
+                errors.push(`Cound not modify round: ${error}`);
                 updatesFailed++;
             }
         }
     }
+    // Deleting rounds
+    if(Array.isArray(data.deleteRoundQueue)) {
+        for (let i = 0; i < data.deleteRoundQueue.length; i++) {
+            try {
+                const roundUUID = data.deleteRoundQueue[i].roundUUID;
+                if(await deleteRound(user.useruuid, roundUUID)) {
+                    updatesSucceeded++;
+                }
+                else {
+                    errors.push("Could not delete round: Round not found");
+                    updatesFailed++;
+                }
+
+            } catch (error) {
+                errors.push(`Could not delete round: ${error}`);
+                updatesFailed++;
+            }
+        }
+    }
+
     return { updatesSucceeded, updatesFailed, errors };
 }
 
