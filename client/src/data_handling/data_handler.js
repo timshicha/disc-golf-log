@@ -187,6 +187,43 @@ class DataHandler {
         });
     }
 
+    static replaceUpdateQueue = (newQueue) => {
+        // Clear the update queue
+        return db.addCourseQueue.clear().then(async () => {
+            await db.modifyCourseQueue.clear();
+            await db.deleteCourseQueue.clear();
+            await db.addRoundQueue.clear();
+            await db.modifyRoundQueue.clear();
+            await db.deleteRoundQueue.clear();
+            // Replace with the new queue
+            for (let i = 0; i < newQueue.addCourseQueue.length; i++) {
+                if(!newQueue.addCourseQueue[i]) continue;
+                await db.addCourseQueue.put(newQueue.addCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.modifyCourseQueue.length; i++) {
+                if(!newQueue.modifyCourseQueue[i]) continue;
+                await db.modifyCourseQueue.put(newQueue.modifyCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.deleteCourseQueue.length; i++) {
+                if(!newQueue.deleteCourseQueue[i]) continue;
+                await db.deleteCourseQueue.put(newQueue.deleteCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.addRoundQueue.length; i++) {
+                console.log(newQueue.addRoundQueue[i]);
+                if(!newQueue.addRoundQueue[i]) continue;
+                await db.addRoundQueue.put(newQueue.addRoundQueue[i]);
+            }
+            for (let i = 0; i < newQueue.modifyRoundQueue.length; i++) {
+                if(!newQueue.modifyRoundQueue[i]) continue;
+                await db.modifyRoundQueue.put(newQueue.modifyRoundQueue[i]);
+            }
+            for (let i = 0; i < newQueue.deleteRoundQueue.length; i++) {
+                if(!newQueue.deleteRoundQueue[i]) continue;
+                await db.deleteRoundQueue.put(newQueue.deleteRoundQueue[i]);
+            }
+        });
+    };
+
     static getQueue = () => {
         const queue = {};
         return db.addCourseQueue.toArray().then(result => {

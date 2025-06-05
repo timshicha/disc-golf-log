@@ -74,6 +74,7 @@ app.post("/data", async (req, res) => {
         }
         // At this point the user has been validated and we have their userID
         try {
+            console.log("Incoming queue:", req.body.data);
             const updateResults = await uploadBulkData(user, req.body.data);
             console.log("Remaining queue:", updateResults.data);
             console.log(`${user.email}: Updated: ${updateResults.updatesSucceeded} (${updateResults.updatesFailed} failed)`);
@@ -82,7 +83,7 @@ app.post("/data", async (req, res) => {
                 updatesSucceeded: updateResults.updatesSucceeded,
                 updatesFailed: updateResults.updatesFailed,
                 errors: updateResults.errors,
-                queue: updateResults.data
+                updateQueue: updateResults.data
             });
         } catch (error) {
             res.status(400).send(error);

@@ -94,8 +94,8 @@ class SettingsPage extends React.Component {
                 <button className="bg-red-600 text-white block mx-auto" onClick={() => {
                     DataHandler.getQueue().then(data => {
                         console.log(data);
-                        uploadChangesToCloud(this.state.email, data).then(result => {
-                            console.log(result);
+                        uploadChangesToCloud(this.state.email, data).then(result => result.json()).then(result => {
+                            return DataHandler.replaceUpdateQueue(result.updateQueue);
                         }).catch(error => {
                             console.log(error);
                         });
