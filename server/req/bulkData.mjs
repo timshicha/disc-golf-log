@@ -19,6 +19,7 @@ const uploadBulkData = async (user, data) => {
                 const courseUUID = data.addCourseQueue[i].courseUUID;
                 const courseData = JSON.stringify(data.addCourseQueue[i]);
                 if(await addCourse(user.useruuid, courseUUID, courseData)) {
+                    data.addCourseQueue[i] = null;
                     updatesSucceeded++
                 }
                 else {
@@ -38,6 +39,7 @@ const uploadBulkData = async (user, data) => {
                 const courseUUID = data.modifyCourseQueue[i].courseUUID;
                 const courseData = JSON.stringify(data.modifyCourseQueue[i]);
                 if(await modifyCourse(user.useruuid, courseUUID, courseData)) {
+                    data.modifyCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
                 else {
@@ -56,6 +58,7 @@ const uploadBulkData = async (user, data) => {
             try {
                 const courseUUID = data.deleteCourseQueue[i].courseUUID;
                 if(await deleteCourse(user.useruuid, courseUUID)) {
+                    data.deleteCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
                 else {
@@ -77,6 +80,7 @@ const uploadBulkData = async (user, data) => {
                 const courseUUID = data.addRoundQueue[i].courseUUID;
                 const roundData = JSON.stringify(data.addRoundQueue[i]);
                 if(await addRound(user.useruuid, roundUUID, courseUUID, roundData)) {
+                    data.addRoundQueue[i] = null;
                     updatesSucceeded++;
                 }
                 else {
@@ -97,6 +101,7 @@ const uploadBulkData = async (user, data) => {
                 const roundUUID = data.modifyRoundQueue[i].roundUUID;
                 const roundData = JSON.stringify(data.modifyRoundQueue[i]);
                 if(await modifyRound(user.useruuid, roundUUID, roundData)) {
+                    data.modifyRoundQueue[i] = null;
                     updatesSucceeded++;
                 }
                 else {
@@ -116,6 +121,7 @@ const uploadBulkData = async (user, data) => {
                 const roundUUID = data.deleteRoundQueue[i].roundUUID;
                 if(await deleteRound(user.useruuid, roundUUID)) {
                     updatesSucceeded++;
+                    data.deleteRoundQueue[i] = null;
                 }
                 else {
                     errors.push("Could not delete round: Round not found");
@@ -129,7 +135,7 @@ const uploadBulkData = async (user, data) => {
         }
     }
 
-    return { updatesSucceeded, updatesFailed, errors };
+    return { data, updatesSucceeded, updatesFailed, errors };
 }
 
 export { uploadBulkData };
