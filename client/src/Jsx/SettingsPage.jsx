@@ -23,6 +23,7 @@ class SettingsPage extends React.Component {
         // Pull user settings from local storage
         this.state = {
             confirmDelete: localStorage.getItem("confirm-delete") === "true",
+            lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud") || null,
             email: localStorage.getItem("email") || null,
             currentModal: null
         };
@@ -62,6 +63,23 @@ class SettingsPage extends React.Component {
         localStorage.removeItem("email");
     }
 
+    handleUploadChangesToCloud = () => {
+        DataHandler.getQueue().then(data => {
+            console.log(data);
+            uploadChangesToCloud(this.state.email, data).then(result => result.json()).then(result => {
+                const now = Date();
+                localStorage.setItem("last-pushed-to-cloud", now);
+                this.setState({
+                    lastPushedToCloud: now
+                });
+                
+                return DataHandler.replaceUpdateQueue(result.updateQueue);
+            }).catch(error => {
+                console.log(error);
+            });
+        })
+    }
+
     render = () => {
         return (
             <div className="settings-page">
@@ -78,11 +96,23 @@ class SettingsPage extends React.Component {
 
                 {/* If the user is logged in */}
                 {this.state.email &&
-                    <SettingsBlock>
-                        <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
-                        <div className="text-desc text-gray">You are logged in as</div>
-                        <div className="text-desc text-gray italic">{this.state.email}</div>
-                    </SettingsBlock>
+                    <>
+                        <SettingsBlock>
+                            <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
+                            <div className="text-desc text-gray">You are logged in as</div>
+                            <div className="text-desc text-gray italic">{this.state.email}</div>
+                        </SettingsBlock>
+                        <SettingsBlock>
+                            <div className="w-100% text-center">
+                                <div className="text-desc text-gray text-left">
+                                    {this.state.lastPushedToCloud && <>Changes last uploaded to cloud {this.state.lastPushedToCloud}.</>}
+                                    {!this.state.lastPushedToCloud && <>Changes have not yet been uploaded to cloud.</>}
+                                </div>
+                                <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
+                                <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton>
+                            </div>
+                        </SettingsBlock>
+                    </>
                 }
 
                 {this.state.currentModal === Modals.MAIN_LOGIN &&
@@ -91,16 +121,6 @@ class SettingsPage extends React.Component {
                 }
 
                 <div className="w-[100%] h-[2px] bg-gray-light"></div>
-                <button className="bg-red-600 text-white block mx-auto" onClick={() => {
-                    DataHandler.getQueue().then(data => {
-                        console.log(data);
-                        uploadChangesToCloud(this.state.email, data).then(result => result.json()).then(result => {
-                            return DataHandler.replaceUpdateQueue(result.updateQueue);
-                        }).catch(error => {
-                            console.log(error);
-                        });
-                    })
-                }}>upload data to cloud</button>
                 <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
                 <SettingsBlock>
                     <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
