@@ -1,8 +1,7 @@
 
 
-import db from "../db/db_setup.mjs";
-import { addCourse, deleteCourse, modifyCourse } from "./courses.mjs";
-import { addRound, deleteRound, modifyRound } from "./rounds.mjs";
+import { addCourse, deleteCourse, getAllCourses, modifyCourse } from "./courses.mjs";
+import { addRound, deleteRound, getAllRounds, modifyRound } from "./rounds.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
@@ -138,4 +137,10 @@ const uploadBulkData = async (user, data) => {
     return { data, updatesSucceeded, updatesFailed, errors };
 }
 
-export { uploadBulkData };
+const getAllCloudData = async (user) => {
+    const courses = await getAllCourses(user.useruuid);
+    const rounds = await getAllRounds(user.useruuid);
+    return { courses, rounds };
+}
+
+export { uploadBulkData, getAllCloudData };

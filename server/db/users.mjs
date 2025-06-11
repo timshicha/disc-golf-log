@@ -1,10 +1,11 @@
-import db from "./db_setup.mjs";
+import db, { SCHEMA } from "./db_setup.mjs";
+import { sql } from "slonik";
 import { randomUUID } from "crypto";
 
 // Find a user with a certain email.
 // May fail so be sure to wrap in try block!
 const findUserByEmail = async (email) => {
-    const [user] = await db`SELECT * FROM users WHERE email = ${email} LIMIT 1`;
+    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE email = ${email} LIMIT 1`;
     return user;
 }
 
@@ -15,7 +16,7 @@ const addUser = async (email, userData) => {
     // Stringigy all data
     const safeEmail = String(email);
     const safeUserData = JSON.stringify(userData);
-    return await db`INSERT INTO users (email, useruuid, data) VALUES (${safeEmail}, ${userUUID}, ${safeUserData})`;
+    return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data) VALUES (${safeEmail}, ${userUUID}, ${safeUserData})`;
 }
 
 export { findUserByEmail, addUser };

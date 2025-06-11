@@ -77,7 +77,6 @@ const handleGoogleLoginRequest = async (req, res) => {
         res.cookie("token", token, {
             secure: false
         });
-        console.log(req.session);
         console.log("Token set: " + token);
     }
 

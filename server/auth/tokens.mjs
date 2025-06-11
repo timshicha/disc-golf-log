@@ -1,15 +1,13 @@
-import crypto from "crypto";
-import db from "../db/db_setup.mjs";
+import db, { SCHEMA } from "../db/db_setup.mjs";
 import { randomUUID } from "crypto";
-
 
 const generateToken = async (email) => {
     // Attempt to create a token
     try {
         const token = randomUUID();
-        await db`INSERT INTO tokens (token, userUUID)
+        await db`INSERT INTO ${SCHEMA}.tokens (token, userUUID)
             VALUES (
-                ${token}, (SELECT useruuid FROM users WHERE email = ${email})
+                ${token}, (SELECT useruuid FROM ${SCHEMA}.users WHERE email = ${email})
             )`;
         return token;
     } catch (error) {
@@ -24,7 +22,7 @@ const validateToken = async (token) => {
     }
     try {
         // User token to find token that maps to the user
-        let user = await db`SELECT * FROM users WHERE useruuid = (SELECT useruuid FROM tokens WHERE token = ${token})`;
+        let user = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = (SELECT useruuid FROM ${SCHEMA}.tokens WHERE token = ${token})`;
         user = user[0];
         if(!user) {
             throw("Can't map token to a user.");

@@ -224,6 +224,23 @@ class DataHandler {
         });
     };
 
+    static clearUpdateQueue = () => {
+        // Clear the update queue
+        return db.addCourseQueue.clear().then(async () => {
+            await db.modifyCourseQueue.clear();
+            await db.deleteCourseQueue.clear();
+            await db.addRoundQueue.clear();
+            await db.modifyRoundQueue.clear();
+            return db.deleteRoundQueue.clear();
+        });
+    }
+
+    static clearData = () => {
+        return db.courses.clear().then(() => {
+            return db.rounds.clear();
+        });
+    }
+
     static getQueue = () => {
         const queue = {};
         return db.addCourseQueue.toArray().then(result => {

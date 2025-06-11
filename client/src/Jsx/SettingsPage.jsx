@@ -4,7 +4,7 @@ import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
-import { uploadChangesToCloud } from "../serverCalls/data.mjs";
+import { retrieveAllDataFromCloud, uploadChangesToCloud } from "../serverCalls/data.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -56,11 +56,22 @@ class SettingsPage extends React.Component {
             currentModal: null
         });
         localStorage.setItem("email", email);
+        console.log("retrieving data")
+        retrieveAllDataFromCloud().then(result => result.json()).then(result => {
+            console.log(result);
+        })
+        // Ask what they want to do:
+        // 1) Overwrite their cloud data with current data (CONFIRM)
+        // 2) Delete their current data and load their cloud data (CONFIRM)
+        // 3) Merge their data (try to keep both)
+
     }
 
     onLogout = () => {
         this.setState({ email: null });
         localStorage.removeItem("email");
+        DataHandler.clearData();
+        DataHandler.clearUpdateQueue();
     }
 
     handleUploadChangesToCloud = () => {
@@ -73,7 +84,7 @@ class SettingsPage extends React.Component {
                     lastPushedToCloud: now
                 });
                 
-                return DataHandler.replaceUpdateQueue(result.updateQueue);
+                return DataHandler.clearUpdateQueue();
             }).catch(error => {
                 console.log(error);
             });

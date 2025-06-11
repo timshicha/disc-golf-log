@@ -16,4 +16,14 @@ const uploadChangesToCloud = (userEmail, data) => {
     });
 }
 
-export { uploadChangesToCloud };
+const retrieveAllDataFromCloud = () => {
+    return fetch(SERVER_URI + "/data", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+
+export { uploadChangesToCloud, retrieveAllDataFromCloud };
