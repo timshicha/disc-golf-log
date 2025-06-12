@@ -2,25 +2,22 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { configDotenv } from "dotenv";
-import { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest } from "./auth/google.mjs";
+import { handleGoogleLoginRequest } from "./auth/google.mjs";
 import { validateToken } from "./auth/tokens.mjs";
 import { addCourse, modifyCourse } from "./req/courses.mjs";
 import { getAllCloudData, uploadBulkData } from "./req/bulkData.mjs";
 
 configDotenv();
-const HOST = process.env.HOST;
 const PORT = process.env.PORT;
-const ENV = process.env.ENV
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
 const app = express();
 app.use(cors({
     origin: CLIENT_HOSTNAME,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
-app.options("*", cors());
 app.use(express.json()); // Automatically parse body when json
 app.use(cookieParser()); // Automatically parse cookies
 
@@ -112,4 +109,4 @@ app.get("/data", async (req, res) => {
 });
 
 // starts a simple http server locally on port 3000
-app.listen(PORT, "localhost", () => console.log("Listening on 3000..."));
+app.listen(PORT, "localhost", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port 3000...`));
