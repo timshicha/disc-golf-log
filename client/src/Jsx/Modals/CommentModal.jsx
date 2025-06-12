@@ -40,7 +40,7 @@ const CommentModal = (props) => {
     return (
         <FormModal replaceImg={props.replaceImg} onSubmit={onSubmit} onClose={props.onClose} onBack={props.onBack}>
             <ModalTitle>Comments</ModalTitle>
-            <textarea ref={textAreaRef} className="w-[90%] h-[200px]"></textarea>
+            <textarea id={props.id} name={props.name} ref={textAreaRef} className="w-[90%] h-[200px]"></textarea>
             <div className="mt-[10px]">
                 <ModalButton onClick={clearTextarea} className="w-[45%] bg-gray-dark mx-[5px] text-white">Clear</ModalButton>
                 <ModalButton type="submit" className="w-[45%] bg-blue-basic mx-[5px] text-white">Submit</ModalButton>

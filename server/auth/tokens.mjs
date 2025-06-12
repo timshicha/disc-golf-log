@@ -1,15 +1,13 @@
-import crypto from "crypto";
-import db from "../db/db_setup.mjs";
+import db, { SCHEMA } from "../db/db_setup.mjs";
 import { randomUUID } from "crypto";
-
 
 const generateToken = async (email) => {
     // Attempt to create a token
     try {
         const token = randomUUID();
-        await db`INSERT INTO tokens (user_id, token)
+        await db`INSERT INTO ${SCHEMA}.tokens (token, userUUID)
             VALUES (
-                (SELECT id FROM users WHERE email = ${email}), ${token}
+                ${token}, (SELECT useruuid FROM ${SCHEMA}.users WHERE email = ${email})
             )`;
         return token;
     } catch (error) {
@@ -20,21 +18,19 @@ const generateToken = async (email) => {
 
 const validateToken = async (token) => {
     if(!token) {
-        console.log("Error validating token: no token");
         return null;
     }
     try {
-        console.log("Validating token: " + token);
-        const userObj = await db`SELECT user_id FROM tokens WHERE token = ${token}`;
-        const userID = userObj[0]?.user_id;
-        if(!userID) {
+        // User token to find token that maps to the user
+        let user = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = (SELECT useruuid FROM ${SCHEMA}.tokens WHERE token = ${token})`;
+        user = user[0];
+        if(!user) {
             throw("Can't map token to a user.");
         }
-        console.log("Token validated! User ID: " + userID);
-        return userID;
+        return user;
     }
     catch (error) {
-        console.log("Error validating token: " + error);
+        // console.log("Error validating token: " + error);
         return null;
     }
 }

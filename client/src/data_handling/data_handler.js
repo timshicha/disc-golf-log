@@ -145,7 +145,7 @@ class DataHandler {
                 // adding a modify task
                 return db.addRoundQueue.get(round.roundUUID).then(result => {
                     if(result) {
-                        return db.addRoundQueue.put(result);
+                        return db.addRoundQueue.put(round);
                     }
                     // If not added in queue, modify
                     return db.modifyRoundQueue.put(round);
@@ -185,6 +185,71 @@ class DataHandler {
                 return data;
             });
         });
+    }
+
+    static replaceUpdateQueue = (newQueue) => {
+        // Clear the update queue
+        return db.addCourseQueue.clear().then(async () => {
+            await db.modifyCourseQueue.clear();
+            await db.deleteCourseQueue.clear();
+            await db.addRoundQueue.clear();
+            await db.modifyRoundQueue.clear();
+            await db.deleteRoundQueue.clear();
+            // Replace with the new queue
+            for (let i = 0; i < newQueue.addCourseQueue.length; i++) {
+                if(!newQueue.addCourseQueue[i]) continue;
+                await db.addCourseQueue.put(newQueue.addCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.modifyCourseQueue.length; i++) {
+                if(!newQueue.modifyCourseQueue[i]) continue;
+                await db.modifyCourseQueue.put(newQueue.modifyCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.deleteCourseQueue.length; i++) {
+                if(!newQueue.deleteCourseQueue[i]) continue;
+                await db.deleteCourseQueue.put(newQueue.deleteCourseQueue[i]);
+            }
+            for (let i = 0; i < newQueue.addRoundQueue.length; i++) {
+                console.log(newQueue.addRoundQueue[i]);
+                if(!newQueue.addRoundQueue[i]) continue;
+                await db.addRoundQueue.put(newQueue.addRoundQueue[i]);
+            }
+            for (let i = 0; i < newQueue.modifyRoundQueue.length; i++) {
+                if(!newQueue.modifyRoundQueue[i]) continue;
+                await db.modifyRoundQueue.put(newQueue.modifyRoundQueue[i]);
+            }
+            for (let i = 0; i < newQueue.deleteRoundQueue.length; i++) {
+                if(!newQueue.deleteRoundQueue[i]) continue;
+                await db.deleteRoundQueue.put(newQueue.deleteRoundQueue[i]);
+            }
+        });
+    };
+
+    static clearUpdateQueue = () => {
+        // Clear the update queue
+        return db.addCourseQueue.clear().then(async () => {
+            await db.modifyCourseQueue.clear();
+            await db.deleteCourseQueue.clear();
+            await db.addRoundQueue.clear();
+            await db.modifyRoundQueue.clear();
+            return db.deleteRoundQueue.clear();
+        });
+    }
+
+    static clearData = () => {
+        return db.courses.clear().then(() => {
+            return db.rounds.clear();
+        });
+    }
+
+    // Bulk add (such as when reading from cloud).
+    // Changes will not be saved to the update queue or uploaded to cloud
+    static bulkAdd = async (courses, rounds) => {
+        for (let i = 0; i < courses.length; i++) {
+            await db.courses.put(JSON.parse(courses[i]));
+        }
+        for (let i = 0; i < rounds.length; i++) {
+            await db.rounds.put(JSON.parse(rounds[i]));
+        }
     }
 
     static getQueue = () => {

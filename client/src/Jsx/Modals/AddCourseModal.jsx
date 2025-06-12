@@ -71,7 +71,7 @@ class AddCourseModal extends React.Component {
                 <ModalTitle>Add course</ModalTitle>
                 <div className="text-left">
                     <label htmlFor="name">Name: </label>
-                    <input type="text" name="name" id="name" className="mb-[10px] w-[calc(100%-80px)]" ref={this.nameInputRef}></input>
+                    <input type="text" name="name" id="name" autoComplete="off" className="mb-[10px] w-[calc(100%-80px)]" ref={this.nameInputRef}></input>
                 </div>
                 <div className="text-left">
                     <label htmlFor="holes">Holes: </label>

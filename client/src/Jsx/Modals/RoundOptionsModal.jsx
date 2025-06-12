@@ -42,7 +42,7 @@ const RoundOptionsModal = (props) => {
         }
 
         {currentModal === Modals.DATE_INPUT &&
-            <DateInputModal replaceImg="back-arrow" onSubmit={props.onUpdateDate}
+            <DateInputModal id="round-date-field" name="round-date-field" replaceImg="back-arrow" onSubmit={props.onUpdateDate}
             onBack={() => {
                 setCurrentModal(Modals.ROUND_OPTIONS);
             }}
@@ -52,7 +52,7 @@ const RoundOptionsModal = (props) => {
         }
 
         {currentModal === Modals.COMMENTS &&
-            <CommentModal replaceImg="back-arrow" onSubmit={props.onUpdateComments}
+            <CommentModal id="round-comments-field" name="round-comments-field" replaceImg="back-arrow" onSubmit={props.onUpdateComments}
                 onBack={() => {
                     setCurrentModal(Modals.ROUND_OPTIONS);
                 }}

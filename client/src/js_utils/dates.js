@@ -55,7 +55,6 @@ const getSafeIso = (iso) => {
 
 // iso date is format "YYYY-MM-DDTHH:MM"
 const parseIso = (iso) => {
-    console.log("here");
     let year;
     let month;
     let date;

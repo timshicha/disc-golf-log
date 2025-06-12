@@ -5,6 +5,8 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "slonik": "^47.3.2",
+    "uuid": "^11.1.0"
   }
 }

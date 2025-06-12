@@ -1,12 +1,24 @@
-import db from "../db/db_setup.mjs"
+import db, { SCHEMA } from "../db/db_setup.mjs";
 
-const addCourse = (userID, courseName, courseHoles) => {
-    return db`INSERT INTO courses (user_id, name, holes) VALUES (${userID}, ${courseName}, ${courseHoles})`;
+const addCourse = async (userUUID, courseUUID, data) => {
+    const result = await db`INSERT INTO ${SCHEMA}.courses (courseuuid, useruuid, data) VALUES (${courseUUID}, ${userUUID}, ${data})`;
+    return result.count > 0;
 }
 
-const modifyCourse = (userID, courseName, newCourseName) => {
-    return db`UPDATE courses SET name = ${newCourseName}
-        WHERE user_id = ${userID} AND name = ${courseName}`;
+const modifyCourse = async (userUUID, courseUUID, data) => {
+    const result = await db`UPDATE ${SCHEMA}.courses SET data = ${data}
+        WHERE useruuid = ${userUUID} AND courseuuid = ${courseUUID}`;
+    return result.count > 0;
 }
 
-export { addCourse, modifyCourse };
+const deleteCourse = async (userUUID, courseUUID) => {
+    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE courseuuid = ${courseUUID} AND useruuid = ${userUUID}`;
+    return result.count > 0;
+}
+
+const getAllCourses = async (userUUID) => {
+    const result = await db`SELECT * from ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
+    return result
+}
+
+export { addCourse, modifyCourse, deleteCourse, getAllCourses };

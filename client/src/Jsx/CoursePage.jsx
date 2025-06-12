@@ -39,8 +39,6 @@ class CoursePage extends React.Component{
     reloadCourseRounds = () => {
         DataHandler.getCourseRounds(this.state.course).then(result => {
             // Sort the rounds by date
-            result.sort((a, b) => compareStrings(a.date, b.date));
-            console.log(result);
             this.setState({rounds: result});
         });
     }
@@ -101,7 +99,7 @@ class CoursePage extends React.Component{
             }
             
             <div className="overflow-y-scroll overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>
-                {this.state.rounds.map((round, index) => {
+                {this.state.rounds.sort((a, b) => compareStrings(a.date, b.date)).map((round, index) => {
                     return (
                         <Round round={round} course={this.state.course} key={round.roundUUID} index={index}
                             // When the user clicks on the triple dot icon

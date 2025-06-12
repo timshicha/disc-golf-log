@@ -19,7 +19,7 @@ const SortCoursesBy = (props) => {
             <div className={"h-[30px] bg-gray-light text-gray-mild rounded-[5px] font-bold text-[16px] " + props.className} onClick={() => setShowModal(true)}>
                 <img src={sortByIcon} className="h-[24px] m-[3px]"></img>
             </div>
-            {showModal && console.log(showModal)+"a" &&
+            {showModal &&
                 <MenuModal onClose={() => setShowModal(false)}>
                     <ModalTitle>Sort Courses By</ModalTitle>
                     <ModalButton className="w-[95%] bg-gray-dark text-white m-[5px]" onClick={() => onSubmit("Alphabetically")}>

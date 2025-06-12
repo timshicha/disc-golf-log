@@ -34,7 +34,7 @@ class DateInputModal extends React.Component {
                 onBack={this.props.onBack}
             >
                 <ModalTitle>Adjust Date</ModalTitle>
-                <input type="date" className="w-[220px]" ref={this.ref}></input>
+                <input name={this.props.name} id={this.props.id} type="date" className="w-[220px]" ref={this.ref}></input>
                 <ModalButton type="submit" className="w-[150px] mx-[5px] bg-blue-basic text-white mt-[10px]">Apply</ModalButton>
             </FormModal>
         );

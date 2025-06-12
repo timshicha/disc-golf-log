@@ -9,6 +9,7 @@ export const Modals = {
     ADD_COURSE: "add course",
     DATE_INPUT: "date input",
     COMMENTS: "comments",
+    MAIN_LOGIN: "main login"
 }
 
 export const Pages = {

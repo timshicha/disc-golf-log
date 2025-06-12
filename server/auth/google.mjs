@@ -68,7 +68,7 @@ const handleGoogleLoginRequest = async (req, res) => {
     let user = await findUserByEmail(google_profile.email);
     // If user doesn't exist, add them
     if(!user) {
-        user = await addUser(google_profile.email, google_profile.name);
+        user = await addUser(google_profile.email, {});
     }
 
     const token = await generateToken(google_profile.email);
@@ -81,7 +81,8 @@ const handleGoogleLoginRequest = async (req, res) => {
     }
 
     res.status(200).json({
-        message: JSON.stringify(user)
+        email: user.email,
+        data: user.data
     });
 }
 

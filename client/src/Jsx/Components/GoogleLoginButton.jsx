@@ -17,23 +17,32 @@ const GoogleLoginButton = (props) => {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ code })
-                }).then(res => res.json()).then(data => {
-                    data = JSON.parse(data.message);
-                    props.onSuccess(data);
-                });
+                }).then(res => {
+                    if(!res.ok) {
+                        props.onError("Code " + res.status);
+                    }
+                    return res.json();
+                }).then(data => {
+                    props.onSuccess(data)
+                }).catch(error => {
+                    console.log(error);
+                    props.onError("Server Error");
+                })
             } catch (error) {
-                console.log("Login failed:", error);
+                console.log(error);
+                props.onError(error);
             }
         },
-        onError: () => {
-            console.log("Login failed.");
+        onError: (error) => {
+            console.log(error);
+            props.onError();
         },
         // redirect_uri: "postmessage",
         scope: "email profile"
     });
 
     return (
-        <div onClick={() => alert("This feature is under construction!")}>{props.children}</div>
+        <div onClick={login}>{props.children}</div>
     );
 }
 

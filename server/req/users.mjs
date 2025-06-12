@@ -1,7 +1,4 @@
-import { configDotenv } from "dotenv";
 import { findUserByEmail } from "../db/users.mjs";
-
-configDotenv();
 
 // Handle an http user login
 const loginAndGetToken = async (req, res) => {

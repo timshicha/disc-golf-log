@@ -29,16 +29,24 @@ class RenameModal extends React.Component {
     }
 
     setInputValue = (value) => {
-        this.state.inputValue = value;
+        this.setState({
+            inputValue: value
+        });
+    }
+
+    onSubmit = () => {
+        this.props.onSubmit(this.state.inputValue);
     }
 
     render = () => {
         return (
             <>
-            <FormModal {...this.props} autocomplete="off">
+            <FormModal onSubmit={this.onSubmit} autocomplete="off">
                 {this.props.children}
-                <label htmlFor="name"></label>
-                <input type="text" id="name" name="name" ref={this.nameInputRef} className="w-[90%] my-[15px]" value={this.state.inputValue} onChange={this.onChange}></input>
+                <label htmlFor="rename-course-field"></label>
+                <input type="text" id="rename-course-field" name="rename-course-field"
+                    autoComplete="off" ref={this.nameInputRef} className="w-[90%] my-[15px]" value={this.state.inputValue} onChange={this.onChange}>    
+                </input>
                 <ModalButton className="w-[45%] mx-[5px] bg-gray-dark text-white" type="button" onClick={() => {
                     this.setState({inputValue: ""});
                     this.focus();
