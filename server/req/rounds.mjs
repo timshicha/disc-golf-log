@@ -41,8 +41,8 @@ const deleteRound = async (userUUID, roundUUID) => {
 }
 
 const getAllRounds = async (userUUID) => {
-    const result = await db`SELECT * FROM ${SCHEMA}.rounds WHERE courseuuid IN
-        (SELECT courseuuid FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID})`;
+    const result = await db`SELECT r.* FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
     return result;
 }
 

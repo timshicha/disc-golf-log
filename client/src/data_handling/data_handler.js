@@ -145,7 +145,7 @@ class DataHandler {
                 // adding a modify task
                 return db.addRoundQueue.get(round.roundUUID).then(result => {
                     if(result) {
-                        return db.addRoundQueue.put(result);
+                        return db.addRoundQueue.put(round);
                     }
                     // If not added in queue, modify
                     return db.modifyRoundQueue.put(round);
@@ -239,6 +239,17 @@ class DataHandler {
         return db.courses.clear().then(() => {
             return db.rounds.clear();
         });
+    }
+
+    // Bulk add (such as when reading from cloud).
+    // Changes will not be saved to the update queue or uploaded to cloud
+    static bulkAdd = async (courses, rounds) => {
+        for (let i = 0; i < courses.length; i++) {
+            await db.courses.put(JSON.parse(courses[i]));
+        }
+        for (let i = 0; i < rounds.length; i++) {
+            await db.rounds.put(JSON.parse(rounds[i]));
+        }
     }
 
     static getQueue = () => {

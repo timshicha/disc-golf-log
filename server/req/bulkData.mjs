@@ -138,8 +138,12 @@ const uploadBulkData = async (user, data) => {
 }
 
 const getAllCloudData = async (user) => {
-    const courses = await getAllCourses(user.useruuid);
-    const rounds = await getAllRounds(user.useruuid);
+    let courses = await getAllCourses(user.useruuid);
+    let rounds = await getAllRounds(user.useruuid);
+    
+    // Go through each course and round and just keep the data
+    courses = courses.map(course => course.data);
+    rounds = rounds.map(round => round.data);
     return { courses, rounds };
 }
 

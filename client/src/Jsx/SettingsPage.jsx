@@ -56,10 +56,9 @@ class SettingsPage extends React.Component {
             currentModal: null
         });
         localStorage.setItem("email", email);
-        console.log("retrieving data")
         retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-            console.log(result);
-        })
+            DataHandler.bulkAdd(result.courses, result.rounds);
+        });
         // Ask what they want to do:
         // 1) Overwrite their cloud data with current data (CONFIRM)
         // 2) Delete their current data and load their cloud data (CONFIRM)
@@ -68,10 +67,17 @@ class SettingsPage extends React.Component {
     }
 
     onLogout = () => {
-        this.setState({ email: null });
-        localStorage.removeItem("email");
-        DataHandler.clearData();
-        DataHandler.clearUpdateQueue();
+        // Upload their data first
+        DataHandler.getQueue().then(data => {
+            uploadChangesToCloud(this.state.email, data).then(() => {
+                DataHandler.clearData();
+                DataHandler.clearUpdateQueue();
+                this.setState({ email: null });
+                localStorage.removeItem("email");
+            }).catch(error => {
+                this.console.log(error);
+            });
+        });
     }
 
     handleUploadChangesToCloud = () => {
