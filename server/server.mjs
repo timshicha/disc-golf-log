@@ -12,17 +12,7 @@ const PORT = process.env.PORT;
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
 const app = express();
-app.use((req, res, next) => {
-    console.log(req.method);
-    res.header('Access-Control-Allow-Origin', CLIENT_HOSTNAME);
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(204); // No Content for preflight
-    }
-    next();
-});
+
 const corsOptions = {
     origin: CLIENT_HOSTNAME,
     credentials: true,
@@ -30,9 +20,14 @@ const corsOptions = {
     allowedHeaders: ["Content-Type", "Authorization"]
 };
 app.use(cors(corsOptions));
+app.options("/*", cors(corsOptions));
 
 app.use(express.json()); // Automatically parse body when json
 app.use(cookieParser()); // Automatically parse cookies
+
+app.get("/ready", async (req, res) => {
+    res.status(200).send("Server is ready.");
+});
 
 // If logging in (user wants a token)
 app.post("/auth/google", async (req, res) => {
