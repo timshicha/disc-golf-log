@@ -12,12 +12,24 @@ const PORT = process.env.PORT;
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
 const app = express();
-app.use(cors({
+const corsOptions = {
     origin: CLIENT_HOSTNAME,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
-}));
+};
+app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Origin', CLIENT_HOSTNAME);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    return res.sendStatus(204); // No Content for preflight
+  }
+  next();
+});
+
 app.use(express.json()); // Automatically parse body when json
 app.use(cookieParser()); // Automatically parse cookies
 
