@@ -1,4 +1,5 @@
 import React from "react";
+const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 import { useGoogleLogin } from "@react-oauth/google";
 
 const GoogleLoginButton = (props) => {
@@ -10,7 +11,7 @@ const GoogleLoginButton = (props) => {
             const { code } = tokenResponse;
 
             try {
-                fetch("http://localhost:3000/auth/google", {
+                fetch(SERVER_URI + "/auth/google", {
                     method: "POST",
                     credentials: "include",
                     headers: {

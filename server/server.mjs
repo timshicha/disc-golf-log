@@ -9,7 +9,7 @@ import { getAllCloudData, uploadBulkData } from "./req/bulkData.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
-const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
+const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME;
 
 const app = express();
 

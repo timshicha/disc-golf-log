@@ -1,6 +1,7 @@
 import { configDotenv } from "dotenv";
 import { addUser, findUserByEmail } from "../db/users.mjs";
 import { generateToken } from "./tokens.mjs";
+const ENV = process.env.ENV;
 
 configDotenv();
 
@@ -75,7 +76,10 @@ const handleGoogleLoginRequest = async (req, res) => {
     // If a token was generated, set as a cookie
     if(token) {
         res.cookie("token", token, {
-            secure: false
+            httpOnly: true,
+            secure: ENV === "dev" ? false : true,
+            sameSite: ENV === "dev" ? "lax" : "none",
+            path: "/"
         });
         console.log("Token set: " + token);
     }
