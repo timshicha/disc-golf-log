@@ -8,7 +8,7 @@ import { addCourse, modifyCourse } from "./req/courses.mjs";
 import { getAllCloudData, uploadBulkData } from "./req/bulkData.mjs";
 
 configDotenv();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME
 
 const app = express();
@@ -116,5 +116,4 @@ app.get("/data", async (req, res) => {
     }
 });
 
-// starts a simple http server locally on port 3000
-app.listen(PORT || 3000, "0.0.0.0", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port ${PORT}...`));
+app.listen(PORT, "0.0.0.0", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port ${PORT}...`));
