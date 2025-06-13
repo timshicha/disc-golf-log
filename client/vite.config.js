@@ -3,7 +3,8 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/postcss";
 import fs from "fs";
 
-export default defineConfig({
+const configOptions = {
+    // Only applied in localhost... server over https manually
     server: {
         https: {
             key: fs.readFileSync("./localhost-key.pem"),
@@ -18,4 +19,6 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ["sql.js"]
     },
-});
+};
+
+export default defineConfig(configOptions);

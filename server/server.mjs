@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import https from "https";
+import fs from "fs";
 import { configDotenv } from "dotenv";
 import { handleGoogleLoginRequest } from "./auth/google.mjs";
 import { validateToken } from "./auth/tokens.mjs";
@@ -10,6 +12,7 @@ import { getAllCloudData, uploadBulkData } from "./req/bulkData.mjs";
 configDotenv();
 const PORT = process.env.PORT || 8080;
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME;
+const ENV = process.env.ENV;
 
 const app = express();
 
@@ -116,4 +119,35 @@ app.get("/data", async (req, res) => {
     }
 });
 
-app.listen(PORT, "0.0.0.0", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port ${PORT}...`));
+// If on localhost, manually set up to listen via https
+if(ENV === "localhost") {
+    const httpsCredentials = {
+        key: fs.readFileSync("localhost-key.pem"),
+        cert: fs.readFileSync("localhost.pem")
+    };
+    https.createServer(httpsCredentials, app).listen(PORT, () => {
+        console.log("--------------------------------------------------");
+        console.log("");
+        console.log("SERVER STARTED!");
+        console.log(`Port: ${PORT}`);
+        console.log(`Accepting requests from: ${CLIENT_HOSTNAME}`);
+        console.log(`Environment: ${process.env.ENV}`);
+        console.log(`DB schema: ${process.env.DB_SCHEMA}`);
+        console.log("");
+        console.log("--------------------------------------------------");
+    });
+}
+// If not on localhost (production environment)
+else {
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log("--------------------------------------------------");
+        console.log("");
+        console.log("SERVER STARTED!");
+        console.log(`Port: ${PORT}`);
+        console.log(`Accepting requests from: ${CLIENT_HOSTNAME}`);
+        console.log(`Environment: ${process.env.ENV}`);
+        console.log(`DB schema: ${process.env.DB_SCHEMA}`);
+        console.log("");
+        console.log("--------------------------------------------------");
+    });
+}

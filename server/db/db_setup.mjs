@@ -9,7 +9,7 @@ const db = postgres(connectionString, {
     ssl: "require"
 });
 // In not in production, set schema to test so we don't mess up the actual database
-export const SCHEMA = db.unsafe(`${process.env.env === "prod" ? "public" : "test"}`);
+export const SCHEMA = db.unsafe(`${process.env.DB_SCHEMA}`);
 
 (async () => {
     try {
