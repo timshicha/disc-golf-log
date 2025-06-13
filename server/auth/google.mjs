@@ -77,8 +77,8 @@ const handleGoogleLoginRequest = async (req, res) => {
     if(token) {
         res.cookie("token", token, {
             httpOnly: true,
-            secure: ENV === "dev" ? false : true,
-            sameSite: ENV === "dev" ? "lax" : "none",
+            secure: true,
+            sameSite: "none",
             path: "/"
         });
         console.log("Token set: " + token);
