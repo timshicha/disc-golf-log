@@ -224,20 +224,20 @@ class DataHandler {
         });
     };
 
-    static clearUpdateQueue = () => {
+    static clearUpdateQueue = async () => {
         // Clear the update queue
         return db.addCourseQueue.clear().then(async () => {
             await db.modifyCourseQueue.clear();
             await db.deleteCourseQueue.clear();
             await db.addRoundQueue.clear();
             await db.modifyRoundQueue.clear();
-            return db.deleteRoundQueue.clear();
+            await db.deleteRoundQueue.clear();
         });
     }
 
-    static clearData = () => {
-        return db.courses.clear().then(() => {
-            return db.rounds.clear();
+    static clearData = async () => {
+        return db.courses.clear().then(async () => {
+            await db.rounds.clear();
         });
     }
 
@@ -250,6 +250,24 @@ class DataHandler {
         for (let i = 0; i < rounds.length; i++) {
             await db.rounds.put(JSON.parse(rounds[i]));
         }
+    }
+
+    // Take all the current courses and rounds and make that the update queue.
+    // This will replace the current update queue. This is useful for when a user
+    // logs in. We will just take whatever data they currently have locally and
+    // turn it into an update queue to send to the server
+    static replaceUpdateQueueWithCurrentData = async () => {
+        await this.clearUpdateQueue();
+        await db.courses.toArray().then(async (courses) => {
+            for (let i = 0; i < courses.length; i++) {
+                await db.addCourseQueue.put(courses[i]);
+            }
+        });
+        await db.rounds.toArray().then(async (rounds) => {
+            for (let i = 0; i < rounds.length; i++) {
+                await db.addRoundQueue.put(rounds[i]);
+            };
+        });
     }
 
     static getQueue = () => {

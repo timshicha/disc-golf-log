@@ -153,6 +153,7 @@ class SettingsPage extends React.Component {
                         Ask for confirmation before deleting courses or rounds.
                     </div>
                 </SettingsBlock>
+                <button onClick={DataHandler.replaceUpdateQueueWithCurrentData}>test</button>
             </div>
         );
     }

@@ -65,10 +65,12 @@ const handleGoogleLoginRequest = async (req, res) => {
     // json of items.
     const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
 
+    let isNewUser = false;
     // Find user by email
     let user = await findUserByEmail(google_profile.email);
     // If user doesn't exist, add them
     if(!user) {
+        isNewUser = true;
         user = await addUser(google_profile.email, {});
     }
 
@@ -86,7 +88,8 @@ const handleGoogleLoginRequest = async (req, res) => {
 
     res.status(200).json({
         email: user.email,
-        data: user.data
+        data: user.data,
+        isNewUser: isNewUser
     });
 }
 
