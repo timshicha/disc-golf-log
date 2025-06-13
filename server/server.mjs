@@ -117,4 +117,4 @@ app.get("/data", async (req, res) => {
 });
 
 // starts a simple http server locally on port 3000
-app.listen(PORT || 3000, "localhost", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port ${PORT}...`));
+app.listen(PORT || 3000, "0.0.0.0", () => console.log(`Listening to requests from ${CLIENT_HOSTNAME} on port ${PORT}...`));
