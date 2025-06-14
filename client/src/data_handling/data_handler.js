@@ -154,6 +154,12 @@ class DataHandler {
         });
     }
 
+    static clearAllCoursesAndRounds = () => {
+        return db.courses.clear().then(() => {
+            return db.rounds.clear();
+        });
+    }
+
     static getCourseRounds = (course) => {
         return db.rounds.where("courseUUID").equals(course.courseUUID).sortBy("date");
     }

@@ -6,8 +6,8 @@ import fs from "fs";
 import { configDotenv } from "dotenv";
 import { handleGoogleLoginRequest } from "./auth/google.mjs";
 import { validateToken } from "./auth/tokens.mjs";
-import { addCourse, modifyCourse } from "./req/courses.mjs";
-import { getAllCloudData, uploadBulkData } from "./req/bulkData.mjs";
+import { addCourse, modifyCourse } from "./db/courses.mjs";
+import { getAllCloudData, replaceAllCloudData, uploadBulkData } from "./data_handling/bulkData.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -83,7 +83,16 @@ app.post("/data", async (req, res) => {
         }
         // At this point the user has been validated and we have their userID
         try {
-            const updateResults = await uploadBulkData(user, req.body.data);
+            let updateResults;
+            // See if the user wants to delete all existing data
+            console.log("ded", req.body.deleteExistingData);
+            if(req.body.deleteExistingData) {
+                console.log("del");
+                updateResults = await replaceAllCloudData(user, req.body.data);
+            }
+            else {
+                updateResults = await uploadBulkData(user, req.body.data);
+            }
             console.log(`${user.email}: Updated: ${updateResults.updatesSucceeded} (${updateResults.updatesFailed} failed)`);
             console.log("Errors: ", updateResults.errors);
             res.status(200).json({

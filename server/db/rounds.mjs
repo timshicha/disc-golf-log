@@ -1,4 +1,4 @@
-import db, { SCHEMA } from "../db/db_setup.mjs";
+import db, { SCHEMA } from "./db_setup.mjs";
 
 const addRound = async (userUUID, roundUUID, courseUUID, data) => {
     // Make sure this course belongs to this user
@@ -46,5 +46,11 @@ const getAllRounds = async (userUUID) => {
     return result;
 }
 
+const deleteAllRounds = async (userUUID) => {
+    const result = await db`SELECT r.* FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
+    return result;
+}
 
-export { addRound, modifyRound, deleteRound, getAllRounds };
+
+export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds };

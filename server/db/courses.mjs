@@ -1,4 +1,4 @@
-import db, { SCHEMA } from "../db/db_setup.mjs";
+import db, { SCHEMA } from "./db_setup.mjs";
 
 const addCourse = async (userUUID, courseUUID, data) => {
     const result = await db`INSERT INTO ${SCHEMA}.courses (courseuuid, useruuid, data) VALUES (${courseUUID}, ${userUUID}, ${data})`;
@@ -17,8 +17,13 @@ const deleteCourse = async (userUUID, courseUUID) => {
 }
 
 const getAllCourses = async (userUUID) => {
-    const result = await db`SELECT * from ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
+    const result = await db`SELECT * FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
     return result
 }
 
-export { addCourse, modifyCourse, deleteCourse, getAllCourses };
+const deleteAllCourses = async (userUUID) => {
+    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
+    return result;
+}
+
+export { addCourse, modifyCourse, deleteCourse, getAllCourses, deleteAllCourses };

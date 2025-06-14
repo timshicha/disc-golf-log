@@ -55,15 +55,6 @@ class SettingsPage extends React.Component {
             email: email,
             currentModal: null
         });
-        localStorage.setItem("email", email);
-        retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-            DataHandler.bulkAdd(result.courses, result.rounds);
-        });
-        // Ask what they want to do:
-        // 1) Overwrite their cloud data with current data (CONFIRM)
-        // 2) Delete their current data and load their cloud data (CONFIRM)
-        // 3) Merge their data (try to keep both)
-
     }
 
     onLogout = () => {
@@ -94,7 +85,7 @@ class SettingsPage extends React.Component {
             }).catch(error => {
                 console.log(error);
             });
-        })
+        });
     }
 
     render = () => {

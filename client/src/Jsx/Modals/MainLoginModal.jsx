@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import DataHandler from "../../data_handling/data_handler";
 import MenuModal from "./Frames/MenuModal";
 import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import signInWithGoogleImg from "../../assets/images/signInWithGoogleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
+import { replaceAllDataInCloud, retrieveAllDataFromCloud, uploadChangesToCloud } from "../../serverCalls/data.mjs";
 
 // Once a user has been authenticated, we need to give them 3 options:
 // 1) Keep both their current local data and data in the cloud
@@ -36,6 +38,10 @@ const MainLoginModal = (props) => {
 
     const onLoginComplete = (email) => {
         localStorage.setItem("email", email);
+        setErrorMessage(null);
+        setShowOptionModal(false);
+        setUserEmail("");
+        setUserData("");
         props.onLogin(email);
     }
 
@@ -43,21 +49,45 @@ const MainLoginModal = (props) => {
         setErrorMessage("Could not log in: " + error);
     }
 
-    const onLoginConfirm = (event) => {
+    const onLoginConfirm = async (event) => {
         event.preventDefault();
         event.stopPropagation();
 
         // If keeping device data...
         if(selectedDataOption === "device") {
-
+            // Replace all data in cloud with devide data
+            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
+                DataHandler.getQueue().then(async (data) => {
+                    await replaceAllDataInCloud(userEmail, data);
+                    await DataHandler.clearUpdateQueue();
+                    onLoginComplete(userEmail);
+                });
+            });
         }
         // If keeping cloud data...
         else if(selectedDataOption === "cloud") {
-
+            // Retrieve all data from cloud
+            await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
+                DataHandler.bulkAdd(result.courses, result.rounds);
+            });
+            onLoginComplete(userEmail);
         }
         // If keeping data from both...
         else {
-            
+            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
+                DataHandler.getQueue().then(async (data) => {
+                    // Upload local data to cloud
+                    await uploadChangesToCloud(userEmail, data);
+                    await DataHandler.clearUpdateQueue();
+                    // Delete all data
+                    await DataHandler.clearAllCoursesAndRounds();
+                    // Pull data from cloud
+                    await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
+                        DataHandler.bulkAdd(result.courses, result.rounds);
+                    })
+                    onLoginComplete(userEmail);
+                });
+            });
         }
     }
 
@@ -80,15 +110,15 @@ const MainLoginModal = (props) => {
             {showOptionModal && <form onSubmit={onLoginConfirm} className="text-left mb-[0px]">
                 <div className="text-desc text-gray-dark text-left text-[13px] mb-[15px]">It appears that you already have previous data in the cloud. What would you like to do with your data?</div>
                 <div>
-                    <input type="radio" checked={selectedDataOption === "device"} name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("device")} className=""></input>
+                    <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("device")} className=""></input>
                     <label htmlFor="keep-device-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep device data only</label>
                 </div>
                 <div>
-                    <input type="radio" checked={selectedDataOption === "cloud"} name="data-option" id="keep-cloud-data-radio" onClick={() => setSelectedDataOption("cloud")} className=""></input>
+                    <input type="radio" name="data-option" id="keep-cloud-data-radio" onClick={() => setSelectedDataOption("cloud")} className=""></input>
                     <label htmlFor="keep-cloud-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep cloud data only</label>
                 </div>
                 <div>
-                    <input type="radio" checked={selectedDataOption === "both"} name="data-option" id="keep-both-data-radio" onClick={() => setSelectedDataOption("both")} className=""></input>                  
+                    <input type="radio" defaultChecked={true} name="data-option" id="keep-both-data-radio" onClick={() => setSelectedDataOption("both")} className=""></input>                  
                     <label htmlFor="keep-both-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep both data (try to marge)</label>
                 </div>
                 {/* Option description */}

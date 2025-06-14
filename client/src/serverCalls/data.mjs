@@ -16,6 +16,21 @@ const uploadChangesToCloud = (userEmail, data) => {
     });
 }
 
+const replaceAllDataInCloud = (userEmail, data) => {
+    return fetch(SERVER_URI + "/data", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: userEmail,
+            data: data,
+            deleteExistingData: true
+        })
+    });
+}
+
 const retrieveAllDataFromCloud = () => {
     return fetch(SERVER_URI + "/data", {
         method: "GET",
@@ -26,4 +41,4 @@ const retrieveAllDataFromCloud = () => {
     });
 }
 
-export { uploadChangesToCloud, retrieveAllDataFromCloud };
+export { uploadChangesToCloud, replaceAllDataInCloud, retrieveAllDataFromCloud };

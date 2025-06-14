@@ -1,7 +1,7 @@
 
 
-import { addCourse, deleteCourse, getAllCourses, modifyCourse } from "./courses.mjs";
-import { addRound, deleteRound, getAllRounds, modifyRound } from "./rounds.mjs";
+import { addCourse, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addRound, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
@@ -147,4 +147,11 @@ const getAllCloudData = async (user) => {
     return { courses, rounds };
 }
 
-export { uploadBulkData, getAllCloudData };
+// Delete all data in the cloud and replace with new data
+const replaceAllCloudData = async (user, data) => {
+    // Delete all courses (rounds should be deleted through cascading deletion)
+    await deleteAllCourses(user.useruuid);
+    return await uploadBulkData(user, data);
+}
+
+export { uploadBulkData, getAllCloudData, replaceAllCloudData };
