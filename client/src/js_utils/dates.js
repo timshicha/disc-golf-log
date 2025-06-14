@@ -118,10 +118,12 @@ const timeAgo = (date) => {
     const secondsAgo = (now - then) / 1000;
     if(secondsAgo < 5) return "just now";
     if(secondsAgo < 60) return Math.floor(secondsAgo) + " seconds ago";
-    const minutesAgo = secondsAgo / 60;
-    if(minutesAgo < 60) return Math.floor(minutesAgo) + " minutes ago";
-    const hoursAgo = minutesAgo / 60;
-    if(hoursAgo < 24) return Math.floor(hoursAgo) + " hours ago";
+    const minutesAgo = Math.floor(secondsAgo / 60);
+    if(minutesAgo === 1) return "1 minute ago";
+    if(minutesAgo < 60) return minutesAgo + " minutes ago";
+    const hoursAgo = Math.floor(minutesAgo / 60);
+    if(hoursAgo === 1) return "1 hour ago";
+    if(hoursAgo < 24) return hoursAgo + " hours ago";
     // Otherwise just do the date
     const year = then.getFullYear();
     const month = monthsShort[then.getMonth()];
