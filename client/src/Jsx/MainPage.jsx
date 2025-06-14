@@ -6,7 +6,7 @@ import RenameModal from "./Modals/RenameModal";
 import { compareDates, compareStrings } from "../js_utils/sorting";
 import DataHandler from "../data_handling/data_handler";
 import ModifyHolesModal from "./Modals/ModifyHolesModal";
-import { Modals } from "../js_utils/Enums";
+import { Modals, Pages } from "../js_utils/Enums";
 import CourseOptionsModal from "./Modals/CourseOptionsModal";
 import StickyDiv from "./Components/StickyDiv";
 import ModalButton from "./Modals/ModalComponents/ModalButton";
@@ -70,6 +70,12 @@ function MainPage (props) {
         sortCourseBy = sortBy;
         localStorage.setItem("sort-courses-by", sortBy);
         reloadCourses();
+    }
+
+    const addCourseCallback = (course) => {
+        setCurrentCourse(course);
+        props.navigateTo(Pages.COURSE);
+        props.setCurrentCourse(course);
     }
 
     return (
@@ -143,7 +149,7 @@ function MainPage (props) {
                 <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>
             </StickyDiv>
             {currentModal === Modals.ADD_COURSE &&
-                <AddCourseModal onClose={() => setCurrentModal(null)} callback={reloadCourses} className="add-course-modal"></AddCourseModal>
+                <AddCourseModal onClose={() => setCurrentModal(null)} callback={addCourseCallback} className="add-course-modal"></AddCourseModal>
             }
         </div>
     );

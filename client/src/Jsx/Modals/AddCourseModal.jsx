@@ -45,7 +45,7 @@ class AddCourseModal extends React.Component {
             holesElement.value = "";
         }).then(() => {
             this.props.onClose();
-            this.callback();
+            this.callback(course);
         }).catch(error => {
             console.log("Couldn't add course: " + error);
         });
