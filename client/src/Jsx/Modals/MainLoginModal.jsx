@@ -22,17 +22,36 @@ const MainLoginModal = (props) => {
     const [selectedDataOption, setSelectedDataOption] = useState("both");
 
 
-    const onGoogleLoginSuccess = (data) => {
-        // If existing user, ask them what do with their data
-        if(!data.isNewUser) {
+    const onGoogleLoginSuccess = async (data) => {
+        const localData = await DataHandler.getAllData();
+        console.log(localData);
+        const hasLocalData = (localData.courses.length + localData.rounds.length) > 0;
+        // If existing user and has local data, ask what to do with their data
+        if(!data.isNewUser && hasLocalData) {
             setUserEmail(data.email);
             setUserData(data.data);
             setShowOptionModal(true);
         }
+        // If only local data, push the data
+        else if(hasLocalData) {
+            // Replace all data in cloud with devide data
+            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
+                DataHandler.getQueue().then(async (data) => {
+                    await uploadChangesToCloud(userEmail, data);
+                    await DataHandler.clearUpdateQueue();
+                    onLoginComplete(userEmail);
+                });
+            });
+        }
         // Otherwise, upload their current data to cloud and finish login
         else {
-            setShowOptionModal(false);
-            onLoginComplete(data.email, data.data);
+            // Retrieve all data from cloud
+            retrieveAllDataFromCloud().then(result => result.json()).then(result => {
+                DataHandler.bulkAdd(result.courses, result.rounds).then(() => {
+                    onLoginComplete(userEmail);
+                    onLoginComplete(data.email, data.data);
+                });
+            });
         }
     }
 

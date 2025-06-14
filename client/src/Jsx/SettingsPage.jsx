@@ -4,7 +4,7 @@ import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
-import { retrieveAllDataFromCloud, uploadChangesToCloud } from "../serverCalls/data.mjs";
+import { uploadChangesToCloud } from "../serverCalls/data.mjs";
 import { timeAgo } from "../js_utils/dates.js";
 
 const SettingsBlock = (props) => {
@@ -118,7 +118,7 @@ class SettingsPage extends React.Component {
                                     {!this.state.lastPushedToCloud && <>Changes have not yet been uploaded to cloud.</>}
                                 </div>
                                 <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
-                                <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton>
+                                {/* <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton> */}
                             </div>
                         </SettingsBlock>
                     </>
@@ -145,7 +145,6 @@ class SettingsPage extends React.Component {
                         Ask for confirmation before deleting courses or rounds.
                     </div>
                 </SettingsBlock>
-                <button onClick={DataHandler.replaceUpdateQueueWithCurrentData}>test</button>
             </div>
         );
     }

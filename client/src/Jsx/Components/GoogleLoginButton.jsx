@@ -24,7 +24,7 @@ const GoogleLoginButton = (props) => {
                     }
                     return res.json();
                 }).then(data => {
-                    props.onSuccess(data)
+                    props.onSuccess(data);
                 }).catch(error => {
                     console.log(error);
                     props.onError("Server Error");

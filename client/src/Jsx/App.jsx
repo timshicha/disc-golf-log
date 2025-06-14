@@ -3,8 +3,6 @@ import MainPage from "./MainPage";
 import SettingsPage from "./SettingsPage";
 import NavBar, { NavBarBackButton, NavBarTitle } from "./Components/NavBar";
 import "../css/general.css";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
-import GoogleLoginButton from "./Components/GoogleLoginButton";
 import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
@@ -38,6 +36,8 @@ if(isVersionBehind(version, "1.0.1")) {
     localStorage.setItem("version", "1.0.1");
     version = "1.0.1";
 }
+
+localStorage.setItem("version", version);
 
 function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
