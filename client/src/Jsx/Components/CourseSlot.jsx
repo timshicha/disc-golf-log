@@ -17,18 +17,18 @@ class CourseSlot extends React.Component{
 
     render = () => {
         return (
-            <div onClick={this.onClick} className="w-[calc(100%-20px] bg-gray-light p-[10px] pr-[0px] mx-auto my-[10px] rounded-[7px] cursor-pointer">
+            <div onClick={this.onClick} className="w-[calc(100%-20px] bg-gray-light py-[5px] px-[10px] pr-[0px] mx-auto my-[10px] rounded-[7px] cursor-pointer">
                 {/* Course settings button (triple dot icon) */}
                 <TripleDotButton className="h-[20px] float-right cursor-pointer rounded-[10px] mt-[8px] mr-[8px]" onClick={e => {
                     e.stopPropagation();
                     this.onOpenOptionsList();
                 }}></TripleDotButton>
                 {/* Course title */}
-                <div className="text-[18px] font-bold text-sans h-[18px]">
+                <div className="text-[18px] h-[25px] w-[calc(100%-40px)] font-bold text-sans truncate">
                     {this.state.course.name}
                 </div>
-                {/* Number of holes text */}
-                <div className="text-[12px]">
+                {/* Number of times played text */}
+                <div className="text-[12px] mt-[-3px]">
                     {this.props.course.roundCount === 1
                     ?
                     <>Played 1 time</>

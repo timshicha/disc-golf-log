@@ -103,7 +103,7 @@ function App() {
                 <>
                     <NavBar>
                         <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
-                        <NavBarTitle>{currentCourse.name}</NavBarTitle>
+                        <div className="absolute w-[calc(100%-70px)] ml-[50px] mt-[10px] h-[20px] text-center text-[15px] font-bold truncate">{currentCourse.name}</div>
                     </NavBar>
                     <CoursePage course={currentCourse} navigateTo={navigateTo}>
                     </CoursePage>
