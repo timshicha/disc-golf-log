@@ -52,10 +52,10 @@ function MainPage (props) {
         });
     }
 
-    const handleRenameCourse = (newName) => {
+    const handleRenameCourse = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        currentCourse.name = newName;
+        currentCourse.name = event.target.inputValue;
         DataHandler.modifyCourse(currentCourse, true).then(() => {
             setCurrentModal(null);
             setCurrentCourse(null);
@@ -112,7 +112,8 @@ function MainPage (props) {
                 <div className="fixed left-0 mt-[49px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
                 <div className="h-[46px]"></div>
-                    {courses.filter(course => course.name.toLowerCase().includes(searchString.toLowerCase())).map(course => {
+                    {/* Filter by search string. If name is undefined, treat as empty string. */}
+                    {courses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
                                 key={course.courseUUID}

@@ -31,6 +31,7 @@ class FormModal extends React.Component {
                     [&_input,textarea]:inline-block [&_input,textarea]:p-[5px] [&_input,textarea]:bg-gray-lighter" 
                 ref={this.ref}>
                     {/* X-button closes the options list window */}
+                    {/* replaceImg="back-arrow": back arrow instead of X */}
                     <CloseX replaceImg={this.props.replaceImg} onClick={this.props.onBack || this.props.onClose}></CloseX>
                     {this.props.children}  
                 </form>

@@ -34,14 +34,15 @@ class RenameModal extends React.Component {
         });
     }
 
-    onSubmit = () => {
-        this.props.onSubmit(this.state.inputValue);
+    onSubmit = (event) => {
+        event.target.inputValue = this.state.inputValue;
+        this.props.onSubmit(event);
     }
 
     render = () => {
         return (
             <>
-            <FormModal onSubmit={this.onSubmit} autocomplete="off">
+            <FormModal onSubmit={this.onSubmit} onClose={this.props.onClose} onBack={this.props.onBack} replaceImg={"back-arrow"} autocomplete="off">
                 {this.props.children}
                 <label htmlFor="rename-course-field"></label>
                 <input type="text" id="rename-course-field" name="rename-course-field"
