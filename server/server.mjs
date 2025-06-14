@@ -85,9 +85,7 @@ app.post("/data", async (req, res) => {
         try {
             let updateResults;
             // See if the user wants to delete all existing data
-            console.log("ded", req.body.deleteExistingData);
             if(req.body.deleteExistingData) {
-                console.log("del");
                 updateResults = await replaceAllCloudData(user, req.body.data);
             }
             else {
@@ -121,7 +119,6 @@ app.get("/data", async (req, res) => {
             courses: result.courses,
             rounds: result.rounds
         });
-        console.log("here")
     } catch (error) {
         res.status(400).send("Failed to retrieve data from cloud.");
         console.log(error);

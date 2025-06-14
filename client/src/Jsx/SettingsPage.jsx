@@ -5,6 +5,7 @@ import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
 import { retrieveAllDataFromCloud, uploadChangesToCloud } from "../serverCalls/data.mjs";
+import { timeAgo } from "../js_utils/dates.js";
 
 const SettingsBlock = (props) => {
     return (
@@ -70,7 +71,7 @@ class SettingsPage extends React.Component {
             });
         });
     }
-
+    
     handleUploadChangesToCloud = () => {
         DataHandler.getQueue().then(data => {
             console.log(data);
@@ -113,7 +114,7 @@ class SettingsPage extends React.Component {
                         <SettingsBlock>
                             <div className="w-100% text-center">
                                 <div className="text-desc text-gray text-left">
-                                    {this.state.lastPushedToCloud && <>Changes last uploaded to cloud {this.state.lastPushedToCloud}.</>}
+                                    {this.state.lastPushedToCloud && <>Changes last uploaded to cloud {timeAgo(this.state.lastPushedToCloud)}.</>}
                                     {!this.state.lastPushedToCloud && <>Changes have not yet been uploaded to cloud.</>}
                                 </div>
                                 <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>

@@ -107,4 +107,26 @@ const isoToVisualFormat = (iso) => {
     return `${date.day}, ${date.month}-${date.date}-${date.year}`;
 }
 
-export { getSafeIso, isoToVisualFormat, toLocalIsoString };
+// Turns a date into a time ago string
+// Ex: 34 seconds ago
+// Ex: 5 minutes ago
+// Ex: 16 hours ago
+// Ex: May 12, 2025
+const timeAgo = (date) => {
+    const now = new Date();
+    const then = new Date(date);
+    const secondsAgo = (now - then) / 1000;
+    if(secondsAgo < 5) return "just now";
+    if(secondsAgo < 60) return Math.floor(secondsAgo) + " seconds ago";
+    const minutesAgo = secondsAgo / 60;
+    if(minutesAgo < 60) return Math.floor(minutesAgo) + " minutes ago";
+    const hoursAgo = minutesAgo / 60;
+    if(hoursAgo < 24) return Math.floor(hoursAgo) + " hours ago";
+    // Otherwise just do the date
+    const year = then.getFullYear();
+    const month = monthsShort[then.getMonth()];
+    const day = then.getDate();
+    return `on ${month} ${day}, ${year}`;
+}
+
+export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo };

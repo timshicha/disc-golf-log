@@ -32,9 +32,7 @@ const deleteRound = async (userUUID, roundUUID) => {
         (SELECT courseuuid FROM ${SCHEMA}.rounds WHERE rounduuid = ${roundUUID}) LIMIT 1`)?.[0]?.useruuid;
     // If the user ID's match, proceed
     if(roundUserUUID === userUUID) {
-        console.log(roundUUID);
         const result = await db`DELETE FROM ${SCHEMA}.rounds WHERE rounduuid = ${roundUUID}`;
-        console.log("res", result.count)
         return result.count > 0;
     }
     return false;
