@@ -57,6 +57,7 @@ const MainLoginModal = (props) => {
 
     const onLoginComplete = (email) => {
         localStorage.setItem("email", email);
+        localStorage.setItem("last-pushed-to-cloud", Date ());
         setErrorMessage(null);
         setShowOptionModal(false);
         setUserEmail("");

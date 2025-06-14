@@ -54,7 +54,8 @@ class SettingsPage extends React.Component {
     onLogin = (email) => {
         this.setState({
             email: email,
-            currentModal: null
+            currentModal: null,
+            lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud")
         });
     }
 

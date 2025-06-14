@@ -79,7 +79,7 @@ function MainPage (props) {
     }
 
     return (
-        <div className="p-[10px] height-[calc(100dvh-120px] overflow-scroll">
+        <div className="p-[10px] height-[100dvh]] overflow-hidden">
 
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
@@ -110,7 +110,7 @@ function MainPage (props) {
             
             {courses.length > 0
             ? // If there are courses, show courses
-            <div className="min-h-[100dvh]">
+            <div className="fixed left-0 w-[96dvw] mx-[2dvw] overflow-hidden">
                 <div className="fixed left-0 bg-white w-full h-[45px] p-[10px]">
                     <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
                     <SearchBar id="course-search-bar" className="inline-block float-right" onChange={setSearchString}></SearchBar>
@@ -118,6 +118,7 @@ function MainPage (props) {
                 <div className="fixed left-0 mt-[45px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
                 <div className="h-[46px]"></div>
+                <div className="h-[calc(100dvh-120px)] overflow-scroll">
                     {/* Filter by search string. If name is undefined, treat as empty string. */}
                     {courses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
@@ -137,7 +138,8 @@ function MainPage (props) {
                             </CourseSlot>
                         );
                     })}
-                    <div className="h-[200px]"></div>
+                    <div className="h-[60px]"></div>
+                </div>
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
