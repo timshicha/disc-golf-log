@@ -122,7 +122,7 @@ const MainLoginModal = (props) => {
             }
             <GoogleLoginButton onSuccess={onGoogleLoginSuccess} onError={onError}>
                 <ModalButton>
-                    <img src={signInWithGoogleImg} className="h-[130%]"></img>
+                    <img src={signInWithGoogleImg} className="h-[50px]"></img>
                 </ModalButton>
             </GoogleLoginButton>
             </>}

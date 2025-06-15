@@ -10,6 +10,7 @@ import { Pages } from "../js_utils/Enums";
 import { migrate_v1_to_v2 } from "../data_handling/migrations";
 import { version as currentVersion } from "../../package.json";
 import { isVersionBehind } from "../js_utils/sorting";
+import { uploadQueueToCloud } from "../serverCalls/data.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -38,6 +39,22 @@ if(isVersionBehind(version, "1.0.1")) {
 }
 
 localStorage.setItem("version", version);
+
+// If the user is logged in
+const email = localStorage.getItem("email");
+if(email) {
+    const lastUpdated = localStorage.getItem("last-pushed-to-cloud") || 0;
+    // If the last time changes were updated to cloud was over an hour
+    // ago, push changes to cloud (if there are changes)
+    const updateInterval = 1000 * 60 * 60;
+    if(new Date() - new Date(lastUpdated) >= updateInterval) {
+        uploadQueueToCloud().then(result => {
+            if(result.success === true) {
+                localStorage.setItem("last-pushed-to-cloud", Date ());
+            }
+        });
+    }
+}
 
 function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);

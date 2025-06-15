@@ -110,7 +110,7 @@ function MainPage (props) {
             
             {courses.length > 0
             ? // If there are courses, show courses
-            <div className="fixed left-0 w-[96dvw] mx-[2dvw] overflow-hidden">
+            <div className="fixed left-0 w-[100dvw] overflow-hidden">
                 <div className="fixed left-0 bg-white w-full h-[45px] p-[10px]">
                     <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
                     <SearchBar id="course-search-bar" className="inline-block float-right" onChange={setSearchString}></SearchBar>
@@ -118,7 +118,7 @@ function MainPage (props) {
                 <div className="fixed left-0 mt-[45px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
                 <div className="h-[46px]"></div>
-                <div className="h-[calc(100dvh-120px)] overflow-scroll">
+                <div className="h-[calc(100dvh-120px)] overflow-scroll px-[10px]">
                     {/* Filter by search string. If name is undefined, treat as empty string. */}
                     {courses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
@@ -143,7 +143,7 @@ function MainPage (props) {
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p className="text-center text-gray-mild m-[25px]">
+                <p className="text-center text-desc mt-[25px]">
                     You don't have any courses.
                 </p>
             }

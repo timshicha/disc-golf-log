@@ -4,7 +4,7 @@ import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
-import { uploadChangesToCloud } from "../serverCalls/data.mjs";
+import { uploadChangesToCloud, uploadQueueToCloud } from "../serverCalls/data.mjs";
 import { timeAgo } from "../js_utils/dates.js";
 
 const SettingsBlock = (props) => {
@@ -74,19 +74,10 @@ class SettingsPage extends React.Component {
     }
     
     handleUploadChangesToCloud = () => {
-        DataHandler.getQueue().then(data => {
-            console.log(data);
-            uploadChangesToCloud(this.state.email, data).then(result => result.json()).then(result => {
-                const now = Date();
-                localStorage.setItem("last-pushed-to-cloud", now);
-                this.setState({
-                    lastPushedToCloud: now
-                });
-                
-                return DataHandler.clearUpdateQueue();
-            }).catch(error => {
-                console.log(error);
-            });
+        uploadQueueToCloud().then(result => {
+            if(result.success === true) {
+                this.setState({ lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud")});
+            }
         });
     }
 
