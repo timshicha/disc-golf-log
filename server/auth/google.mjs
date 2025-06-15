@@ -47,50 +47,56 @@ const fetchUserGoogleInfo = async (google_access_token) => {
     return user_result.json();
 }
 
-const handleGoogleLoginRequest = async (req, res) => {
-    const { code } = req.body;
-
-    if(!code) {
-        return res.status(400).json({
-            error: "Missing code"
+/**
+ * @param {import("express").Express} app 
+ */
+const registerGoogleAuthEndpoint = (app) => {
+    // If logging in (user wants a token)
+    app.post("/auth/google", async (req, res) => {
+        const { code } = req.body;
+    
+        if(!code) {
+            return res.status(400).json({
+                error: "Missing code"
+            });
+        }
+        const google_access_token = await exchangeGoogleCodeForToken(code);
+        if(!google_access_token) {
+            res.status(400).json({
+                error: "Invalid Google token"
+            });
+        }
+        // Must use google_access_token.access_token because it's a
+        // json of items.
+        const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
+    
+        let isNewUser = false;
+        // Find user by email
+        let user = await findUserByEmail(google_profile.email);
+        // If user doesn't exist, add them
+        if(!user) {
+            isNewUser = true;
+            user = await addUser(google_profile.email, {});
+        }
+    
+        const token = await generateToken(google_profile.email);
+        // If a token was generated, set as a cookie
+        if(token) {
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                path: "/"
+            });
+            console.log("Token set: " + token);
+        }
+    
+        res.status(200).json({
+            email: user.email,
+            data: user.data,
+            isNewUser: isNewUser
         });
-    }
-    const google_access_token = await exchangeGoogleCodeForToken(code);
-    if(!google_access_token) {
-        res.status(400).json({
-            error: "Invalid Google token"
-        });
-    }
-    // Must use google_access_token.access_token because it's a
-    // json of items.
-    const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
-
-    let isNewUser = false;
-    // Find user by email
-    let user = await findUserByEmail(google_profile.email);
-    // If user doesn't exist, add them
-    if(!user) {
-        isNewUser = true;
-        user = await addUser(google_profile.email, {});
-    }
-
-    const token = await generateToken(google_profile.email);
-    // If a token was generated, set as a cookie
-    if(token) {
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            path: "/"
-        });
-        console.log("Token set: " + token);
-    }
-
-    res.status(200).json({
-        email: user.email,
-        data: user.data,
-        isNewUser: isNewUser
     });
 }
 
-export { exchangeGoogleCodeForToken, fetchUserGoogleInfo, handleGoogleLoginRequest };
+export { exchangeGoogleCodeForToken, fetchUserGoogleInfo, registerGoogleAuthEndpoint };
