@@ -81,12 +81,17 @@ class SettingsPage extends React.Component {
         // });
     }
     
-    handleUploadChangesToCloud = () => {
-        uploadQueueToCloud().then(result => {
-            if(result.success === true) {
-                this.setState({ lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud")});
-            }
-        });
+    handleUploadChangesToCloud = async () => {
+        const email = localStorage.getItem("email");
+        const result = await uploadQueueToCloud(email, false);
+        console.log(result)
+        if(result.success) {
+            const date = Date ();
+            localStorage.setItem("last-pushed-to-cloud", date);
+            this.setState({
+                lastPushedToCloud: date
+            });
+        }
     }
 
     render = () => {
