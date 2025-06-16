@@ -38,7 +38,7 @@ if(isVersionBehind(version, "1.0.1")) {
     version = "1.0.1";
 }
 
-localStorage.setItem("version", version);
+localStorage.setItem("version", currentVersion);
 
 // If the user is logged in
 const email = localStorage.getItem("email");

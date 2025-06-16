@@ -85,7 +85,7 @@ const registerGoogleAuthEndpoint = (app) => {
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: true,
-                sameSite: "none",
+                sameSite: "None",
                 path: "/"
             });
             console.log("Token set: " + token);
