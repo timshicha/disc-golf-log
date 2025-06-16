@@ -62,11 +62,17 @@ class SettingsPage extends React.Component {
     onLogout = () => {
         // Upload their data first
         DataHandler.getQueue().then(data => {
-            uploadChangesToCloud(this.state.email, data).then(() => {
-                DataHandler.clearData();
-                DataHandler.clearUpdateQueue();
-                this.setState({ email: null });
-                localStorage.removeItem("email");
+            uploadChangesToCloud(this.state.email, data).then(result => {
+                // Make sure success before deleting their data
+                if(result.success) {
+                    DataHandler.clearData();
+                    DataHandler.clearUpdateQueue();
+                    this.setState({ email: null });
+                    localStorage.removeItem("email");
+                }
+                else {
+                    console.log("Data was not deleted.");
+                }
             }).catch(error => {
                 this.console.log(error);
             });

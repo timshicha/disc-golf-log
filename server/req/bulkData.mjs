@@ -29,7 +29,8 @@ export const registerPostDataEndpoint = (app) => {
                 updatesSucceeded: updateResults.updatesSucceeded,
                 updatesFailed: updateResults.updatesFailed,
                 errors: updateResults.errors,
-                updateQueue: updateResults.data
+                updateQueue: updateResults.data,
+                success: true
             });
         } catch (error) {
             res.status(400).send(error);
@@ -54,7 +55,8 @@ export const registerGetDataEndpoint = (app) => {
             const result = await getAllCloudData(user);
             res.status(200).json({
                 courses: result.courses,
-                rounds: result.rounds
+                rounds: result.rounds,
+                success: true
             });
         } catch (error) {
             res.status(400).send("Failed to retrieve data from cloud.");

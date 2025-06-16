@@ -37,9 +37,15 @@ const MainLoginModal = (props) => {
             // Replace all data in cloud with devide data
             DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
                 DataHandler.getQueue().then(async (data) => {
-                    await uploadChangesToCloud(userEmail, data);
-                    await DataHandler.clearUpdateQueue();
-                    onLoginComplete(userEmail);
+                    const result = await uploadChangesToCloud(userEmail, data);
+                    // Make sure success before deleting their data
+                    if(result.success) {
+                        await DataHandler.clearUpdateQueue();
+                        onLoginComplete(userEmail);
+                    }
+                    else {
+                        console.log("Data was not deleted.");
+                    }
                 });
             });
         }
@@ -78,9 +84,14 @@ const MainLoginModal = (props) => {
             // Replace all data in cloud with devide data
             DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
                 DataHandler.getQueue().then(async (data) => {
-                    await replaceAllDataInCloud(userEmail, data);
-                    await DataHandler.clearUpdateQueue();
-                    onLoginComplete(userEmail);
+                    const result = await replaceAllDataInCloud(userEmail, data);
+                    if(result.success) {
+                        await DataHandler.clearUpdateQueue();
+                        onLoginComplete(userEmail);
+                    }
+                    else {
+                        console.log("Data was not deleted.");
+                    }
                 });
             });
         }
@@ -97,14 +108,19 @@ const MainLoginModal = (props) => {
             DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
                 DataHandler.getQueue().then(async (data) => {
                     // Upload local data to cloud
-                    await uploadChangesToCloud(userEmail, data);
-                    await DataHandler.clearUpdateQueue();
-                    // Delete all data
-                    await DataHandler.clearAllCoursesAndRounds();
-                    // Pull data from cloud
-                    await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-                        DataHandler.bulkAdd(result.courses, result.rounds);
-                    })
+                    const result = await uploadChangesToCloud(userEmail, data);
+                    if(result.success) {
+                        await DataHandler.clearUpdateQueue();
+                        // Delete all data
+                        await DataHandler.clearAllCoursesAndRounds();
+                        // Pull data from cloud
+                        await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
+                            DataHandler.bulkAdd(result.courses, result.rounds);
+                        });
+                    }
+                    else {
+                        console.log("Data was not deleted.");    
+                    }
                     onLoginComplete(userEmail);
                 });
             });
