@@ -90,7 +90,6 @@ const registerGoogleAuthEndpoint = (app) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: "None",
-                path: "/"
             });
             console.log("Token set: " + token);
         }
