@@ -21,7 +21,7 @@ const NavBarTitle = (props) => {
 const NavBar = (props) => {
 
     return createPortal(
-        <div className={"h-[54px] w-[100%] fixed top-[0px] bg-[#ff8f8f] py-[6px] flex justify-between " + props.className}>{props.children}</div>,
+        <div className={"h-[54px] w-[100%] fixed top-[0px] bg-[#baceff] py-[6px] flex justify-between " + props.className}>{props.children}</div>,
         document.body
     );
 }
