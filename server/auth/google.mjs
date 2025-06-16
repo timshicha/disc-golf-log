@@ -76,7 +76,11 @@ const registerGoogleAuthEndpoint = (app) => {
         // If user doesn't exist, add them
         if(!user) {
             isNewUser = true;
-            user = await addUser(google_profile.email, {});
+            await addUser(google_profile.email, {});
+            user = {
+                email: google_profile.email,
+                data: {}
+            };
         }
     
         const token = await generateToken(google_profile.email);
@@ -90,7 +94,7 @@ const registerGoogleAuthEndpoint = (app) => {
             });
             console.log("Token set: " + token);
         }
-    
+        
         res.status(200).json({
             email: user.email,
             data: user.data,

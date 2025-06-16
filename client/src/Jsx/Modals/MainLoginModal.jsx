@@ -5,7 +5,7 @@ import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import signInWithGoogleImg from "../../assets/images/signInWithGoogleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
-import { replaceAllDataInCloud, retrieveAllDataFromCloud, uploadChangesToCloud } from "../../serverCalls/data.mjs";
+import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
 
 // Once a user has been authenticated, we need to give them 3 options:
 // 1) Keep both their current local data and data in the cloud
@@ -19,45 +19,37 @@ const MainLoginModal = (props) => {
     const [userEmail, setUserEmail] = useState("");
     const [userData, setUserData] = useState({});
 
+    // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
 
-
-    const onGoogleLoginSuccess = async (data) => {
-        const localData = await DataHandler.getAllData();
-        console.log(localData);
-        const hasLocalData = (localData.courses.length + localData.rounds.length) > 0;
-        // If existing user and has local data, ask what to do with their data
-        if(!data.isNewUser && hasLocalData) {
-            setUserEmail(data.email);
-            setUserData(data.data);
+    const onLoginAttempt = async (result) => {
+        // On successful login:
+        // {success: true,
+        //  data: {email: "...", data: "{...}", isNewUser: true/false}
+        // }
+        if(result.success) {
+            setUserEmail(result.data.email);
+            setUserData(result.data.data);
+            // If a new user, default to keeping device data
+            if(result.data.isNewUser === true) {
+                setSelectedDataOption("local");
+                await onLoginHandleData("local", result.data.email, result.data.data);
+            }
+            else {
+                const localData = await DataHandler.getAllData();
+                // If there are no local courses (and no rounds)
+                if(localData.courses.length === 0) {
+                    setSelectedDataOption("cloud");
+                    await onLoginHandleData("cloud", result.data.email, result.data.data);
+                }
+            }
+            // Otherwise, it's not a new user and they have data, so
+            // let them decide what to do with their data
             setShowOptionModal(true);
         }
-        // If only local data, push the data
-        else if(hasLocalData) {
-            // Replace all data in cloud with devide data
-            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
-                DataHandler.getQueue().then(async (data) => {
-                    const result = await uploadChangesToCloud(userEmail, data);
-                    // Make sure success before deleting their data
-                    if(result.success) {
-                        await DataHandler.clearUpdateQueue();
-                        onLoginComplete(userEmail);
-                    }
-                    else {
-                        console.log("Data was not deleted.");
-                    }
-                });
-            });
-        }
-        // Otherwise, upload their current data to cloud and finish login
         else {
-            // Retrieve all data from cloud
-            retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-                DataHandler.bulkAdd(result.courses, result.rounds).then(() => {
-                    onLoginComplete(userEmail);
-                    onLoginComplete(data.email, data.data);
-                });
-            });
+            alert("Could not log in");
+            console.log(result);
         }
     }
 
@@ -71,59 +63,44 @@ const MainLoginModal = (props) => {
         props.onLogin(email);
     }
 
-    const onError = (error) => {
-        setErrorMessage("Could not log in: " + error);
-    }
-
     const onLoginConfirm = async (event) => {
         event.preventDefault();
         event.stopPropagation();
 
+        onLoginHandleData(selectedDataOption, userEmail, userData);
+    }
+
+    const onLoginHandleData = async (dataOption, email, data) => {
+        let result;
         // If keeping device data...
-        if(selectedDataOption === "device") {
+        if(dataOption === "local") {
             // Replace all data in cloud with devide data
-            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
-                DataHandler.getQueue().then(async (data) => {
-                    const result = await replaceAllDataInCloud(userEmail, data);
-                    if(result.success) {
-                        await DataHandler.clearUpdateQueue();
-                        onLoginComplete(userEmail);
-                    }
-                    else {
-                        console.log("Data was not deleted.");
-                    }
-                });
-            });
+            result = await uploadQueueToCloud(email, true);
         }
         // If keeping cloud data...
-        else if(selectedDataOption === "cloud") {
+        else if(dataOption === "cloud") {
             // Retrieve all data from cloud
-            await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-                DataHandler.bulkAdd(result.courses, result.rounds);
-            });
-            onLoginComplete(userEmail);
+            result = await retrieveAllDataFromCloud(email);
         }
         // If keeping data from both...
         else {
-            DataHandler.replaceUpdateQueueWithCurrentData().then(() => {
-                DataHandler.getQueue().then(async (data) => {
-                    // Upload local data to cloud
-                    const result = await uploadChangesToCloud(userEmail, data);
-                    if(result.success) {
-                        await DataHandler.clearUpdateQueue();
-                        // Delete all data
-                        await DataHandler.clearAllCoursesAndRounds();
-                        // Pull data from cloud
-                        await retrieveAllDataFromCloud().then(result => result.json()).then(result => {
-                            DataHandler.bulkAdd(result.courses, result.rounds);
-                        });
-                    }
-                    else {
-                        console.log("Data was not deleted.");    
-                    }
-                    onLoginComplete(userEmail);
-                });
-            });
+            // First pull the data from the server
+            result = await retrieveAllDataFromCloud(email);
+            // Now push the local data to server
+            if(result.success) {
+                const cloudData = result.data;
+                await DataHandler.replaceUpdateQueueWithCurrentData();
+                result = await uploadQueueToCloud(email, false);
+                if(result.success) {
+                    await DataHandler.bulkAdd(cloudData.courses, cloudData.rounds);
+                }
+            }
+        }
+        if(result.success) {
+            onLoginComplete(email);
+        }
+        else {
+            console.log(result);
         }
     }
 
@@ -136,7 +113,7 @@ const MainLoginModal = (props) => {
             {errorMessage &&
                 <div className="text-desc text-red-caution mt-[-10px] mb-[10px]">{errorMessage}</div>
             }
-            <GoogleLoginButton onSuccess={onGoogleLoginSuccess} onError={onError}>
+            <GoogleLoginButton onSubmit={onLoginAttempt}>
                 <ModalButton>
                     <img src={signInWithGoogleImg} className="h-[50px]"></img>
                 </ModalButton>
@@ -146,7 +123,7 @@ const MainLoginModal = (props) => {
             {showOptionModal && <form onSubmit={onLoginConfirm} className="text-left mb-[0px]">
                 <div className="text-desc text-gray-dark text-left text-[13px] mb-[15px]">It appears that you already have previous data in the cloud. What would you like to do with your data?</div>
                 <div>
-                    <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("device")} className=""></input>
+                    <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("local")} className=""></input>
                     <label htmlFor="keep-device-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep device data only</label>
                 </div>
                 <div>

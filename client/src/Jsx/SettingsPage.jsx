@@ -4,7 +4,7 @@ import ModalButton from "./Modals/ModalComponents/ModalButton";
 import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
-import { uploadChangesToCloud, uploadQueueToCloud } from "../serverCalls/data.mjs";
+import { uploadQueueToCloud } from "../serverCalls/data.mjs";
 import { timeAgo } from "../js_utils/dates.js";
 
 const SettingsBlock = (props) => {
@@ -60,23 +60,25 @@ class SettingsPage extends React.Component {
     }
 
     onLogout = () => {
+        localStorage.removeItem("email");
+        this.setState({ email: null });
         // Upload their data first
-        DataHandler.getQueue().then(data => {
-            uploadChangesToCloud(this.state.email, data).then(result => {
-                // Make sure success before deleting their data
-                if(result.success) {
-                    DataHandler.clearData();
-                    DataHandler.clearUpdateQueue();
-                    this.setState({ email: null });
-                    localStorage.removeItem("email");
-                }
-                else {
-                    console.log("Data was not deleted.");
-                }
-            }).catch(error => {
-                this.console.log(error);
-            });
-        });
+        // DataHandler.getQueue().then(data => {
+        //     uploadChangesToCloud(this.state.email, data).then(result => {
+        //         localStorage.removeItem("email");
+        //         // Make sure success before deleting their data
+        //         if(result.success) {
+        //             DataHandler.clearData();
+        //             DataHandler.clearUpdateQueue();
+        //             this.setState({ email: null });
+        //         }
+        //         else {
+        //             console.log("Data was not deleted.");
+        //         }
+        //     }).catch(error => {
+        //         this.console.log(error);
+        //     });
+        // });
     }
     
     handleUploadChangesToCloud = () => {
