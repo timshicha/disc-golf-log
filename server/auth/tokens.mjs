@@ -18,6 +18,7 @@ const generateToken = async (email) => {
 
 const validateToken = async (token) => {
     if(!token) {
+        console.log("No token provided.");
         return null;
     }
     try {
@@ -25,6 +26,7 @@ const validateToken = async (token) => {
         let user = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = (SELECT useruuid FROM ${SCHEMA}.tokens WHERE token = ${token})`;
         user = user[0];
         if(!user) {
+            console.log("Can't find user in database.");
             throw("Can't map token to a user.");
         }
         return user;
