@@ -30,7 +30,7 @@ const validateToken = async (token) => {
         return user;
     }
     catch (error) {
-        // console.log("Error validating token: " + error);
+        console.log("Error validating token: " + error);
         return null;
     }
 }

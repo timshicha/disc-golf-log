@@ -20,6 +20,8 @@ const GoogleLoginButton = (props) => {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ code })
+                }).catch(error => {
+                    console.log(error);
                 });
                 if(!result.ok) {
                     status = result.status;

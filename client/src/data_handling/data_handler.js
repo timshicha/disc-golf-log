@@ -241,12 +241,6 @@ class DataHandler {
         });
     }
 
-    static clearData = async () => {
-        return db.courses.clear().then(async () => {
-            await db.rounds.clear();
-        });
-    }
-
     // Bulk add (such as when reading from cloud).
     // Changes will not be saved to the update queue or uploaded to cloud
     static bulkAdd = async (courses, rounds) => {
