@@ -13,6 +13,15 @@ export default {
                 "gray-lighter": "#eeeeee",
                 "blue-basic": "#4a86e8",
                 "red-caution": "#dc0000"
+            },
+            keyframes: {
+                rotateSteps: {
+                    from: { transform: "rotate(0deg)" },
+                    to: { transform: "rotate(360deg)" }
+                }
+            },
+            animation: {
+                rotate8: "rotateSteps 0.8s steps(8) infinite"
             }
         }
     },
