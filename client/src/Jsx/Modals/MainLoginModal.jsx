@@ -18,6 +18,7 @@ const MainLoginModal = (props) => {
     const [showOptionModal, setShowOptionModal] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [userData, setUserData] = useState({});
+    const [confirmLoginLoading, setConfirmLoginLoading] = useState(false);
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
@@ -64,10 +65,12 @@ const MainLoginModal = (props) => {
     }
 
     const onLoginConfirm = async (event) => {
+        setConfirmLoginLoading(true);
         event.preventDefault();
         event.stopPropagation();
 
-        onLoginHandleData(selectedDataOption, userEmail, userData);
+        await onLoginHandleData(selectedDataOption, userEmail, userData);
+        setConfirmLoginLoading(false);
     }
 
     const onLoginHandleData = async (dataOption, email, data) => {
@@ -136,7 +139,7 @@ const MainLoginModal = (props) => {
                 </div>
                 {/* Option description */}
                 <div className="mt-[15px] text-desc text-gray-dark text-[13px] h-[90px] overflow-y-scroll">
-                    {selectedDataOption === "device" &&
+                    {selectedDataOption === "local" &&
                     "All your data in the cloud will be deleted and replaced by what is currently on this device."}
                     {selectedDataOption === "cloud" &&
                     "All the data on this device will be deleted and replaced by your data in the cloud."}
@@ -144,7 +147,7 @@ const MainLoginModal = (props) => {
                     "We will attempt to merge and keep the data both on this device and the data in the cloud. The merged data will be added to this device and to the cloud."}
                 </div>
                 <div className="text-center">
-                    <ModalButton className="bg-blue-basic text-white">Confirm</ModalButton>
+                    <ModalButton loading={confirmLoginLoading} className="bg-blue-basic text-white">Confirm</ModalButton>
                 </div>
             </form>}
         </MenuModal>

@@ -1,5 +1,6 @@
 import React from "react";
 import "../../../css/general.css";
+import LoadingImg from "../../Components/LoadingImg";
 
 class ModalButton extends React.Component {
     constructor (props) {
@@ -10,8 +11,15 @@ class ModalButton extends React.Component {
 
     render = () => {
         return (
-            <button {...this.props} className={"inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + this.props.className}>
-                {this.props.children}
+            <button {...this.props} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + (this.props.loading ? "pointer-events-none opacity-60 " : "") + this.props.className}>
+                {this.props.loading &&
+                    <div className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
+                        <LoadingImg className="w-[20px]"></LoadingImg>
+                    </div>
+                }
+                <div className={this.props.loading ? "opacity-0" : ""}>
+                    {this.props.children}
+                </div>
             </button>
         );
     }

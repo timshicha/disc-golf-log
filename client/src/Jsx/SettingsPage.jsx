@@ -5,7 +5,7 @@ import { download } from "../js_utils/downloads";
 import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
 import { uploadQueueToCloud } from "../serverCalls/data.mjs";
-import { timeAgo } from "../js_utils/dates.js";
+import { createLastPushedToCloudString } from "../js_utils/dates.js";
 
 const SettingsBlock = (props) => {
     return (
@@ -24,9 +24,13 @@ class SettingsPage extends React.Component {
         // Pull user settings from local storage
         this.state = {
             confirmDelete: localStorage.getItem("confirm-delete") === "true",
-            lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud") || null,
+            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")),
             email: localStorage.getItem("email") || null,
-            currentModal: null
+            currentModal: null,
+            // Keep track of which requests to the server are loading so we can
+            // show a loading circle over those buttons
+            logoutLoading: false,
+            uploadChangesToCloudLoading: false
         };
     }
 
@@ -55,13 +59,17 @@ class SettingsPage extends React.Component {
         this.setState({
             email: email,
             currentModal: null,
-            lastPushedToCloud: localStorage.getItem("last-pushed-to-cloud")
+            lastPushedToCloudString: localStorage.getItem("last-pushed-to-cloud")
         });
     }
 
     onLogout = () => {
+        this.setState({ logoutLoading: true });
         localStorage.removeItem("email");
-        this.setState({ email: null });
+        this.setState({
+            email: null,
+            logoutLoading: false
+         });
         // Upload their data first
         // DataHandler.getQueue().then(data => {
         //     uploadChangesToCloud(this.state.email, data).then(result => {
@@ -82,6 +90,7 @@ class SettingsPage extends React.Component {
     }
     
     handleUploadChangesToCloud = async () => {
+        this.setState({ uploadChangesToCloudLoading: true });
         const email = localStorage.getItem("email");
         const result = await uploadQueueToCloud(email, false);
         console.log(result)
@@ -89,67 +98,68 @@ class SettingsPage extends React.Component {
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);
             this.setState({
-                lastPushedToCloud: date
+                lastPushedToCloudString: createLastPushedToCloudString(date)
             });
         }
+        this.setState({ uploadChangesToCloudLoading: false });
     }
 
     render = () => {
         return (
-            <div className="settings-page">
-                {/* Spacer for navbar */}
-                <div className="h-[70px]"></div>
+            <div>
+                <div className="settings-page mt-[70px]">
 
-                {/* If the user is not logged in */}
-                {!this.state.email &&
-                    <SettingsBlock>
-                        <ModalButton className="bg-gray-dark text-white float-right" onClick={() => this.setState({ currentModal: Modals.MAIN_LOGIN })}>Log in</ModalButton>
-                        <div className="text-desc text-gray">You are not logged in. Log in to save your data to the cloud.</div>
-                    </SettingsBlock>
-                }
-
-                {/* If the user is logged in */}
-                {this.state.email &&
-                    <>
+                    {/* If the user is not logged in */}
+                    {!this.state.email &&
                         <SettingsBlock>
-                            <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
-                            <div className="text-desc text-gray">You are logged in as</div>
-                            <div className="text-desc text-gray italic">{this.state.email}</div>
+                            <ModalButton className="bg-gray-dark text-white float-right" onClick={() => this.setState({ currentModal: Modals.MAIN_LOGIN })}>Log in</ModalButton>
+                            <div className="text-desc text-gray">You are not logged in. Log in to save your data to the cloud.</div>
                         </SettingsBlock>
-                        <SettingsBlock>
-                            <div className="w-100% text-center">
-                                <div className="text-desc text-gray text-left">
-                                    {this.state.lastPushedToCloud && <>Changes last uploaded to cloud {timeAgo(this.state.lastPushedToCloud)}.</>}
-                                    {!this.state.lastPushedToCloud && <>Changes have not yet been uploaded to cloud.</>}
+                    }
+
+                    {/* If the user is logged in */}
+                    {this.state.email &&
+                        <>
+                            <SettingsBlock>
+                                <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
+                                <div className="text-desc text-gray">You are logged in as</div>
+                                <div className="text-desc text-gray italic">{this.state.email}</div>
+                            </SettingsBlock>
+                            <SettingsBlock>
+                                <div className="w-100% text-center">
+                                    <div className="text-desc text-gray text-left">
+                                        {this.state.lastPushedToCloudString}
+                                    </div>
+                                    <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.uploadChangesToCloudLoading} onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
+                                    {/* <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton> */}
                                 </div>
-                                <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
-                                {/* <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton> */}
-                            </div>
-                        </SettingsBlock>
-                    </>
-                }
+                            </SettingsBlock>
+                        </>
+                    }
 
-                {this.state.currentModal === Modals.MAIN_LOGIN &&
-                    <MainLoginModal onLogin={this.onLogin} onClose={() => {this.setState({ currentModal: null })}}>
-                    </MainLoginModal>
-                }
+                    {this.state.currentModal === Modals.MAIN_LOGIN &&
+                        <MainLoginModal onLogin={this.onLogin} onClose={() => {this.setState({ currentModal: null })}}>
+                        </MainLoginModal>
+                    }
 
-                <div className="w-[100%] h-[2px] bg-gray-light"></div>
-                <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
-                <SettingsBlock>
-                    <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
-                    <div className="text-desc text-gray">
-                        Download all your courses and rounds into a JSON file.
-                    </div>
-                </SettingsBlock>
-                <SettingsBlock className="min-h-[60px] bg-special">
-                    <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle}
-                        id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
-                    </input>
-                    <div className="text-desc">
-                        Ask for confirmation before deleting courses or rounds.
-                    </div>
-                </SettingsBlock>
+                    <div className="w-[100%] h-[2px] bg-gray-light"></div>
+                    <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
+                    <SettingsBlock>
+                        <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
+                        <div className="text-desc text-gray">
+                            Download all your courses and rounds into a JSON file.
+                        </div>
+                    </SettingsBlock>
+                    <SettingsBlock className="min-h-[60px] bg-special">
+                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle}
+                            id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
+                        </input>
+                        <div className="text-desc">
+                            Ask for confirmation before deleting courses or rounds.
+                        </div>
+                    </SettingsBlock>
+                </div>
+
             </div>
         );
     }

@@ -131,4 +131,13 @@ const timeAgo = (date) => {
     return `on ${month} ${day}, ${year}`;
 }
 
-export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo };
+const createLastPushedToCloudString = (lastPushedToCloud) => {
+    if(!lastPushedToCloud) {
+        return "Changes have not yet been uploaded to cloud.";
+    }
+    else {
+        return `Changes last pushed to cloud ${timeAgo(lastPushedToCloud)}.`;
+    }
+}
+
+export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo, createLastPushedToCloudString };
