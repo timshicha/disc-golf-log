@@ -292,6 +292,18 @@ class DataHandler {
             });
         });
     }
+
+    static hasChanges = async () => {
+        const queue = await this.getQueue();
+        // If there is something in any queue, return true
+        return (queue.addCourseQueue.length > 0 ||
+            queue.modifyCourseQueue.length > 0 ||
+            queue.deleteCourseQueue.length > 0 ||
+            queue.addRoundQueue.length > 0 ||
+            queue.modifyRoundQueue.length > 0 ||
+            queue.deleteRoundQueue.length > 0
+        );
+    }
 }
 
 export default DataHandler;

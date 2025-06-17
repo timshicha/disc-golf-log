@@ -6,6 +6,8 @@ import { Modals } from "../js_utils/Enums";
 import MainLoginModal from "./Modals/MainLoginModal";
 import { uploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../js_utils/dates.js";
+import MenuModal from "./Modals/Frames/MenuModal.jsx";
+import ModalTitle from "./Modals/ModalComponents/ModalTitle.jsx";
 
 const SettingsBlock = (props) => {
     return (
@@ -59,7 +61,7 @@ class SettingsPage extends React.Component {
         this.setState({
             email: email,
             currentModal: null,
-            lastPushedToCloudString: localStorage.getItem("last-pushed-to-cloud")
+            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud"))
         });
     }
 
@@ -68,25 +70,9 @@ class SettingsPage extends React.Component {
         localStorage.removeItem("email");
         this.setState({
             email: null,
-            logoutLoading: false
-         });
-        // Upload their data first
-        // DataHandler.getQueue().then(data => {
-        //     uploadChangesToCloud(this.state.email, data).then(result => {
-        //         localStorage.removeItem("email");
-        //         // Make sure success before deleting their data
-        //         if(result.success) {
-        //             DataHandler.clearData();
-        //             DataHandler.clearUpdateQueue();
-        //             this.setState({ email: null });
-        //         }
-        //         else {
-        //             console.log("Data was not deleted.");
-        //         }
-        //     }).catch(error => {
-        //         this.console.log(error);
-        //     });
-        // });
+            logoutLoading: false,
+            currentModal: null
+        });
     }
     
     handleUploadChangesToCloud = async () => {
@@ -121,7 +107,7 @@ class SettingsPage extends React.Component {
                     {this.state.email &&
                         <>
                             <SettingsBlock>
-                                <ModalButton onClick={this.onLogout} className="bg-red-caution text-white float-right">Log out</ModalButton>
+                                <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white float-right">Log out</ModalButton>
                                 <div className="text-desc text-gray">You are logged in as</div>
                                 <div className="text-desc text-gray italic">{this.state.email}</div>
                             </SettingsBlock>
@@ -140,6 +126,16 @@ class SettingsPage extends React.Component {
                     {this.state.currentModal === Modals.MAIN_LOGIN &&
                         <MainLoginModal onLogin={this.onLogin} onClose={() => {this.setState({ currentModal: null })}}>
                         </MainLoginModal>
+                    }
+                    {this.state.currentModal === Modals.CONFIRM_LOGOUT &&
+                        <MenuModal onClose={() => {this.setState({ currentModal: null })}}>
+                            <ModalTitle>Confirm Logout?</ModalTitle>
+                            <div className="text-desc text-gray-dark text-left text-[14px]">Are you sure you want to log out? Any changes that have not been uploaded to cloud will not be uploaded.</div>
+                            <div className="mt-[5px]">
+                                <ModalButton className="w-[45%] bg-gray-dark text-white m-[5px]" onClick={() => this.setState({ currentModal: null })}>Cancel</ModalButton>
+                                <ModalButton className="w-[45%] bg-red-caution text-white m-[5px]" onClick={this.onLogout}>Log out</ModalButton>
+                            </div>
+                        </MenuModal>
                     }
 
                     <div className="w-[100%] h-[2px] bg-gray-light"></div>
