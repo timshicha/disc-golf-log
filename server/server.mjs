@@ -6,6 +6,7 @@ import fs from "fs";
 import { configDotenv } from "dotenv";
 import { registerGoogleAuthEndpoint } from "./auth/google.mjs";
 import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkData.mjs";
+import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -30,8 +31,10 @@ app.get("/ready", async (req, res) => {
     res.status(200).send("Server is ready.");
 });
 
-// If logging in (user wants a token)
+// If logging in with Google (user wants a token)
 registerGoogleAuthEndpoint(app);
+// If logging in with email (either email or code from email)
+registerEmailAuthEndpoint(app);
 
 // If the user sends a list of modifications
 registerPostDataEndpoint(app);

@@ -7,6 +7,7 @@ import googleIcon from "../../assets/images/googleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
 import { Modals } from "../../js_utils/Enums";
+import { httpSendCodeToEmail } from "../../serverCalls/auth.mjs";
 
 // Once a user has been authenticated, we need to give them 3 options:
 // 1) Keep both their current local data and data in the cloud
@@ -114,14 +115,23 @@ const MainLoginModal = (props) => {
         }
     }
 
-    const sendCode = (event) => {
+    const sendCode = async (event) => {
         event.preventDefault();
         event.stopPropagation();
+        setMainLoginError(null);
 
         setSendCodeLoading(true);
+        const email = event?.target?.email?.value;
+        const result = await httpSendCodeToEmail(email);
         // When code has been sent, show code modal
-        setCurrentSubmodal(Modals.LOGIN_CODE_MODAL);
-        setModalXImg("back-arrow");
+        if(result.success === true) {
+            setModalXImg("back-arrow");
+            setCurrentSubmodal(Modals.LOGIN_CODE_MODAL);
+        }
+        else {
+            setMainLoginError("Error sending email.");
+        }
+        setSendCodeLoading(false);
     }
 
     const onCodeSubmit = (event) => {
@@ -132,20 +142,25 @@ const MainLoginModal = (props) => {
 
     }
 
-    const onBackOrClose = () => {
+    const onBack = () => {
         if(currentSubmodal) {
-            setCurrentSubmodal(null);
             setModalXImg(null);
+            setCurrentSubmodal(null);
         }
         else {
-            props.onClose();
+            onClose();
         }
+    }
+
+    const onClose = () => {
+        props.onClose();
+        setCurrentSubmodal(null);
     }
 
 
 
     return (
-        <MenuModal className="pb-[20px]" onClose={onBackOrClose} replaceImg={modalXImg}>
+        <MenuModal className="pb-[20px]" onClose={onClose} onBack={onBack} replaceImg={modalXImg}>
             <ModalTitle>Login</ModalTitle>
 
 
@@ -163,7 +178,7 @@ const MainLoginModal = (props) => {
                         }
                         <form className="w-[90%] text-left mx-auto" onSubmit={sendCode}>
                             <label htmlFor="login-email-input" className="text-left text-[13px] text-gray-dark">Email:</label>
-                            <input id="login-email-input" type="email" className="mb-[10px] w-[100%]" placeholder="example@email.com">
+                            <input id="login-email-input" name="email" type="email" className="mb-[10px] w-[100%]" placeholder="example@email.com">
                             </input>
                             <div className="text-center">
                                 <ModalButton loading={sendCodeLoading} type="submit" className="bg-blue-basic text-white block">Send Code</ModalButton>
