@@ -14,7 +14,8 @@ const httpSendCodeToEmail = async (email) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: email
+                email: email,
+                desired: "code"
             })
         });
         if(!result.ok) {
