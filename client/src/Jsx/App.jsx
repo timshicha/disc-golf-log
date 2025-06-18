@@ -7,35 +7,18 @@ import titleLogo from "../assets/images/title-logo.png";
 import cogwheel from "../assets/images/cogwheel.png";
 import CoursePage from "./CoursePage";
 import { Pages } from "../js_utils/Enums";
-import { migrate_v1_to_v2 } from "../data_handling/migrations";
 import { version as currentVersion } from "../../package.json";
 import { isVersionBehind } from "../js_utils/sorting";
 import { uploadQueueToCloud } from "../serverCalls/data.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
-let version = localStorage.getItem("version") || currentVersion;
-console.log(version);
-
-// v1.0.0 now uses DBv2. If v1.0.0 isn't set, migrate to DBv2
-if(isVersionBehind(version, "1.0.0")) {
-    migrate_v1_to_v2().then(() => {
-        localStorage.setItem("version", "1.0.0");
-        alert("All data moved to new database successfully!");
-        version = "1.0.0";
-        window.location.reload();
-    }).catch(error => {
-        alert(error);
-    });
-}
+let version = localStorage.getItem("version") || "0.0.0";
 
 // v1.0.1 update
+// Confirm delete default = true
 if(isVersionBehind(version, "1.0.1")) {
-    console.log("here")
-    // In this version, we are adding some setting preferences
     localStorage.setItem("confirm-delete", true);
-    localStorage.setItem("version", "1.0.1");
-    version = "1.0.1";
 }
 
 localStorage.setItem("version", currentVersion);
@@ -73,14 +56,6 @@ function App() {
         else {
             setCurrentPage(Pages.MAIN);
         }
-    }
-
-    const onGoogleLoginSuccess = (data) => {
-        for (let key in data) {
-            console.log(key + ": " + data[key]);
-        }
-
-        localStorage.setItem("signed-in-email", data.email);
     }
 
     return (

@@ -8,7 +8,7 @@ export const registerPostDataEndpoint = (app) => {
     // If the user sends a list of modifications
     app.post("/data", async (req, res) => {
         // Validate token
-        const user = await validateToken(req.cookies.token);
+        const user = await validateToken(req, res);
         if(user === null) {
             res.status(401).send("Can't validate user.");
             return;
@@ -46,7 +46,7 @@ export const registerGetDataEndpoint = (app) => {
     // If the user wants to get all their data from the cloud (such as when logging in)
     app.get("/data", async (req, res) => {
         // Validate token
-        const user = await validateToken(req.cookies.token);
+        const user = await validateToken(req, res);
         if(user === null) {
             res.status(401).send("Can't validate user.");
             return;

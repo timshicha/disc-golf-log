@@ -32,7 +32,8 @@ class SettingsPage extends React.Component {
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
             logoutLoading: false,
-            uploadChangesToCloudLoading: false
+            uploadChangesToCloudLoading: false,
+            uploadChangesToCloudError: null
         };
     }
 
@@ -79,13 +80,32 @@ class SettingsPage extends React.Component {
         this.setState({ uploadChangesToCloudLoading: true });
         const email = localStorage.getItem("email");
         const result = await uploadQueueToCloud(email, false);
-        console.log(result)
         if(result.success) {
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);
             this.setState({
-                lastPushedToCloudString: createLastPushedToCloudString(date)
+                lastPushedToCloudString: createLastPushedToCloudString(date),
+                uploadChangesToCloudError: null
             });
+        }
+        else {
+            let error;
+            if(result.status === 401) {
+                error = "Failed to upload data: You are not logged in.";
+            }
+            else if(result.status === 500) {
+                error = "Failed to upload data: A problem occured in the server.";
+            }
+            else if(result.status === 404) {
+                error = "Failed to upload data: Bad request (not your fault).";
+            }
+            else if(!result.status) {
+                error = "Failed to upload data: Could not connect to server.";
+            }
+            else {
+                error = "Failed to upload data.";
+            }
+            this.setState({ uploadChangesToCloudError: error });
         }
         this.setState({ uploadChangesToCloudLoading: false });
     }
@@ -117,7 +137,9 @@ class SettingsPage extends React.Component {
                                         {this.state.lastPushedToCloudString}
                                     </div>
                                     <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.uploadChangesToCloudLoading} onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
-                                    {/* <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]">Download changes from cloud</ModalButton> */}
+                                    {this.state.uploadChangesToCloudError && 
+                                        <div className="text-desc text-red-caution mt-[3px]">{this.state.uploadChangesToCloudError}</div>
+                                    }
                                 </div>
                             </SettingsBlock>
                         </>

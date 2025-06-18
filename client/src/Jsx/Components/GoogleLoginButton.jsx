@@ -31,9 +31,17 @@ const GoogleLoginButton = (props) => {
                     result = await result.json();
                 }
             } catch (error) {
+                if(status === 500) {
+                    error = "An error occured in the server. (Not your fault)."
+                }
+                else if(status === 401) {
+                    error = "Invalid Google token provided."
+                }
+                else {
+                    error = "An error occured."
+                }
                 props.onSubmit({
                     success: false,
-                    status: status,
                     error: error
                 });
                 return;
@@ -47,7 +55,7 @@ const GoogleLoginButton = (props) => {
         onError: (error) => {
             props.onSubmit({
                 success: false,
-                error: error
+                error: "An error occured."
             });
             return;
         },
