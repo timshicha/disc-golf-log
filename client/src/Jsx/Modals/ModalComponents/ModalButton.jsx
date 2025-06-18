@@ -4,14 +4,16 @@ import LoadingImg from "../../Components/LoadingImg";
 
 class ModalButton extends React.Component {
     constructor (props) {
-        super ();
+        super (props);
 
+        const { loading, ...otherProps } = props;
+        this.otherProps = otherProps;
         this.props = props;
     }
 
     render = () => {
         return (
-            <button {...this.props} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + (this.props.loading ? "pointer-events-none opacity-60 " : "") + this.props.className}>
+            <button {...this.otherProps} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + (this.props.loading ? "pointer-events-none opacity-60 " : "") + this.props.className}>
                 {this.props.loading &&
                     <div className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
                         <LoadingImg className="w-[20px]"></LoadingImg>

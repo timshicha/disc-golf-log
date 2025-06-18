@@ -4,7 +4,7 @@ import "../../../css/general.css";
 const Backdrop = (props) => {
 
     return (
-        <div className="inset-0 bg-white opacity-[0.6] fixed x-index-[999]" {...props}></div>
+        <div className="inset-0 bg-gray-dark opacity-[0.9] fixed x-index-[999]" {...props}></div>
     );
 }
 
