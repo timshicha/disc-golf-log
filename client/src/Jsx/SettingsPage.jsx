@@ -62,13 +62,15 @@ class SettingsPage extends React.Component {
         this.setState({
             email: email,
             currentModal: null,
-            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud"))
+            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")),
+            uploadChangesToCloudError: null
         });
     }
 
     onLogout = () => {
         this.setState({ logoutLoading: true });
         localStorage.removeItem("email");
+        localStorage.removeItem("last-pushed-to-cloud");
         this.setState({
             email: null,
             logoutLoading: false,
@@ -91,7 +93,14 @@ class SettingsPage extends React.Component {
         else {
             let error;
             if(result.status === 401) {
+                // Log them out so they don't try to request again
                 error = "Failed to upload data: You are not logged in.";
+                localStorage.removeItem("email");
+                localStorage.removeItem("last-pushed-to-cloud");
+                this.setState({ 
+                    email: null,
+                    lastPushedToCloudString: ""
+                });
             }
             else if(result.status === 500) {
                 error = "Failed to upload data: A problem occured in the server.";
