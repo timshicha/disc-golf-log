@@ -3,9 +3,10 @@ import DataHandler from "../../data_handling/data_handler";
 import MenuModal from "./Frames/MenuModal";
 import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
-import signInWithGoogleImg from "../../assets/images/signInWithGoogleIcon.png";
+import googleIcon from "../../assets/images/googleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
+import { Modals } from "../../js_utils/Enums";
 
 // Once a user has been authenticated, we need to give them 3 options:
 // 1) Keep both their current local data and data in the cloud
@@ -19,6 +20,12 @@ const MainLoginModal = (props) => {
     const [userEmail, setUserEmail] = useState("");
     const [userData, setUserData] = useState({});
     const [confirmLoginLoading, setConfirmLoginLoading] = useState(false);
+    const [sendCodeLoading, setSendCodeLoading] = useState(false);
+    const [codeLoginLoading, setCodeLoginLoading] = useState(false);
+    const [currentSubmodal, setCurrentSubmodal] = useState(null);
+    const [modalXImg, setModalXImg] = useState("");
+    const [mainLoginError, setMainLoginError] = useState(null);
+    const [loginWithCodeError, setLoginWithCodeError] = useState(null);
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
@@ -107,49 +114,114 @@ const MainLoginModal = (props) => {
         }
     }
 
+    const sendCode = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        setSendCodeLoading(true);
+        // When code has been sent, show code modal
+        setCurrentSubmodal(Modals.LOGIN_CODE_MODAL);
+        setModalXImg("back-arrow");
+    }
+
+    const onCodeSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        setCodeLoginLoading(true);
+
+    }
+
+    const onBackOrClose = () => {
+        if(currentSubmodal) {
+            setCurrentSubmodal(null);
+            setModalXImg(null);
+        }
+        else {
+            props.onClose();
+        }
+    }
+
+
 
     return (
-        <MenuModal className="pb-[20px]" onClose={props.onClose}>
+        <MenuModal className="pb-[20px]" onClose={onBackOrClose} replaceImg={modalXImg}>
             <ModalTitle>Login</ModalTitle>
-            {/* IF NOT LOGGED IN YET */}
-            {!showOptionModal && <>
-            {errorMessage &&
-                <div className="text-desc text-red-caution mt-[-10px] mb-[10px]">{errorMessage}</div>
-            }
-            <GoogleLoginButton onSubmit={onLoginAttempt}>
-                <ModalButton>
-                    <img src={signInWithGoogleImg} className="h-[50px]"></img>
-                </ModalButton>
-            </GoogleLoginButton>
-            </>}
-            {/* IF JUST LOGGED IN (GIVE THEM OPTIONS ON WHAT TO DO WITH DATA) */}
-            {showOptionModal && <form onSubmit={onLoginConfirm} className="text-left mb-[0px]">
-                <div className="text-desc text-gray-dark text-left text-[13px] mb-[15px]">It appears that you already have previous data in the cloud. What would you like to do with your data?</div>
-                <div>
-                    <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("local")} className=""></input>
-                    <label htmlFor="keep-device-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep device data only</label>
-                </div>
-                <div>
-                    <input type="radio" name="data-option" id="keep-cloud-data-radio" onClick={() => setSelectedDataOption("cloud")} className=""></input>
-                    <label htmlFor="keep-cloud-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep cloud data only</label>
-                </div>
-                <div>
-                    <input type="radio" defaultChecked={true} name="data-option" id="keep-both-data-radio" onClick={() => setSelectedDataOption("both")} className=""></input>                  
-                    <label htmlFor="keep-both-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep both data (try to marge)</label>
-                </div>
-                {/* Option description */}
-                <div className="mt-[15px] text-desc text-gray-dark text-[13px] h-[90px] overflow-y-scroll">
-                    {selectedDataOption === "local" &&
-                    "All your data in the cloud will be deleted and replaced by what is currently on this device."}
-                    {selectedDataOption === "cloud" &&
-                    "All the data on this device will be deleted and replaced by your data in the cloud."}
-                    {selectedDataOption === "both" &&
-                    "We will attempt to merge and keep the data both on this device and the data in the cloud. The merged data will be added to this device and to the cloud."}
-                </div>
-                <div className="text-center">
-                    <ModalButton loading={confirmLoginLoading} className="bg-blue-basic text-white">Confirm</ModalButton>
-                </div>
-            </form>}
+
+
+                {/* IF NOT LOGGED IN YET */}
+                {!showOptionModal &&
+                <>
+                    {/* IF ON MAIN LOGIN MODAL */}
+                    {!currentSubmodal &&
+                    <>
+                        {mainLoginError &&
+                        <div className="text-desc text-red-caution text-[13px]">{mainLoginError}</div>
+                        }
+                        {errorMessage &&
+                            <div className="text-desc text-red-caution mt-[-10px] mb-[10px]">{errorMessage}</div>
+                        }
+                        <form className="w-[90%] text-left mx-auto" onSubmit={sendCode}>
+                            <label htmlFor="login-email-input" className="text-left text-[13px] text-gray-dark">Email:</label>
+                            <input id="login-email-input" type="email" className="mb-[10px] w-[100%]" placeholder="example@email.com">
+                            </input>
+                            <div className="text-center">
+                                <ModalButton loading={sendCodeLoading} type="submit" className="bg-blue-basic text-white block">Send Code</ModalButton>
+                            </div>
+                        </form>
+                            
+                        <hr className="text-gray-mild mt-[10px]"></hr>
+                        <div className="text-desc text-gray-dark text-[12px] mb-[15px]">Or log in another way</div>
+                        <GoogleLoginButton onSubmit={onLoginAttempt} className="inline-block w-[40px]">
+                            <img className="w-[40px]" src={googleIcon}></img>
+                        </GoogleLoginButton>
+                    </>}
+                    
+                    {/* IF ON CODE INPUT MODAL */}
+                    {currentSubmodal === Modals.LOGIN_CODE_MODAL &&
+                    <>
+                        <form className="text-left w-[150px] max-w-[90%] mx-auto" onSubmit={onCodeSubmit}>
+                            <label htmlFor="login-code-input" className="text-desc text-[13px] text-gray-dark block">Code:</label>
+                            <input id="login-code-input" inputMode="numeric" className="block w-[100%] text-center" placeholder="000000" maxLength={6}></input>
+                            <div className="text-center">
+                                <ModalButton loading={codeLoginLoading} className="bg-blue-basic text-white mt-[10px]">Login</ModalButton>
+                            </div>
+                        </form>
+                        {loginWithCodeError &&
+                            <div className="text-desc mt-[10px] text-red-caution text-[13px]">{loginWithCodeError}</div>
+                        }
+                    </>}
+                </>}
+
+
+                {/* IF JUST LOGGED IN (GIVE THEM OPTIONS ON WHAT TO DO WITH DATA) */}
+                {showOptionModal && <form onSubmit={onLoginConfirm} className="text-left mb-[0px]">
+                    <div className="text-desc text-gray-dark text-left text-[13px] mb-[15px]">It appears that you already have previous data in the cloud. What would you like to do with your data?</div>
+                    <div>
+                        <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("local")} className=""></input>
+                        <label htmlFor="keep-device-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep device data only</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="data-option" id="keep-cloud-data-radio" onClick={() => setSelectedDataOption("cloud")} className=""></input>
+                        <label htmlFor="keep-cloud-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep cloud data only</label>
+                    </div>
+                    <div>
+                        <input type="radio" defaultChecked={true} name="data-option" id="keep-both-data-radio" onClick={() => setSelectedDataOption("both")} className=""></input>                  
+                        <label htmlFor="keep-both-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep both data (try to marge)</label>
+                    </div>
+                    {/* Option description */}
+                    <div className="mt-[15px] text-desc text-gray-dark text-[13px] h-[90px] overflow-y-scroll">
+                        {selectedDataOption === "local" &&
+                        "All your data in the cloud will be deleted and replaced by what is currently on this device."}
+                        {selectedDataOption === "cloud" &&
+                        "All the data on this device will be deleted and replaced by your data in the cloud."}
+                        {selectedDataOption === "both" &&
+                        "We will attempt to merge and keep the data both on this device and the data in the cloud. The merged data will be added to this device and to the cloud."}
+                    </div>
+                    <div className="text-center">
+                        <ModalButton loading={confirmLoginLoading} className="bg-blue-basic text-white">Confirm</ModalButton>
+                    </div>
+                </form>}
         </MenuModal>
     );
 }

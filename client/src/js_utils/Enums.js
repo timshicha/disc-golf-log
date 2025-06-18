@@ -10,7 +10,8 @@ export const Modals = {
     DATE_INPUT: "date input",
     COMMENTS: "comments",
     MAIN_LOGIN: "main login",
-    CONFIRM_LOGOUT: "confirm logout"
+    CONFIRM_LOGOUT: "confirm logout",
+    LOGIN_CODE_MODAL: "login code modal"
 }
 
 export const Pages = {
