@@ -89,7 +89,7 @@ const httpConfirmEmailCode = async (email, code) => {
     // If code was sent
     return {
         success: true,
-        data: result
+        data: await result.json()
     };
 }
 

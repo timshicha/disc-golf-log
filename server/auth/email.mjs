@@ -3,6 +3,7 @@
 
 import { addEmailLoginCode, confirmEmailLoginCode } from "../db/auth.mjs";
 import { sendEmail } from "../utils/emailSender.mjs";
+import { handleSuccessfulLogin } from "./success.mjs";
 
 /**
  * @param {import("express").Express} app 
@@ -30,20 +31,30 @@ const registerEmailAuthEndpoint = (app) => {
             const expiresAt = Date.now() + 600_000;
             if(await addEmailLoginCode(email, new Date(expiresAt), code)) {
                 const result = await sendEmail(email, "Your Login Code", code);
-                console.log(result);
+                console.log("Email sent successfully: " + result.success);
+                res.status(200).json({
+                    success: true
+                });
             }
-            res.status(200);
+            else {
+                res.status(500).json({
+                    success: false,
+                    error: "Could not send email."
+                });
+            }
         }
         // If code
         else if(desired === "login"){
             const result = await confirmEmailLoginCode(email, code);
             if(result.success === true) {
-                console.log("Code confirmed? Logged in!");
-                res.status(200);
+                handleSuccessfulLogin(req, res, email);
             }
             else {
                 // See if the code is correct
-                res.status(401);
+                res.status(401).json({
+                    success: false,
+                    error: "Could not send email."
+                });
             }
         }
         // If neither

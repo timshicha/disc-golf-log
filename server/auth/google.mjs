@@ -1,6 +1,7 @@
 import { configDotenv } from "dotenv";
 import { addUser, findUserByEmail } from "../db/users.mjs";
 import { generateToken } from "./tokens.mjs";
+import { handleSuccessfulLogin } from "./success.mjs";
 const ENV = process.env.ENV;
 
 configDotenv();
@@ -62,43 +63,19 @@ const registerGoogleAuthEndpoint = (app) => {
         }
         const google_access_token = await exchangeGoogleCodeForToken(code);
         if(!google_access_token) {
-            res.status(400).json({
-                error: "Invalid Google token"
+            res.status(401).json({
+                error: "Invalid Google token provided."
             });
         }
         // Must use google_access_token.access_token because it's a
         // json of items.
         const google_profile = await fetchUserGoogleInfo(google_access_token.access_token);
-    
-        let isNewUser = false;
-        // Find user by email
-        let user = await findUserByEmail(google_profile.email);
-        // If user doesn't exist, add them
-        if(!user) {
-            isNewUser = true;
-            await addUser(google_profile.email, {});
-            user = {
-                email: google_profile.email,
-                data: {}
-            };
+        if(google_profile.email) {
+            await handleSuccessfulLogin(req, res, google_profile.email);
         }
-    
-        const token = await generateToken(google_profile.email);
-        // If a token was generated, set as a cookie
-        if(token) {
-            res.cookie("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "None",
-            });
-            console.log("Token set: " + token);
+        else {
+            res.status(500).json({ error: "Unable to retrieve user's email from their Google profile"});
         }
-        
-        res.status(200).json({
-            email: user.email,
-            data: user.data,
-            isNewUser: isNewUser
-        });
     });
 }
 

@@ -31,35 +31,26 @@ const MainLoginModal = (props) => {
     const [selectedDataOption, setSelectedDataOption] = useState("both");
     const [email, setEmail] = useState(null);
 
-    const onLoginAttempt = async (result) => {
-        // On successful login:
-        // {success: true,
-        //  data: {email: "...", data: "{...}", isNewUser: true/false}
-        // }
-        if(result.success) {
-            setUserEmail(result.data.email);
-            setUserData(result.data.data);
-            // If a new user, default to keeping device data
-            if(result.data.isNewUser === true) {
-                setSelectedDataOption("local");
-                await onLoginHandleData("local", result.data.email, result.data.data);
-            }
-            else {
-                const localData = await DataHandler.getAllData();
-                // If there are no local courses (and no rounds)
-                if(localData.courses.length === 0) {
-                    setSelectedDataOption("cloud");
-                    await onLoginHandleData("cloud", result.data.email, result.data.data);
-                }
-            }
-            // Otherwise, it's not a new user and they have data, so
-            // let them decide what to do with their data
-            setShowOptionModal(true);
+    const onLoginSuccess = async (result) => {
+        // result: { email: "", data: {}, isNewUser: true/false}
+        setUserEmail(result.email);
+        setUserData(result.data);
+        // If a new user, default to keeping device data
+        if(result.isNewUser === true) {
+            setSelectedDataOption("local");
+            await onLoginHandleData("local", result.email, result.data);
         }
         else {
-            alert("Could not log in");
-            console.log(result);
+            const localData = await DataHandler.getAllData();
+            // If there are no local courses (and no rounds)
+            if(localData.courses.length === 0) {
+                setSelectedDataOption("cloud");
+                await onLoginHandleData("cloud", result.email, result.data);
+            }
         }
+        // Otherwise, it's not a new user and they have data, so
+        // let them decide what to do with their data
+        setShowOptionModal(true);
     }
 
     const onLoginComplete = (email) => {
@@ -90,6 +81,9 @@ const MainLoginModal = (props) => {
         }
         // If keeping cloud data...
         else if(dataOption === "cloud") {
+            // Delete all local data
+            await DataHandler.clearAllCoursesAndRounds();
+            await DataHandler.clearUpdateQueue();
             // Retrieve all data from cloud
             result = await retrieveAllDataFromCloud(email);
         }
@@ -149,12 +143,23 @@ const MainLoginModal = (props) => {
         // Confirm that the code is correct
         const result = await httpConfirmEmailCode(email, event?.target?.code?.value);
         if(result.success) {
-            console.log("Login is successful!");
+            onLoginSuccess(result.data);
         }
         else {
             setLoginWithCodeError(result.error);
+            console.log(result);
         }
         setCodeLoginLoading(false);
+    }
+
+    const onGoogleLoginAttempt = (result) => {
+        if(result.success) {
+            onLoginSuccess(result.data);
+            setMainLoginError(null);
+        }
+        else {
+            setMainLoginError(result.error);
+        }
     }
 
     const onBack = () => {
@@ -207,7 +212,7 @@ const MainLoginModal = (props) => {
                             
                         <hr className="text-gray-mild mt-[10px]"></hr>
                         <div className="text-desc text-gray-dark text-[12px] mb-[15px]">Or log in another way</div>
-                        <GoogleLoginButton onSubmit={onLoginAttempt} className="inline-block w-[40px]">
+                        <GoogleLoginButton onSubmit={onGoogleLoginAttempt} className="inline-block w-[40px]">
                             <img className="w-[40px]" src={googleIcon}></img>
                         </GoogleLoginButton>
                     </>}
