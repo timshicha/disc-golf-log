@@ -7,7 +7,7 @@ import googleIcon from "../../assets/images/googleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
 import { Modals } from "../../js_utils/Enums";
-import { httpSendCodeToEmail } from "../../serverCalls/auth.mjs";
+import { httpRequestEmailCode, httpConfirmEmailCode } from "../../serverCalls/auth.mjs";
 
 // Once a user has been authenticated, we need to give them 3 options:
 // 1) Keep both their current local data and data in the cloud
@@ -16,7 +16,6 @@ import { httpSendCodeToEmail } from "../../serverCalls/auth.mjs";
 
 const MainLoginModal = (props) => {
 
-    const [errorMessage, setErrorMessage] = useState(null);
     const [showOptionModal, setShowOptionModal] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [userData, setUserData] = useState({});
@@ -30,6 +29,7 @@ const MainLoginModal = (props) => {
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
+    const [email, setEmail] = useState(null);
 
     const onLoginAttempt = async (result) => {
         // On successful login:
@@ -65,7 +65,7 @@ const MainLoginModal = (props) => {
     const onLoginComplete = (email) => {
         localStorage.setItem("email", email);
         localStorage.setItem("last-pushed-to-cloud", Date ());
-        setErrorMessage(null);
+        setMainLoginError(null);
         setShowOptionModal(false);
         setUserEmail("");
         setUserData("");
@@ -122,7 +122,9 @@ const MainLoginModal = (props) => {
 
         setSendCodeLoading(true);
         const email = event?.target?.email?.value;
-        const result = await httpSendCodeToEmail(email);
+        setEmail(email);
+        // const result = { success: true};
+        const result = await httpRequestEmailCode(email);
         // When code has been sent, show code modal
         if(result.success === true) {
             setModalXImg("back-arrow");
@@ -134,18 +136,35 @@ const MainLoginModal = (props) => {
         setSendCodeLoading(false);
     }
 
-    const onCodeSubmit = (event) => {
+    const onCodeSubmit = async (event) => {
         event.preventDefault();
         event.stopPropagation();
 
         setCodeLoginLoading(true);
-
+        const code = event?.target?.code?.value;
+        if(!code) {
+            setLoginWithCodeError("Please enter a code!");
+            setCodeLoginLoading(false);
+        }
+        // Confirm that the code is correct
+        const result = await httpConfirmEmailCode(email, event?.target?.code?.value);
+        if(result.success) {
+            console.log("Login is successful!");
+        }
+        else {
+            setLoginWithCodeError(result.error);
+        }
+        setCodeLoginLoading(false);
     }
 
     const onBack = () => {
         if(currentSubmodal) {
             setModalXImg(null);
             setCurrentSubmodal(null);
+            setSendCodeLoading(null);
+            setCodeLoginLoading(null);
+            setMainLoginError(null);
+            setLoginWithCodeError(null);
         }
         else {
             onClose();
@@ -155,6 +174,10 @@ const MainLoginModal = (props) => {
     const onClose = () => {
         props.onClose();
         setCurrentSubmodal(null);
+        setSendCodeLoading(null);
+        setCodeLoginLoading(null);
+        setMainLoginError(null);
+        setLoginWithCodeError(null);
     }
 
 
@@ -172,9 +195,6 @@ const MainLoginModal = (props) => {
                     <>
                         {mainLoginError &&
                         <div className="text-desc text-red-caution text-[13px]">{mainLoginError}</div>
-                        }
-                        {errorMessage &&
-                            <div className="text-desc text-red-caution mt-[-10px] mb-[10px]">{errorMessage}</div>
                         }
                         <form className="w-[90%] text-left mx-auto" onSubmit={sendCode}>
                             <label htmlFor="login-email-input" className="text-left text-[13px] text-gray-dark">Email:</label>
@@ -197,14 +217,14 @@ const MainLoginModal = (props) => {
                     <>
                         <form className="text-left w-[150px] max-w-[90%] mx-auto" onSubmit={onCodeSubmit}>
                             <label htmlFor="login-code-input" className="text-desc text-[13px] text-gray-dark block">Code:</label>
-                            <input id="login-code-input" inputMode="numeric" className="block w-[100%] text-center" placeholder="000000" maxLength={6}></input>
+                            <input id="login-code-input" name="code" inputMode="numeric" className="block w-[100%] text-center" placeholder="000000" maxLength={6}></input>
                             <div className="text-center">
+                            {loginWithCodeError &&
+                                <div className="text-desc mt-[10px] text-red-caution text-[13px]">{loginWithCodeError}</div>
+                            }
                                 <ModalButton loading={codeLoginLoading} className="bg-blue-basic text-white mt-[10px]">Login</ModalButton>
                             </div>
                         </form>
-                        {loginWithCodeError &&
-                            <div className="text-desc mt-[10px] text-red-caution text-[13px]">{loginWithCodeError}</div>
-                        }
                     </>}
                 </>}
 

@@ -32,22 +32,26 @@ const registerEmailAuthEndpoint = (app) => {
                 const result = await sendEmail(email, "Your Login Code", code);
                 console.log(result);
             }
-            res.status(200).json({res: "received your email"});
+            res.status(200);
         }
         // If code
         else if(desired === "login"){
-            if(confirmEmailLoginCode(email, code)) {
-                console.log("code confirmed!");
-                res.status(200).json({res: "login successful"});
+            const result = await confirmEmailLoginCode(email, code);
+            if(result.success === true) {
+                console.log("Code confirmed? Logged in!");
+                res.status(200);
             }
             else {
                 // See if the code is correct
-                res.status(200).json({res: "cant log in"});
+                res.status(401);
             }
         }
         // If neither
         else {
-            res.status(200).json({res: "neither was sent"});
+            res.status(400).json({
+                success: false,
+                error: "Specify if you want the code or to login."
+            });
         }
     });
 }
