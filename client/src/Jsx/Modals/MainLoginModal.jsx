@@ -125,7 +125,7 @@ const MainLoginModal = (props) => {
             setCurrentSubmodal(Modals.LOGIN_CODE_MODAL);
         }
         else {
-            setMainLoginError("Error sending email.");
+            setMainLoginError(result.error);
         }
         setSendCodeLoading(false);
     }
@@ -198,19 +198,20 @@ const MainLoginModal = (props) => {
                     {/* IF ON MAIN LOGIN MODAL */}
                     {!currentSubmodal &&
                     <>
-                        {mainLoginError &&
-                        <div className="text-desc text-red-caution text-[13px]">{mainLoginError}</div>
-                        }
                         <form className="w-[90%] text-left mx-auto" onSubmit={sendCode}>
+                            <div className="text-desc text-[12px] text-gray-mild">We will send a code to your email and ask for you to verify it at the next step. The code will expire after 10 minutes.</div>
                             <label htmlFor="login-email-input" className="text-left text-[13px] text-gray-dark">Email:</label>
                             <input id="login-email-input" name="email" type="email" className="mb-[10px] w-[100%]" placeholder="example@email.com">
                             </input>
+                            {mainLoginError &&
+                            <div className="text-desc text-red-caution text-[13px] text-center mb-[10px]">{mainLoginError}</div>
+                            }
                             <div className="text-center">
                                 <ModalButton loading={sendCodeLoading} type="submit" className="bg-blue-basic text-white block">Send Code</ModalButton>
                             </div>
                         </form>
                             
-                        <hr className="text-gray-mild mt-[10px]"></hr>
+                        <hr className="text-gray-mild mt-[15px] mb-[10px]"></hr>
                         <div className="text-desc text-gray-dark text-[12px] mb-[15px]">Or log in another way</div>
                         <GoogleLoginButton onSubmit={onGoogleLoginAttempt} className="inline-block w-[40px]">
                             <img className="w-[40px]" src={googleIcon}></img>
@@ -220,9 +221,16 @@ const MainLoginModal = (props) => {
                     {/* IF ON CODE INPUT MODAL */}
                     {currentSubmodal === Modals.LOGIN_CODE_MODAL &&
                     <>
-                        <form className="text-left w-[150px] max-w-[90%] mx-auto" onSubmit={onCodeSubmit}>
-                            <label htmlFor="login-code-input" className="text-desc text-[13px] text-gray-dark block">Code:</label>
-                            <input id="login-code-input" name="code" inputMode="numeric" className="block w-[100%] text-center" placeholder="000000" maxLength={6}></input>
+                        <form className="text-left max-[90%] mx-auto" onSubmit={onCodeSubmit}>
+                            <div className="text-desc text-gray-mild text-[13px] mb-[10px] w-[90%] mx-auto">
+                                A code was sent to
+                                <div className="italic text-gray-dark ml-[10px]">{email}.</div>
+                            </div>
+                            <hr className="w-[90%] mx-auto text-gray-mild mb-[10px]"></hr>
+                            <div className="w-[200px] mx-auto max-w-[90%]">
+                                <label htmlFor="login-code-input" className="text-desc text-[13px] text-gray-dark block">Enter code:</label>
+                                <input id="login-code-input" name="code" inputMode="numeric" className="block w-[100%] text-center" placeholder="000000" maxLength={6} autoComplete="off"></input>
+                            </div>
                             <div className="text-center">
                             {loginWithCodeError &&
                                 <div className="text-desc mt-[10px] text-red-caution text-[13px]">{loginWithCodeError}</div>
