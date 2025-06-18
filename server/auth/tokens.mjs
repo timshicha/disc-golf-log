@@ -16,7 +16,13 @@ const generateToken = async (email) => {
     }
 }
 
-const validateToken = async (token) => {
+/**
+ * 
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+const validateToken = async (req, res) => {
+    const token = req.cookies.token;
     if(!token) {
         console.log("No token provided.");
         return null;
@@ -29,6 +35,13 @@ const validateToken = async (token) => {
             console.log("Can't find user in database.");
             throw("Can't map token to a user.");
         }
+        // Renew cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            maxAge: 2_592_000_000
+        });
         return user;
     }
     catch (error) {

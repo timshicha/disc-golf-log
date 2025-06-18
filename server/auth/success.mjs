@@ -28,6 +28,7 @@ const handleSuccessfulLogin = async (req, res, email) => {
             httpOnly: true,
             secure: true,
             sameSite: "None",
+            maxAge: 2_592_000_000
         });
         console.log(`Token set for ${email}: ${token}`);
         res.status(200).json({
