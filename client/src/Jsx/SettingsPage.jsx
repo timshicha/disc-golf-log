@@ -128,7 +128,7 @@ class SettingsPage extends React.Component {
                     {!this.state.email &&
                         <SettingsBlock>
                             <ModalButton className="bg-gray-dark text-white float-right" onClick={() => this.setState({ currentModal: Modals.MAIN_LOGIN })}>Log in</ModalButton>
-                            <div className="text-desc text-gray">You are not logged in. Log in to save your data to the cloud.</div>
+                            <div className="text-desc text-gray">Log in to save your data to the cloud.</div>
                         </SettingsBlock>
                     }
 

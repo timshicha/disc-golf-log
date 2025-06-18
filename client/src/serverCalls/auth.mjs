@@ -2,7 +2,7 @@ const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const httpRequestEmailCode = async (email) => {
     if(!email) {
-        return { success: false, error: "Enter an email." };
+        return { success: false, status: 404, error: "Enter an email." };
     }
     let result;
     let status;
@@ -24,6 +24,20 @@ const httpRequestEmailCode = async (email) => {
         }
     } catch (error) {
         console.log(`Could not send code to email: ${error}`);
+        if(!result) {
+            error = "Could not connect to server.";
+        }
+        else {
+            if(result.status === 500) {
+                error = "An error in the server occured.";
+            }
+            else if(result.status === 404) {
+                error = "Bad request to server (not your fault).";
+            }
+            else {
+                error = "An unknown error occured.";
+            }
+        }
         return {
             success: false,
             error: error,
