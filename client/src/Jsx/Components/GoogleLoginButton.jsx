@@ -56,7 +56,7 @@ const GoogleLoginButton = (props) => {
     });
 
     return (
-        <div onClick={login}>{props.children}</div>
+        <button onClick={login} className={props.className}>{props.children}</button>
     );
 }
 

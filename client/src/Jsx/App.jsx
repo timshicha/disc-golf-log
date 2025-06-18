@@ -107,9 +107,6 @@ function App() {
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
-                        <div className="absolute ml-[100%] translate-x-[calc(-100%-7px)] absolute">
-                            {/* <ModalButton className="bg-black text-white">Save</ModalButton> */}
-                        </div>
                         <NavBarTitle>Settings</NavBarTitle>
                         <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
                     </NavBar>
