@@ -29,11 +29,16 @@ if(email) {
     const lastUpdated = localStorage.getItem("last-pushed-to-cloud") || 0;
     // If the last time changes were updated to cloud was over an hour
     // ago, push changes to cloud (if there are changes)
-    const updateInterval = 1000 * 60 * 60;
+    const updateInterval = 1; //1000 * 60 * 60;
     if(new Date() - new Date(lastUpdated) >= updateInterval) {
-        uploadQueueToCloud().then(result => {
+        uploadQueueToCloud(email).then(result => {
             if(result.success === true) {
                 localStorage.setItem("last-pushed-to-cloud", Date ());
+            }
+            // If the user failed to log in because of credentials,
+            // log them out
+            else if(result.status === 401) {
+                localStorage.removeItem("email");
             }
         });
     }
