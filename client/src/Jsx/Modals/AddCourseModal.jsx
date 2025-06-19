@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import ModalButton from "./ModalComponents/ModalButton";
-import DataHandler from "../../data_handling/data_handler";
+import DataHandler from "../../DataHandling/DataHandler";
 import { v4 as uuidv4 } from "uuid";
 import FormModal from "./Frames/FormModal";
 import ModalTitle from "./ModalComponents/ModalTitle";

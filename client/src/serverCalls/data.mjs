@@ -1,4 +1,4 @@
-import DataHandler from "../data_handling/data_handler";
+import DataHandler from "../DataHandling/DataHandler";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 

@@ -1,13 +1,13 @@
 import React, { createRef } from "react";
-import Round from "./Components/Round";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
-import DataHandler from "../data_handling/data_handler";
+import Round from "../Jsx/Components/Round";
+import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
+import DataHandler from "../DataHandling/DataHandler";
 import { v4 as uuidv4 } from "uuid";
-import { compareStrings } from "../js_utils/sorting";
-import { toLocalIsoString } from "../js_utils/dates";
-import StickyDiv from "./Components/StickyDiv";
-import { Modals } from "../js_utils/Enums";
-import RoundOptionsModal from "./Modals/RoundOptionsModal";
+import { compareStrings } from "../Utilities/sorting";
+import { toLocalIsoString } from "../Utilities/dates";
+import StickyDiv from "../Jsx/Components/StickyDiv";
+import { Modals } from "../Utilities/Enums";
+import RoundOptionsModal from "../Jsx/Modals/RoundOptionsModal";
 
 class CoursePage extends React.Component{
     constructor (props) {
