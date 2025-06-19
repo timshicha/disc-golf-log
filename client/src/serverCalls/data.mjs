@@ -37,8 +37,8 @@ const uploadQueueToCloud = async (email, deleteExistingCloudData=false) => {
             status: status
         };
     }
-    // If queue was uploaded to cloud
-    console.log(result);
+    // If queue was uploaded to cloud, clear it
+    await DataHandler.clearUpdateQueue();
     return {
         success: true,
         data: result

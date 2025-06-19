@@ -27,7 +27,7 @@ class SettingsPage extends React.Component {
         this.state = {
             confirmDelete: localStorage.getItem("confirm-delete") === "true",
             autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") === "true",
-            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")),
+            lastPushedToCloudString: ". . .",
             email: localStorage.getItem("email") || null,
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
@@ -36,8 +36,14 @@ class SettingsPage extends React.Component {
             uploadChangesToCloudLoading: false,
             uploadChangesToCloudError: null
         };
+        this.updateLastPushedToCloudString();
     }
 
+    updateLastPushedToCloudString = () => {
+        createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")).then(result => {
+            this.setState({ lastPushedToCloudString: result });
+        });
+    }
 
     navigateTo = (newPage) => {
         if(this.props.navigateTo) {
@@ -68,9 +74,9 @@ class SettingsPage extends React.Component {
         this.setState({
             email: email,
             currentModal: null,
-            lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")),
             uploadChangesToCloudError: null
         });
+        this.updateLastPushedToCloudString();
     }
 
     onLogout = () => {
@@ -92,9 +98,9 @@ class SettingsPage extends React.Component {
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);
             this.setState({
-                lastPushedToCloudString: createLastPushedToCloudString(date),
                 uploadChangesToCloudError: null
             });
+            this.updateLastPushedToCloudString();
         }
         else {
             let error;
@@ -177,14 +183,8 @@ class SettingsPage extends React.Component {
 
                     <div className="w-[100%] h-[2px] bg-gray-light"></div>
                     <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
-                    <SettingsBlock>
-                        <ModalButton className="bg-gray-dark text-white float-right" onClick={this.downloadData}>Download data</ModalButton>
-                        <div className="text-desc text-gray">
-                            Download all your courses and rounds into a JSON file.
-                        </div>
-                    </SettingsBlock>
                     <SettingsBlock className="min-h-[60px] bg-special">
-                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleConfirmDeleteToggle}
+                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleConfirmDeleteToggle}
                             id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
                         </input>
                         <div className="text-desc">
@@ -192,11 +192,17 @@ class SettingsPage extends React.Component {
                         </div>
                     </SettingsBlock>
                     <SettingsBlock className="min-h-[60px] bg-special">
-                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleAutoOpenCourseOnCreation}
+                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleAutoOpenCourseOnCreation}
                             id="confirm-delete-checkbox" checked={this.state.autoOpenCourseOnCreation}>    
                         </input>
                         <div className="text-desc">
                             Automatically open course after it is created.
+                        </div>
+                    </SettingsBlock>
+                    <SettingsBlock>
+                        <ModalButton className="bg-gray-dark text-white float-right m-[3px]" onClick={this.downloadData}>Download data</ModalButton>
+                        <div className="text-desc text-gray">
+                            Download all your courses and rounds into a JSON file.
                         </div>
                     </SettingsBlock>
                 </div>
