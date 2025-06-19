@@ -193,7 +193,7 @@ class SettingsPage extends React.Component {
                     </SettingsBlock>
                     <SettingsBlock className="min-h-[60px] bg-special">
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleAutoOpenCourseOnCreation}
-                            id="confirm-delete-checkbox" checked={this.state.autoOpenCourseOnCreation}>    
+                            id="auto-open-course-on-creation-checkbox" checked={this.state.autoOpenCourseOnCreation}>    
                         </input>
                         <div className="text-desc">
                             Automatically open course after it is created.
