@@ -1,21 +1,18 @@
 #!/bin/bash
 
 # To create a SFTP user in Ionos, go to Hosting -> SFTP
-IONOS_USER="a0000000"
-IONOS_PASS="password"
-IONOS_HOST="access-0000000000.webspace-host.com"
 
 # Repalce the local .env with production .env
-mv .env env-files-local/.env
-mv env-files-production/.env .env
+cp env-files-production/.env .env
+
+source .env
 # Build
 vite build
 # Place the .env back
-mv .env env-files-production/.env
-mv env-files-local/.env .env
+cp env-files-local/.env .env
 
 # Upload to Ionos through lftp
-lftp -u $IONOS_USER,$IONOS_PASS sftp://$IONOS_HOST <<EOF
+lftp -u $IONOS_USER_PRODUCTION,$IONOS_PASS_PRODUCTION sftp://$IONOS_HOST_PRODUCTION <<EOF
 set sftp:auto-confirm yes
 set net:timeout 10
 debug 3
