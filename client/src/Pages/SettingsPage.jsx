@@ -26,6 +26,7 @@ class SettingsPage extends React.Component {
         // Pull user settings from local storage
         this.state = {
             confirmDelete: localStorage.getItem("confirm-delete") === "true",
+            autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") === "true",
             lastPushedToCloudString: createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")),
             email: localStorage.getItem("email") || null,
             currentModal: null,
@@ -56,6 +57,11 @@ class SettingsPage extends React.Component {
     handleConfirmDeleteToggle = (event) => {
         this.setState({ confirmDelete: event.target.checked });
         localStorage.setItem("confirm-delete", event.target.checked);
+    }
+
+    handleAutoOpenCourseOnCreation = (event) => {
+        this.setState({ autoOpenCourseOnCreation: event.target.checked });
+        localStorage.setItem("auto-open-course-on-creation", event.target.checked);
     }
 
     onLogin = (email) => {
@@ -183,6 +189,14 @@ class SettingsPage extends React.Component {
                         </input>
                         <div className="text-desc">
                             Ask for confirmation before deleting courses or rounds.
+                        </div>
+                    </SettingsBlock>
+                    <SettingsBlock className="min-h-[60px] bg-special">
+                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark" onChange={this.handleAutoOpenCourseOnCreation}
+                            id="confirm-delete-checkbox" checked={this.state.autoOpenCourseOnCreation}>    
+                        </input>
+                        <div className="text-desc">
+                            Automatically open course after it is created.
                         </div>
                     </SettingsBlock>
                 </div>

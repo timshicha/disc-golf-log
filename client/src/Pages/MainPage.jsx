@@ -74,8 +74,15 @@ function MainPage (props) {
 
     const addCourseCallback = (course) => {
         setCurrentCourse(course);
-        props.navigateTo(Pages.COURSE);
         props.setCurrentCourse(course);
+        // See if user's setting is to auto-open course on creation
+        if(localStorage.getItem("auto-open-course-on-creation") === "true") {
+            props.navigateTo(Pages.COURSE);
+        }
+        // Otherwise reload courses so new one appears
+        else {
+            reloadCourses();
+        }
     }
 
     return (
