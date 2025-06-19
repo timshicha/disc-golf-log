@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import MenuModal from "./Frames/MenuModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import ModalButton from "./ModalComponents/ModalButton";
-import DataHandler from "../../data_handling/data_handler";
-import { Modals } from "../../js_utils/Enums";
+import DataHandler from "../../DataHandling/DataHandler";
+import { Modals } from "../../Utilities/Enums";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const CourseOptionsModal = (props) => {

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import DataHandler from "../../data_handling/data_handler";
+import DataHandler from "../../DataHandling/DataHandler";
 import MenuModal from "./Frames/MenuModal";
 import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import googleIcon from "../../assets/images/googleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
 import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
-import { Modals } from "../../js_utils/Enums";
+import { Modals } from "../../Utilities/Enums";
 import { httpRequestEmailCode, httpConfirmEmailCode } from "../../serverCalls/auth.mjs";
 
 // Once a user has been authenticated, we need to give them 3 options:

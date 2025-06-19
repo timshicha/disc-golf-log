@@ -1,8 +1,8 @@
 import React from "react";
 import TripleDotButton from "../Components/TripleDotButton";
-import { isoToVisualFormat } from "../../js_utils/dates";
-import ObjectTools from "../../js_utils/ObjectTools";
-import DataHandler from "../../data_handling/data_handler";
+import { isoToVisualFormat } from "../../Utilities/dates";
+import ObjectTools from "../../Utilities/ObjectTools";
+import DataHandler from "../../DataHandling/DataHandler";
 
 class RoundBox extends React.Component {
     constructor (props) {

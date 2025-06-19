@@ -2,8 +2,8 @@ import React, { useRef } from "react";
 import FormModal from "./Frames/FormModal";
 import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
-import ObjectTools from "../../js_utils/ObjectTools";
-import DataHandler from "../../data_handling/data_handler";
+import ObjectTools from "../../Utilities/ObjectTools";
+import DataHandler from "../../DataHandling/DataHandler";
 
 class HoleModalInput extends React.Component {
     constructor (props) {

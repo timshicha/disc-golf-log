@@ -1,13 +1,13 @@
 import React from "react";
-import DataHandler from "../data_handling/data_handler";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
-import { download } from "../js_utils/downloads";
-import { Modals } from "../js_utils/Enums";
-import MainLoginModal from "./Modals/MainLoginModal";
+import DataHandler from "../DataHandling/DataHandler.js";
+import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton.jsx";
+import { download } from "../Utilities/downloads.js";
+import { Modals } from "../Utilities/Enums.js";
+import MainLoginModal from "../Jsx/Modals/MainLoginModal.jsx";
 import { uploadQueueToCloud } from "../serverCalls/data.mjs";
-import { createLastPushedToCloudString } from "../js_utils/dates.js";
-import MenuModal from "./Modals/Frames/MenuModal.jsx";
-import ModalTitle from "./Modals/ModalComponents/ModalTitle.jsx";
+import { createLastPushedToCloudString } from "../Utilities/dates.js";
+import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
+import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
 
 const SettingsBlock = (props) => {
     return (
