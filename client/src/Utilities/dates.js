@@ -1,3 +1,4 @@
+import DataHandler from "../DataHandling/DataHandler";
 
 const weekdays = ["Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday"];
 const weekdaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -131,13 +132,17 @@ const timeAgo = (date) => {
     return `on ${month} ${day}, ${year}`;
 }
 
-const createLastPushedToCloudString = (lastPushedToCloud) => {
+const createLastPushedToCloudString = async (lastPushedToCloud) => {
     if(!lastPushedToCloud) {
-        return "Changes have not yet been uploaded to cloud.";
+        return Promise.resolve("Changes have not yet been uploaded to cloud.");
     }
-    else {
-        return `Changes last pushed to cloud ${timeAgo(lastPushedToCloud)}.`;
-    }
+    // See if there are no changes to push
+    return DataHandler.hasChanges().then(result => {
+        if(!result) {
+            return "All changes have been uploaded.";
+        }
+        return `Changes last uploaded to cloud ${timeAgo(lastPushedToCloud)}.`;
+    });
 }
 
 export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo, createLastPushedToCloudString };
