@@ -26,6 +26,7 @@ const MainLoginModal = (props) => {
     const [modalXImg, setModalXImg] = useState("");
     const [mainLoginError, setMainLoginError] = useState(null);
     const [loginWithCodeError, setLoginWithCodeError] = useState(null);
+    const [postLoginError, setPostLoginError] = useState(null);
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
@@ -57,6 +58,7 @@ const MainLoginModal = (props) => {
         localStorage.setItem("email", email);
         localStorage.setItem("last-pushed-to-cloud", Date ());
         setMainLoginError(null);
+        setPostLoginError(null);
         setShowOptionModal(false);
         setUserEmail("");
         setUserData("");
@@ -73,6 +75,7 @@ const MainLoginModal = (props) => {
     }
 
     const onLoginHandleData = async (dataOption, email, data) => {
+        setPostLoginError(null);
         let result;
         // If keeping device data...
         if(dataOption === "local") {
@@ -266,6 +269,10 @@ const MainLoginModal = (props) => {
                         {selectedDataOption === "both" &&
                         "We will attempt to merge and keep the data both on this device and the data in the cloud. The merged data will be added to this device and to the cloud."}
                     </div>
+                    {postLoginError &&
+                    <div className="text-desc text-red-caution text-[13px] mb-[10px] w-[90%] mx-auto">
+                        {postLoginError}
+                    </div>}
                     <div className="text-center">
                         <ModalButton loading={confirmLoginLoading} className="bg-blue-basic text-white">Confirm</ModalButton>
                     </div>

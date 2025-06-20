@@ -15,7 +15,7 @@ const addUser = async (email, userData) => {
     const userUUID = randomUUID();
     // Stringigy all data
     const safeEmail = String(email);
-    const safeUserData = JSON.stringify(userData);
+    const safeUserData = userData;
     return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data) VALUES (${safeEmail}, ${userUUID}, ${safeUserData})`;
 }
 
