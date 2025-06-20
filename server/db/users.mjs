@@ -1,5 +1,4 @@
 import db, { SCHEMA } from "./db_setup.mjs";
-import { sql } from "slonik";
 import { randomUUID } from "crypto";
 
 // Find a user with a certain email.
@@ -16,7 +15,11 @@ const addUser = async (email, userData) => {
     // Stringigy all data
     const safeEmail = String(email);
     const safeUserData = userData;
-    return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data) VALUES (${safeEmail}, ${userUUID}, ${safeUserData})`;
+
+    const generatedUserNumber = (await db`SELECT nextval('${SCHEMA}.user_number_seq') AS user_number`)[0].user_number;
+    const generatedUsername = `user${generatedUserNumber}`;
+    
+    return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${safeUserData}, ${generatedUsername})`;
 }
 
 export { findUserByEmail, addUser };
