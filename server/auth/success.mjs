@@ -34,6 +34,7 @@ const handleSuccessfulLogin = async (req, res, email) => {
         res.status(200).json({
             email: user.email,
             data: user.data,
+            username: user.username,
             isNewUser: isNewUser
         });
     }

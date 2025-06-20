@@ -14,10 +14,10 @@ const addUser = async (email, userData) => {
     const userUUID = randomUUID();
     // Stringigy all data
     const safeEmail = String(email);
-    const safeUserData = userData;
-
+    
     const generatedUserNumber = (await db`SELECT nextval('${SCHEMA}.user_number_seq') AS user_number`)[0].user_number;
     const generatedUsername = `user${generatedUserNumber}`;
+    userData.username = generatedUsername;
     
     return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${safeUserData}, ${generatedUsername})`;
 }
