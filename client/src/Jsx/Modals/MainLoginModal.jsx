@@ -30,23 +30,26 @@ const MainLoginModal = (props) => {
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
-    const [email, setEmail] = useState(null);
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
 
     const onLoginSuccess = async (result) => {
-        // result: { email: "", data: {}, isNewUser: true/false}
+        console.log(result);
+        // result: { email: "", data: {}, username: "username", isNewUser: true/false}
         setUserEmail(result.email);
         setUserData(result.data);
+        setUsername(result.username);
         // If a new user, default to keeping device data
         if(result.isNewUser === true) {
             setSelectedDataOption("local");
-            await onLoginHandleData("local", result.email, result.data);
+            await onLoginHandleData("local", result.email, result.username, result.data);
         }
         else {
             const localData = await DataHandler.getAllData();
             // If there are no local courses (and no rounds)
             if(localData.courses.length === 0) {
                 setSelectedDataOption("cloud");
-                await onLoginHandleData("cloud", result.email, result.data);
+                await onLoginHandleData("cloud", result.email, result.username, result.data);
             }
         }
         // Otherwise, it's not a new user and they have data, so
@@ -54,15 +57,18 @@ const MainLoginModal = (props) => {
         setShowOptionModal(true);
     }
 
-    const onLoginComplete = (email) => {
+    const onLoginComplete = (email, username) => {
+        console.log(username);
         localStorage.setItem("email", email);
+        localStorage.setItem("username", username);
         localStorage.setItem("last-pushed-to-cloud", Date ());
         setMainLoginError(null);
         setPostLoginError(null);
         setShowOptionModal(false);
         setUserEmail("");
         setUserData("");
-        props.onLogin(email);
+        setUsername("");
+        props.onLogin(email, username);
     }
 
     const onLoginConfirm = async (event) => {
@@ -70,11 +76,11 @@ const MainLoginModal = (props) => {
         event.preventDefault();
         event.stopPropagation();
 
-        await onLoginHandleData(selectedDataOption, userEmail, userData);
+        await onLoginHandleData(selectedDataOption, userEmail, username, userData);
         setConfirmLoginLoading(false);
     }
 
-    const onLoginHandleData = async (dataOption, email, data) => {
+    const onLoginHandleData = async (dataOption, email, username, data) => {
         setPostLoginError(null);
         let result;
         // If keeping device data...
@@ -105,7 +111,7 @@ const MainLoginModal = (props) => {
             }
         }
         if(result.success) {
-            onLoginComplete(email);
+            onLoginComplete(email, username);
         }
         else {
             console.log(result);
@@ -145,6 +151,7 @@ const MainLoginModal = (props) => {
         }
         // Confirm that the code is correct
         const result = await httpConfirmEmailCode(email, event?.target?.code?.value);
+        console.log(result);
         if(result.success) {
             onLoginSuccess(result.data);
         }
