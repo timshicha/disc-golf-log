@@ -27,6 +27,7 @@ const MainLoginModal = (props) => {
     const [mainLoginError, setMainLoginError] = useState(null);
     const [loginWithCodeError, setLoginWithCodeError] = useState(null);
     const [postLoginError, setPostLoginError] = useState(null);
+    const [iUnderstandInput, setIUnderstandInput] = useState("");
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
@@ -200,10 +201,14 @@ const MainLoginModal = (props) => {
         setLoginWithCodeError(null);
     }
 
+    const onIUnderstandInputChange = (event) => {
+        setIUnderstandInput(event.target.value);
+    }
+
 
 
     return (
-        <MenuModal className="pb-[20px]" onClose={onClose} onBack={onBack} replaceImg={modalXImg}>
+        <MenuModal className="p-[20px]" onClose={onClose} onBack={onBack} replaceImg={modalXImg}>
             <ModalTitle>Login</ModalTitle>
 
                 <div className={loading ? "opacity-0 pointer-events-none" : ""}>
@@ -273,7 +278,7 @@ const MainLoginModal = (props) => {
                             <label htmlFor="keep-both-data-radio" className="ml-[5px] text-desc text-black text-[13px]">Keep both data (try to marge)</label>
                         </div>
                         {/* Option description */}
-                        <div className="mt-[15px] text-desc text-gray-dark text-[13px] h-[90px] overflow-y-scroll">
+                        <div className="mt-[15px] text-desc text-gray-dark text-[13px] min-h-[70px] overflow-y-scroll">
                             {selectedDataOption === "local" &&
                             "All your data in the cloud will be deleted and replaced by what is currently on this device."}
                             {selectedDataOption === "cloud" &&
@@ -281,12 +286,18 @@ const MainLoginModal = (props) => {
                             {selectedDataOption === "both" &&
                             "We will attempt to merge and keep the data both on this device and the data in the cloud. The merged data will be added to this device and to the cloud."}
                         </div>
+                        {(selectedDataOption === "local" || selectedDataOption === "cloud") &&
+                        <div className="mb-[10px]">
+                            <div className="text-desc text-gray-dark text-[13px]">Type "I understand" below to continue:</div>
+                            <input value={iUnderstandInput} onChange={onIUnderstandInputChange}></input>
+                        </div>
+                        }
                         {postLoginError &&
                         <div className="text-desc text-red-caution text-[13px] mb-[10px] w-[90%] mx-auto">
                             {postLoginError}
                         </div>}
                         <div className="text-center">
-                            <ModalButton loading={confirmLoginLoading} className="bg-blue-basic text-white">Confirm</ModalButton>
+                            <ModalButton loading={confirmLoginLoading} className={"bg-blue-basic text-white " + ((iUnderstandInput === "I understand" || selectedDataOption === "both") ? "" : "opacity-[0.5] pointer-events-none")}>Confirm</ModalButton>
                         </div>
                     </form>}
                 </div>
