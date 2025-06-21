@@ -17,8 +17,6 @@ import { httpRequestEmailCode, httpConfirmEmailCode } from "../../serverCalls/au
 const MainLoginModal = (props) => {
 
     const [showOptionModal, setShowOptionModal] = useState(false);
-    const [userEmail, setUserEmail] = useState("");
-    const [userData, setUserData] = useState({});
     const [confirmLoginLoading, setConfirmLoginLoading] = useState(false);
     const [sendCodeLoading, setSendCodeLoading] = useState(false);
     const [codeLoginLoading, setCodeLoginLoading] = useState(false);
@@ -30,26 +28,28 @@ const MainLoginModal = (props) => {
 
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
+    const [user] = useState({
+        email: null, username: null, data: {}
+    });
 
+    // When a user logs in with Google or email+code, this function is called
+    // with result being the returned json {email, username, data, isNewUser}
     const onLoginSuccess = async (result) => {
-        console.log(result);
         // result: { email: "", data: {}, username: "username", isNewUser: true/false}
-        setUserEmail(result.email);
-        setUserData(result.data);
-        setUsername(result.username);
+        user.email = result.email;
+        user.username = result.username;
+        user.data = result.data;
         // If a new user, default to keeping device data
         if(result.isNewUser === true) {
             setSelectedDataOption("local");
-            await onLoginHandleData("local", result.email, result.username, result.data);
+            await onLoginFinish("local");
         }
         else {
             const localData = await DataHandler.getAllData();
             // If there are no local courses (and no rounds)
             if(localData.courses.length === 0) {
                 setSelectedDataOption("cloud");
-                await onLoginHandleData("cloud", result.email, result.username, result.data);
+                await onLoginFinish("cloud");
             }
         }
         // Otherwise, it's not a new user and they have data, so
@@ -57,36 +57,26 @@ const MainLoginModal = (props) => {
         setShowOptionModal(true);
     }
 
-    const onLoginComplete = (email, username) => {
-        console.log(username);
-        localStorage.setItem("email", email);
-        localStorage.setItem("username", username);
-        localStorage.setItem("last-pushed-to-cloud", Date ());
-        setMainLoginError(null);
-        setPostLoginError(null);
-        setShowOptionModal(false);
-        setUserEmail("");
-        setUserData("");
-        setUsername("");
-        props.onLogin(email, username);
-    }
-
-    const onLoginConfirm = async (event) => {
+    // Once the user chooses what to do with their data and presses "confirm",
+    // this function is called
+    const onChooseOption = async (event) => {
         setConfirmLoginLoading(true);
         event.preventDefault();
         event.stopPropagation();
 
-        await onLoginHandleData(selectedDataOption, userEmail, username, userData);
+        await onLoginFinish(selectedDataOption);
         setConfirmLoginLoading(false);
     }
 
-    const onLoginHandleData = async (dataOption, email, username, data) => {
+    // This is called at the end. We will deal with the data the way the user
+    // wants and then finish logging in
+    const onLoginFinish = async (dataOption) => {
         setPostLoginError(null);
         let result;
         // If keeping device data...
         if(dataOption === "local") {
             // Replace all data in cloud with devide data
-            result = await uploadQueueToCloud(email, true);
+            result = await uploadQueueToCloud(true);
         }
         // If keeping cloud data...
         else if(dataOption === "cloud") {
@@ -94,24 +84,31 @@ const MainLoginModal = (props) => {
             await DataHandler.clearAllCoursesAndRounds();
             await DataHandler.clearUpdateQueue();
             // Retrieve all data from cloud
-            result = await retrieveAllDataFromCloud(email);
+            result = await retrieveAllDataFromCloud();
         }
         // If keeping data from both...
         else {
             // First pull the data from the server
-            result = await retrieveAllDataFromCloud(email);
+            result = await retrieveAllDataFromCloud();
             // Now push the local data to server
             if(result.success) {
                 const cloudData = result.data;
                 await DataHandler.replaceUpdateQueueWithCurrentData();
-                result = await uploadQueueToCloud(email, false);
+                result = await uploadQueueToCloud(false);
                 if(result.success) {
                     await DataHandler.bulkAdd(cloudData.courses, cloudData.rounds);
                 }
             }
         }
         if(result.success) {
-            onLoginComplete(email, username);
+            localStorage.setItem("email", user.email);
+            localStorage.setItem("username", user.username);
+            localStorage.setItem("last-pushed-to-cloud", Date ());
+            setMainLoginError(null);
+            setPostLoginError(null);
+            setShowOptionModal(false);
+            setSelectedDataOption(null);
+            props.onLogin(user.email, user.username);
         }
         else {
             console.log(result);
@@ -124,10 +121,9 @@ const MainLoginModal = (props) => {
         setMainLoginError(null);
 
         setSendCodeLoading(true);
-        const email = event?.target?.email?.value;
-        setEmail(email);
+        user.email = event?.target?.email?.value;
         // const result = { success: true};
-        const result = await httpRequestEmailCode(email);
+        const result = await httpRequestEmailCode(user.email);
         // When code has been sent, show code modal
         if(result.success === true) {
             setModalXImg("back-arrow");
@@ -150,8 +146,7 @@ const MainLoginModal = (props) => {
             setCodeLoginLoading(false);
         }
         // Confirm that the code is correct
-        const result = await httpConfirmEmailCode(email, event?.target?.code?.value);
-        console.log(result);
+        const result = await httpConfirmEmailCode(user.email, event?.target?.code?.value);
         if(result.success) {
             onLoginSuccess(result.data);
         }
@@ -234,7 +229,7 @@ const MainLoginModal = (props) => {
                         <form className="text-left max-[90%] mx-auto" onSubmit={onCodeSubmit}>
                             <div className="text-desc text-gray-mild text-[13px] mb-[10px] w-[90%] mx-auto">
                                 A code was sent to
-                                <div className="italic text-gray-dark ml-[10px]">{email}.</div>
+                                <div className="italic text-gray-dark ml-[10px]">{user.email}.</div>
                             </div>
                             <hr className="w-[90%] mx-auto text-gray-mild mb-[10px]"></hr>
                             <div className="w-[200px] mx-auto max-w-[90%]">
@@ -253,7 +248,7 @@ const MainLoginModal = (props) => {
 
 
                 {/* IF JUST LOGGED IN (GIVE THEM OPTIONS ON WHAT TO DO WITH DATA) */}
-                {showOptionModal && <form onSubmit={onLoginConfirm} className="text-left mb-[0px]">
+                {showOptionModal && <form onSubmit={onChooseOption} className="text-left mb-[0px]">
                     <div className="text-desc text-gray-dark text-left text-[13px] mb-[15px]">It appears that you already have previous data in the cloud. What would you like to do with your data?</div>
                     <div>
                         <input type="radio" name="data-option" id="keep-device-data-radio" onClick={() => setSelectedDataOption("local")} className=""></input>
