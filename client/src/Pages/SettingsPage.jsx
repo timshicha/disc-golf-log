@@ -8,6 +8,8 @@ import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
+import EditButton from "../Jsx/Components/EditButton.jsx";
+import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 
 const SettingsBlock = (props) => {
     return (
@@ -35,7 +37,11 @@ class SettingsPage extends React.Component {
             // show a loading circle over those buttons
             logoutLoading: false,
             uploadChangesToCloudLoading: false,
-            uploadChangesToCloudError: null
+            uploadChangesToCloudError: null,
+            changingUsername: false,
+            newUsername: "",
+            changeUsernameError: null,
+            changeUsernameLoading: false
         };
         this.updateLastPushedToCloudString();
     }
@@ -137,6 +143,26 @@ class SettingsPage extends React.Component {
         this.setState({ uploadChangesToCloudLoading: false });
     }
 
+    onChangeUsernameClick = () => {
+        this.setState({ changingUsername: true });
+        console.log("change");
+    }
+
+    onChangeUsernameCancel = () => {
+        this.setState({ changingUsername: false });
+    }
+
+    onNewUsernameChange = (event) => {
+        this.setState({ newUsername: event.target.value });
+    }
+
+    onChangeUsernameSubmit = () => {
+        this.setState({ changeUsernameLoading: true });
+        // Logic for changing username
+        // ...
+        this.setState({ changeUsernameLoading: false });
+    }
+
     render = () => {
         return (
             <div>
@@ -154,11 +180,31 @@ class SettingsPage extends React.Component {
                     {this.state.email &&
                         <>
                             <SettingsBlock>
-                                <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white float-right">Log out</ModalButton>
-                                <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
-                                <div className="text-desc text-gray-dark italic">{this.state.username}</div>
-                                <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
-                                <div className="text-desc text-gray-dark italic">{this.state.email}</div>                                
+                                {!this.state.changingUsername &&
+                                <>
+                                    <EditButton className="float-right w-[38px] bg-gray-dark p-[4px]" onClick={this.onChangeUsernameClick}></EditButton>
+                                    <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
+                                    <div className="text-desc text-gray-dark italic max-w-[calc(100%-48px)] break-words">{this.state.username}</div>
+                                    <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
+                                    <div className="text-desc text-gray-dark italic">{this.state.email}</div>
+                                    <div className="w-[100%] text-center mt-[10px]">
+                                    <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white">Log out</ModalButton>
+                                </div>
+                                </>}
+                                {this.state.changingUsername &&
+                                <>
+                                    <div className="text-desc text-red-caution text-[14px] mb-[5px]">You may change your username once. If you need to change it again, you will need to contact support.</div>
+                                    <div className="text-desc text-[14px]"> New username:</div>
+                                    <div className="mb-[10px]">
+                                        <Input className="w-[100%]" value={this.state.newUsername} onChange={this.onNewUsernameChange}></Input>
+                                        {this.state.changeUsernameError &&
+                                        <div className="text-desc text-[14px] text-red-caution text-center mt-[5px]">{this.state.changeUsernameError}</div>}
+                                        <div className="text-center">
+                                            <ModalButton className="bg-gray-dark text-white my-[10px] mx-[5px] px-[20px]" disabled={this.state.changeUsernameLoading} onClick={this.onChangeUsernameCancel}>Cancel</ModalButton>
+                                            <ModalButton className="bg-blue-basic text-white my-[10px] mx-[5px] px-[20px]" loading={this.state.changeUsernameLoading} onClick={this.onChangeUsernameSubmit}>Change Username</ModalButton>
+                                        </div>
+                                    </div>
+                                </>}
                             </SettingsBlock>
                             <SettingsBlock>
                                 <div className="w-100% text-center">

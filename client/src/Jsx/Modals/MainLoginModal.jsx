@@ -289,7 +289,7 @@ const MainLoginModal = (props) => {
                         {(selectedDataOption === "local" || selectedDataOption === "cloud") &&
                         <div className="mb-[10px]">
                             <div className="text-desc text-gray-dark text-[13px]">Type "I understand" below to continue:</div>
-                            <input value={iUnderstandInput} onChange={onIUnderstandInputChange}></input>
+                            <input value={iUnderstandInput} onChange={onIUnderstandInputChange} className="w-[100%]"></input>
                         </div>
                         }
                         {postLoginError &&
