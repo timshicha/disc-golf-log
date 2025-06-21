@@ -4,6 +4,7 @@ import DataHandler from "../../DataHandling/DataHandler";
 import { v4 as uuidv4 } from "uuid";
 import FormModal from "./Frames/FormModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
+import { isValidCourseName } from "../../Utilities/format";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -26,9 +27,10 @@ class AddCourseModal extends React.Component {
         const name = nameElement.value;
         const holes = parseInt(holesElement.value);
 
-        // Make sure they provided a name
-        if(!name) {
-            this.setState({ error: "Enter a course name." });
+        // Make sure the course name is valid
+        const validName = isValidCourseName(name);
+        if(!validName.isValid) {
+            this.setState({ error: validName.error });
             return;
         }
         // Make sure they provided a valid number of holes (integer above 0)
