@@ -1,6 +1,7 @@
 import React, { createRef } from "react";
 import FormModal from "./Frames/FormModal";
 import ModalButton from "./ModalComponents/ModalButton";
+import { isValidCourseName } from "../../Utilities/format";
 
 class RenameModal extends React.Component {
     constructor (props) {
@@ -9,8 +10,9 @@ class RenameModal extends React.Component {
         this.props = props;
         this.nameInputRef = createRef();
         this.state = {
-            inputValue: props.defaultValue || ""
-        }
+            inputValue: props.defaultValue || "",
+            error: null
+        };
     }
 
     onChange = (event) => {
@@ -35,7 +37,15 @@ class RenameModal extends React.Component {
     }
 
     onSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
         event.target.inputValue = this.state.inputValue;
+        // Make sure it's a valid course name
+        const validName = isValidCourseName(this.state.inputValue);
+        if(!validName.isValid) {
+            this.setState({ error: validName.error });
+            return;
+        }
         this.props.onSubmit(event);
     }
 
@@ -46,13 +56,18 @@ class RenameModal extends React.Component {
                 {this.props.children}
                 <label htmlFor="rename-course-field"></label>
                 <input type="text" id="rename-course-field" name="rename-course-field"
-                    autoComplete="off" ref={this.nameInputRef} className="w-[90%] my-[15px]" value={this.state.inputValue} onChange={this.onChange}>    
+                    autoComplete="off" ref={this.nameInputRef} className="w-[90%] my-[10px]" value={this.state.inputValue} onChange={this.onChange}>    
                 </input>
-                <ModalButton className="w-[45%] mx-[5px] bg-gray-dark text-white" type="button" onClick={() => {
-                    this.setState({inputValue: ""});
-                    this.focus();
-                }}>Clear</ModalButton>
-                <ModalButton className="w-[45%] mx-[5px] bg-blue-basic text-white" type="submit">Apply</ModalButton>
+                {this.state.error &&
+                <div className="text-desc text-red-caution mb-[15px]">{this.state.error}</div>
+                }
+                <div className="mt-[10px]">
+                    <ModalButton className="w-[45%] mx-[5px] bg-gray-dark text-white" type="button" onClick={() => {
+                        this.setState({inputValue: ""});
+                        this.focus();
+                    }}>Clear</ModalButton>
+                    <ModalButton className="w-[45%] mx-[5px] bg-blue-basic text-white" type="submit">Apply</ModalButton>
+                </div>
             </FormModal>
 
             </>

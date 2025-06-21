@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import https from "https";
+import rateLimit from "express-rate-limit";
 import fs from "fs";
 import { configDotenv } from "dotenv";
 import { registerGoogleAuthEndpoint } from "./auth/google.mjs";
@@ -15,6 +16,15 @@ const ENV = process.env.ENV;
 
 const app = express();
 
+const limiter = rateLimit({
+    // Limit to 50 requests every 10 minutes (should be more than enough)
+    windowMs: 10 * 60 * 1000,
+    limit: 50,
+    // Don't show info on max limits to prevent spamming
+    standardHeaders: false,
+    legacyHeaders: false
+});
+
 const corsOptions = {
     origin: CLIENT_HOSTNAME,
     credentials: true,
@@ -22,6 +32,8 @@ const corsOptions = {
     allowedHeaders: ["Content-Type", "Authorization"]
 };
 app.use(cors(corsOptions));
+app.use(limiter); // Request rate limit
+app.use(express.json({ limit: '1mb' })); // Limit incoming data to 1MB
 app.options("/", cors(corsOptions));
 
 app.use(express.json()); // Automatically parse body when json
