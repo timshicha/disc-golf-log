@@ -4,7 +4,7 @@ import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton.jsx";
 import { download } from "../Utilities/downloads.js";
 import { Modals } from "../Utilities/Enums.js";
 import MainLoginModal from "../Jsx/Modals/MainLoginModal.jsx";
-import { uploadQueueToCloud } from "../serverCalls/data.mjs";
+import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
@@ -29,6 +29,7 @@ class SettingsPage extends React.Component {
             autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") === "true",
             lastPushedToCloudString: ". . .",
             email: localStorage.getItem("email") || null,
+            username: localStorage.getItem("username") || null,
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -70,9 +71,10 @@ class SettingsPage extends React.Component {
         localStorage.setItem("auto-open-course-on-creation", event.target.checked);
     }
 
-    onLogin = (email) => {
+    onLogin = (email, username) => {
         this.setState({
             email: email,
+            username: username,
             currentModal: null,
             uploadChangesToCloudError: null
         });
@@ -82,9 +84,11 @@ class SettingsPage extends React.Component {
     onLogout = () => {
         this.setState({ logoutLoading: true });
         localStorage.removeItem("email");
+        localStorage.removeItem("username");
         localStorage.removeItem("last-pushed-to-cloud");
         this.setState({
             email: null,
+            username: null,
             logoutLoading: false,
             currentModal: null
         });
@@ -93,7 +97,7 @@ class SettingsPage extends React.Component {
     handleUploadChangesToCloud = async () => {
         this.setState({ uploadChangesToCloudLoading: true });
         const email = localStorage.getItem("email");
-        const result = await uploadQueueToCloud(email, false);
+        const result = await httpUploadQueueToCloud(false);
         if(result.success) {
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);
@@ -108,9 +112,11 @@ class SettingsPage extends React.Component {
                 // Log them out so they don't try to request again
                 error = "Failed to upload data: You are not logged in.";
                 localStorage.removeItem("email");
+                localStorage.removeItem("username");
                 localStorage.removeItem("last-pushed-to-cloud");
                 this.setState({ 
                     email: null,
+                    username: null,
                     lastPushedToCloudString: ""
                 });
             }
@@ -149,8 +155,10 @@ class SettingsPage extends React.Component {
                         <>
                             <SettingsBlock>
                                 <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white float-right">Log out</ModalButton>
-                                <div className="text-desc text-gray">You are logged in as</div>
-                                <div className="text-desc text-gray italic">{this.state.email}</div>
+                                <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
+                                <div className="text-desc text-gray-dark italic">{this.state.username}</div>
+                                <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
+                                <div className="text-desc text-gray-dark italic">{this.state.email}</div>                                
                             </SettingsBlock>
                             <SettingsBlock>
                                 <div className="w-100% text-center">

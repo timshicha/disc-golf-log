@@ -2,10 +2,7 @@ import DataHandler from "../DataHandling/DataHandler";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
-const uploadQueueToCloud = async (email, deleteExistingCloudData=false) => {
-    if(!email) {
-        return { success: false, error: "You are not logged in." };
-    }
+const httpUploadQueueToCloud = async (deleteExistingCloudData=false) => {
     let result;
     let status;
     try {
@@ -17,9 +14,8 @@ const uploadQueueToCloud = async (email, deleteExistingCloudData=false) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: email,
                 data: data,
-                deleteExistingData: deleteExistingCloudData
+                deleteExistingData: deleteExistingCloudData === true
             })
         });
         if(!result.ok) {
@@ -45,10 +41,7 @@ const uploadQueueToCloud = async (email, deleteExistingCloudData=false) => {
     };
 }
 
-const retrieveAllDataFromCloud = async (email) => {
-    if(!email) {
-        return { success: false, error: "You are not logged in." };
-    }
+const httpRetrieveAllDataFromCloud = async () => {
     let result;
     let status;
     try {
@@ -82,4 +75,4 @@ const retrieveAllDataFromCloud = async (email) => {
     };
 }
 
-export { uploadQueueToCloud, retrieveAllDataFromCloud };
+export { httpUploadQueueToCloud, httpRetrieveAllDataFromCloud };

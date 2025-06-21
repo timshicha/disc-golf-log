@@ -19,7 +19,9 @@ const addUser = async (email, userData) => {
     const generatedUsername = `user${generatedUserNumber}`;
     userData.username = generatedUsername;
     
-    return await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${safeUserData}, ${generatedUsername})`;
+    const [user] = await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${userData}, ${generatedUsername}) RETURNING *`;
+    return user;
+
 }
 
 export { findUserByEmail, addUser };
