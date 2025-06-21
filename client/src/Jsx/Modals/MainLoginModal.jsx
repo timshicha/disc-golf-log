@@ -5,7 +5,7 @@ import ModalButton from "./ModalComponents/ModalButton";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import googleIcon from "../../assets/images/googleIcon.png";
 import GoogleLoginButton from "../Components/GoogleLoginButton";
-import { retrieveAllDataFromCloud, uploadQueueToCloud } from "../../serverCalls/data.mjs";
+import { httpRetrieveAllDataFromCloud, httpUploadQueueToCloud } from "../../serverCalls/data.mjs";
 import { Modals } from "../../Utilities/Enums";
 import { httpRequestEmailCode, httpConfirmEmailCode } from "../../serverCalls/auth.mjs";
 import LoadingImg from "../Components/LoadingImg";
@@ -77,12 +77,14 @@ const MainLoginModal = (props) => {
     // This is called at the end. We will deal with the data the way the user
     // wants and then finish logging in
     const onLoginFinish = async (dataOption) => {
+        console.log(dataOption);
         setPostLoginError(null);
         let result;
         // If keeping device data...
         if(dataOption === "local") {
             // Replace all data in cloud with devide data
-            result = await uploadQueueToCloud(true);
+            await DataHandler.replaceUpdateQueueWithCurrentData();
+            result = await httpUploadQueueToCloud(true);
         }
         // If keeping cloud data...
         else if(dataOption === "cloud") {
@@ -90,17 +92,18 @@ const MainLoginModal = (props) => {
             await DataHandler.clearAllCoursesAndRounds();
             await DataHandler.clearUpdateQueue();
             // Retrieve all data from cloud
-            result = await retrieveAllDataFromCloud();
+            result = await httpRetrieveAllDataFromCloud();
         }
         // If keeping data from both...
         else {
-            // First pull the data from the server
-            result = await retrieveAllDataFromCloud();
+            // Replace update queue with current data
+            await DataHandler.replaceUpdateQueueWithCurrentData();
+            // Pull data from server
+            result = await httpRetrieveAllDataFromCloud();
             // Now push the local data to server
             if(result.success) {
                 const cloudData = result.data;
-                await DataHandler.replaceUpdateQueueWithCurrentData();
-                result = await uploadQueueToCloud(false);
+                result = await httpUploadQueueToCloud(false);
                 if(result.success) {
                     await DataHandler.bulkAdd(cloudData.courses, cloudData.rounds);
                 }

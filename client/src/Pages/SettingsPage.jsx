@@ -4,7 +4,7 @@ import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton.jsx";
 import { download } from "../Utilities/downloads.js";
 import { Modals } from "../Utilities/Enums.js";
 import MainLoginModal from "../Jsx/Modals/MainLoginModal.jsx";
-import { uploadQueueToCloud } from "../serverCalls/data.mjs";
+import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
@@ -97,7 +97,7 @@ class SettingsPage extends React.Component {
     handleUploadChangesToCloud = async () => {
         this.setState({ uploadChangesToCloudLoading: true });
         const email = localStorage.getItem("email");
-        const result = await uploadQueueToCloud(email, false);
+        const result = await httpUploadQueueToCloud(false);
         if(result.success) {
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);

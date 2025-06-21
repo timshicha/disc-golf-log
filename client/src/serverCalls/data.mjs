@@ -2,7 +2,7 @@ import DataHandler from "../DataHandling/DataHandler";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
-const uploadQueueToCloud = async (deleteExistingCloudData=false) => {
+const httpUploadQueueToCloud = async (deleteExistingCloudData=false) => {
     let result;
     let status;
     try {
@@ -15,7 +15,7 @@ const uploadQueueToCloud = async (deleteExistingCloudData=false) => {
             },
             body: JSON.stringify({
                 data: data,
-                deleteExistingData: deleteExistingCloudData
+                deleteExistingData: deleteExistingCloudData === true
             })
         });
         if(!result.ok) {
@@ -41,7 +41,7 @@ const uploadQueueToCloud = async (deleteExistingCloudData=false) => {
     };
 }
 
-const retrieveAllDataFromCloud = async () => {
+const httpRetrieveAllDataFromCloud = async () => {
     let result;
     let status;
     try {
@@ -75,4 +75,4 @@ const retrieveAllDataFromCloud = async () => {
     };
 }
 
-export { uploadQueueToCloud, retrieveAllDataFromCloud };
+export { httpUploadQueueToCloud, httpRetrieveAllDataFromCloud };

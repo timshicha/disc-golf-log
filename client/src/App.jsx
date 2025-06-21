@@ -8,7 +8,7 @@ import CoursePage from "./Pages/CoursePage";
 import { Pages } from "./Utilities/Enums";
 import { version as currentVersion } from "../package.json";
 import { isVersionBehind } from "./Utilities/sorting";
-import { uploadQueueToCloud } from "./ServerCalls/data.mjs";
+import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -30,7 +30,7 @@ if(email) {
     // ago, push changes to cloud (if there are changes)
     const updateInterval = 1000 * 60 * 60;
     if(new Date() - new Date(lastUpdated) >= updateInterval) {
-        uploadQueueToCloud(email).then(result => {
+        httpUploadQueueToCloud(email).then(result => {
             if(result.success === true) {
                 localStorage.setItem("last-pushed-to-cloud", Date ());
             }
