@@ -32,14 +32,22 @@ const registerEmailAuthEndpoint = (app) => {
             if(await addEmailLoginCode(email, new Date(expiresAt), code)) {
                 const result = await sendEmail(email, "Your Login Code", code);
                 console.log("Email sent successfully: " + result.success);
-                res.status(200).json({
-                    success: true
-                });
+                if(result.success) {
+                    res.status(200).json({
+                        success: true
+                    });
+                }
+                else {
+                    res.status(500).json({
+                        success: false,
+                        error: "Could not send email."
+                    });
+                }
             }
             else {
                 res.status(500).json({
                     success: false,
-                    error: "Could not send email."
+                    error: "Could not create a code."
                 });
             }
         }
