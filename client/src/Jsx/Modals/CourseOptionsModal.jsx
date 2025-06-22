@@ -28,7 +28,7 @@ const CourseOptionsModal = (props) => {
             <MenuModal
                 onClose={() => props.setModal(null)}
             >
-                <ModalTitle>{props.course.name}</ModalTitle>
+                <ModalTitle className="truncate max-w-[calc(100%-30px)]">{props.course.name}</ModalTitle>
                 <ModalButton onClick={() => props.setModal(Modals.RENAME)} className="w-[95%] text-white bg-gray-dark mt-[10px]">
                     Rename course
                 </ModalButton>
