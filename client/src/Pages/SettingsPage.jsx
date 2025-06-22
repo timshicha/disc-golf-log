@@ -88,7 +88,6 @@ class SettingsPage extends React.Component {
             uploadChangesToCloudError: null,
             usernameModifed: usernameModified
         });
-        console.log(usernameModified);
         this.updateLastPushedToCloudString();
     }
 

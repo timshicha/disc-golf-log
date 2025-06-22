@@ -119,7 +119,7 @@ const MainLoginModal = (props) => {
             setPostLoginError(null);
             setShowOptionModal(false);
             setSelectedDataOption(null);
-            props.onLogin(user.email, user.username, user.usernameModified);
+            props.onLogin(user.email, user.username, user.usernameModified === true || user.usernameModified === "true");
         }
         else {
             console.log(result);
