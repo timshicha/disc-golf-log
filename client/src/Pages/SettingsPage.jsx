@@ -88,7 +88,6 @@ class SettingsPage extends React.Component {
             uploadChangesToCloudError: null,
             usernameModifed: usernameModified
         });
-        console.log(usernameModified);
         this.updateLastPushedToCloudString();
     }
 
@@ -193,13 +192,13 @@ class SettingsPage extends React.Component {
     render = () => {
         return (
             <div>
-                <div className="settings-page mt-[70px]">
+                <div className="settings-page mt-[70px] mb-[40px]">
 
                     {/* If the user is not logged in */}
                     {!this.state.email &&
                         <SettingsBlock>
                             <ModalButton className="bg-gray-dark text-white float-right" onClick={() => this.setState({ currentModal: Modals.MAIN_LOGIN })}>Log in</ModalButton>
-                            <div className="text-desc text-gray">Log in to save your data to the cloud.</div>
+                            <div className="text-desc text-gray-mild">Log in to save your data to the cloud.</div>
                         </SettingsBlock>
                     }
 
@@ -223,7 +222,7 @@ class SettingsPage extends React.Component {
                                 {this.state.changingUsername &&
                                 <>
                                     <div className="text-desc text-red-caution text-[14px] mb-[5px]">You may change your username once. If you need to change it again, you will need to contact support.</div>
-                                    <div className="text-desc text-[14px]"> New username:</div>
+                                    <div className="text-desc text-gray-mild text-[14px]"> New username:</div>
                                     <div className="mb-[10px]">
                                         <Input id="change-username-input" className="w-[100%]" value={this.state.newUsername} onChange={this.onNewUsernameChange}></Input>
                                         {this.state.changeUsernameError &&
@@ -237,7 +236,7 @@ class SettingsPage extends React.Component {
                             </SettingsBlock>
                             <SettingsBlock>
                                 <div className="w-100% text-center">
-                                    <div className="text-desc text-gray text-left">
+                                    <div className="text-desc text-gray-mild text-left">
                                         {this.state.lastPushedToCloudString}
                                     </div>
                                     <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.uploadChangesToCloudLoading} onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
@@ -265,12 +264,12 @@ class SettingsPage extends React.Component {
                     }
 
                     <div className="w-[100%] h-[2px] bg-gray-light"></div>
-                    <p className="text-desc my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
+                    <p className="text-desc text-gray-mild my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
                     <SettingsBlock className="min-h-[60px] bg-special">
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleConfirmDeleteToggle}
                             id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
                         </input>
-                        <div className="text-desc">
+                        <div className="text-desc text-gray-mild">
                             Ask for confirmation before deleting courses or rounds.
                         </div>
                     </SettingsBlock>
@@ -278,14 +277,22 @@ class SettingsPage extends React.Component {
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleAutoOpenCourseOnCreation}
                             id="auto-open-course-on-creation-checkbox" checked={this.state.autoOpenCourseOnCreation}>    
                         </input>
-                        <div className="text-desc">
+                        <div className="text-desc text-gray-mild">
                             Automatically open course after it is created.
                         </div>
                     </SettingsBlock>
                     <SettingsBlock>
                         <ModalButton className="bg-gray-dark text-white float-right m-[3px]" onClick={this.downloadData}>Download data</ModalButton>
-                        <div className="text-desc text-gray">
+                        <div className="text-desc text-gray-mild">
                             Download all your courses and rounds into a JSON file.
+                        </div>
+                    </SettingsBlock>
+                    <div className="w-[100%] h-[2px] bg-gray-light mb-[10px]"></div>
+                    <SettingsBlock>
+                        <div className="text-desc text-gray-mild text-center mb-[10px]">Support</div>
+                        
+                        <div className="text-desc text-gray-mild">
+                            Email: <a href="mailto:support@bogeypad.com" className="text-desc text-gray-mild underline">support@bogeypad.com</a>
                         </div>
                     </SettingsBlock>
                 </div>
