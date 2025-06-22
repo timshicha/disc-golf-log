@@ -220,7 +220,7 @@ const MainLoginModal = (props) => {
                         {!currentSubmodal &&
                         <>
                             <form className="w-[90%] text-left mx-auto" onSubmit={sendCode}>
-                                <div className="text-desc text-[12px] text-gray-mild">We will send a code to your email and ask for you to verify it at the next step. The code will expire after 10 minutes.</div>
+                                <div className="text-desc text-[12px] text-gray-dark">We will send a code to your email and ask for you to verify it at the next step. The code will expire after 10 minutes.</div>
                                 <label htmlFor="login-email-input" className="text-left text-[13px] text-gray-dark">Email:</label>
                                 <input id="login-email-input" name="email" type="email" className="mb-[10px] w-[100%]" placeholder="example@email.com">
                                 </input>
@@ -243,7 +243,7 @@ const MainLoginModal = (props) => {
                         {currentSubmodal === Modals.LOGIN_CODE_MODAL &&
                         <>
                             <form className="text-left max-[90%] mx-auto" onSubmit={onCodeSubmit}>
-                                <div className="text-desc text-gray-mild text-[13px] mb-[10px] w-[90%] mx-auto">
+                                <div className="text-desc text-gray-dark text-[13px] mb-[10px] w-[90%] mx-auto">
                                     A code was sent to
                                     <div className="italic text-gray-dark ml-[10px]">{user.email}.</div>
                                 </div>
