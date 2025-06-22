@@ -40,7 +40,7 @@ const isValidUsername = (username) => {
 
             // If none of the above, it's an invalid character
             result.isValid = false;
-            result.error = `Invalid character in username: ${c}`;
+            result.error = `Invalid character in username: '${c}'`;
             break;
         }
     }
@@ -77,7 +77,7 @@ const isValidCourseName = (courseName) => {
             const c = courseName[i];
             if(c.charCodeAt(0) < 32 || c.charCodeAt(0) > 126) {
                 result.isValid = false;
-                result.error = `Invalid character in course name: ${c}`;
+                result.error = `Invalid character in course name: '${c}'`;
                 break;
             }
         }

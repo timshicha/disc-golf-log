@@ -19,12 +19,12 @@ class CourseSlot extends React.Component{
         return (
             <div onClick={this.onClick} className="w-[calc(100%-20px] bg-gray-light py-[5px] px-[10px] pr-[0px] mx-auto my-[10px] rounded-[7px] cursor-pointer">
                 {/* Course settings button (triple dot icon) */}
-                <TripleDotButton className="h-[20px] float-right cursor-pointer rounded-[10px] mt-[8px] mr-[8px]" onClick={e => {
+                <TripleDotButton className="h-[20px] float-right cursor-pointer rounded-[10px] mt-[8px] mr-[8px] pl-[15px]" onClick={e => {
                     e.stopPropagation();
                     this.onOpenOptionsList();
                 }}></TripleDotButton>
                 {/* Course title */}
-                <div className="text-[18px] h-[25px] w-[calc(100%-40px)] font-bold text-sans truncate">
+                <div className="text-[18px] h-[25px] max-w-[calc(100%-45px)] font-bold text-sans truncate">
                     {this.state.course.name}
                 </div>
                 {/* Number of times played text */}
