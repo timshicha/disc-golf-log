@@ -40,7 +40,7 @@ const isValidUsername = (username) => {
 
             // If none of the above, it's an invalid character
             result.isValid = false;
-            result.error = `Invalid character: ${c}`;
+            result.error = `Invalid character: '${c}'`;
             break;
         }
     }

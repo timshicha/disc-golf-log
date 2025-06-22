@@ -11,6 +11,7 @@ import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
 import editIcon from "../assets/images/editIcon.png";
 import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
+import { isValidUsername } from "../Utilities/format.js";
 
 const SettingsBlock = (props) => {
     return (
@@ -162,7 +163,15 @@ class SettingsPage extends React.Component {
     onChangeUsernameSubmit = async () => {
         this.setState({ changeUsernameLoading: true });
         // Logic for changing username
-        const result = await httpChangeUsername(this.state.newUsername);
+        // See if valid username (locally first)
+        let result;
+        const validUsername = isValidUsername(this.state.newUsername);
+        if(validUsername.isValid) {
+            result = await httpChangeUsername(this.state.newUsername);
+        }
+        else {
+            result = { success: false, error: validUsername.error };
+        }
         if(result.success) {
             localStorage.setItem("username", this.state.newUsername);
             localStorage.setItem("username-modified", true);
@@ -220,8 +229,8 @@ class SettingsPage extends React.Component {
                                         {this.state.changeUsernameError &&
                                         <div className="text-desc text-[14px] text-red-caution text-center mt-[5px]">{this.state.changeUsernameError}</div>}
                                         <div className="text-center">
-                                            <ModalButton className="bg-gray-dark text-white my-[10px] mx-[5px] px-[20px]" disabled={this.state.changeUsernameLoading} onClick={this.onChangeUsernameCancel}>Cancel</ModalButton>
-                                            <ModalButton className="bg-blue-basic text-white my-[10px] mx-[5px] px-[20px]" loading={this.state.changeUsernameLoading} onClick={this.onChangeUsernameSubmit}>Change Username</ModalButton>
+                                            <ModalButton className="bg-gray-dark text-white my-[10px] mx-[3px] px-[10px]" disabled={this.state.changeUsernameLoading} onClick={this.onChangeUsernameCancel}>Cancel</ModalButton>
+                                            <ModalButton className="bg-blue-basic text-white my-[10px] mx-[3px] px-[10px]" loading={this.state.changeUsernameLoading} onClick={this.onChangeUsernameSubmit}>Change Username</ModalButton>
                                         </div>
                                     </div>
                                 </>}

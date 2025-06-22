@@ -79,7 +79,6 @@ const MainLoginModal = (props) => {
     // This is called at the end. We will deal with the data the way the user
     // wants and then finish logging in
     const onLoginFinish = async (dataOption) => {
-        console.log(dataOption);
         setPostLoginError(null);
         let result;
         // If keeping device data...
