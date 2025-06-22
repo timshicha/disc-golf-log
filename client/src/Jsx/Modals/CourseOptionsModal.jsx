@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import MenuModal from "./Frames/MenuModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import ModalButton from "./ModalComponents/ModalButton";
-import DataHandler from "../../data_handling/data_handler";
-import { Modals } from "../../js_utils/Enums";
+import DataHandler from "../../DataHandling/DataHandler";
+import { Modals } from "../../Utilities/Enums";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const CourseOptionsModal = (props) => {
@@ -28,7 +28,7 @@ const CourseOptionsModal = (props) => {
             <MenuModal
                 onClose={() => props.setModal(null)}
             >
-                <ModalTitle>{props.course.name}</ModalTitle>
+                <ModalTitle className="truncate max-w-[calc(100%-30px)]">{props.course.name}</ModalTitle>
                 <ModalButton onClick={() => props.setModal(Modals.RENAME)} className="w-[95%] text-white bg-gray-dark mt-[10px]">
                     Rename course
                 </ModalButton>

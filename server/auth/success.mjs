@@ -14,11 +14,7 @@ const handleSuccessfulLogin = async (req, res, email) => {
     // If user doesn't exist, add them
     if(!user) {
         isNewUser = true;
-        await addUser(email, {});
-        user = {
-            email: email,
-            data: {}
-        };
+        user = await addUser(email, {});
     }
 
     const token = await generateToken(email);
@@ -34,7 +30,9 @@ const handleSuccessfulLogin = async (req, res, email) => {
         res.status(200).json({
             email: user.email,
             data: user.data,
-            isNewUser: isNewUser
+            username: user.username,
+            isNewUser: isNewUser,
+            username_modified: user.username_modified
         });
     }
     // If token not set

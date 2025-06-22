@@ -5,7 +5,7 @@ import ModalButton from "./ModalComponents/ModalButton";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import DateInputModal from "./DateInputModal";
 import CommentModal from "./CommentModal";
-import { Modals } from "../../js_utils/Enums";
+import { Modals } from "../../Utilities/Enums";
 
 
 const RoundOptionsModal = (props) => {

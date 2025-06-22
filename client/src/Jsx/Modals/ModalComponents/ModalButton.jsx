@@ -13,13 +13,14 @@ class ModalButton extends React.Component {
 
     render = () => {
         return (
-            <button {...this.otherProps} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + (this.props.loading ? "pointer-events-none opacity-60 " : "") + this.props.className}>
+            <button {...this.otherProps} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + ((this.props.loading || this.props.disabled) ? "pointer-events-none opacity-60 " : "") + this.props.className}>
                 {this.props.loading &&
                     <div className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
                         <LoadingImg className="w-[20px]"></LoadingImg>
                     </div>
                 }
-                <div className={this.props.loading ? "opacity-0" : ""}>
+                {/* If loading, opacity 0; if disabled, opacity 0.5 */}
+                <div className={this.props.loading ? "opacity-0" : (this.props.disabled ? "opacity-[0.5]" : "")}>
                     {this.props.children}
                 </div>
             </button>

@@ -2,6 +2,7 @@
 
 import { addCourse, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
 import { addRound, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
+import { isValidCourseName } from "../utils/format.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
@@ -15,9 +16,15 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.addCourseQueue)) {
         for (let i = 0; i < data.addCourseQueue.length; i++) {
             try {
+                const validName = isValidCourseName(data.addCourseQueue[i].name);
                 const courseUUID = data.addCourseQueue[i].courseUUID;
-                const courseData = JSON.stringify(data.addCourseQueue[i]);
-                if(await addCourse(user.useruuid, courseUUID, courseData)) {
+                const courseData = data.addCourseQueue[i];
+                // Validate course name
+                if(!validName.isValid) {
+                    updatesFailed++;
+                    errors.push(`Could not add course: ${validName.error}`);
+                }
+                else if(await addCourse(user.useruuid, courseUUID, courseData)) {
                     data.addCourseQueue[i] = null;
                     updatesSucceeded++
                 }
@@ -35,9 +42,15 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.modifyCourseQueue)) {
         for (let i = 0; i < data.modifyCourseQueue.length; i++) {
             try {
+                const validName = isValidCourseName(data.modifyCourseQueue[i].name);
                 const courseUUID = data.modifyCourseQueue[i].courseUUID;
-                const courseData = JSON.stringify(data.modifyCourseQueue[i]);
-                if(await modifyCourse(user.useruuid, courseUUID, courseData)) {
+                const courseData = data.modifyCourseQueue[i];
+                // Validate course name
+                if(!validName.isValid) {
+                    updatesFailed++;
+                    errors.push(`Could not modify course: ${validName.error}`);
+                }
+                else if(await modifyCourse(user.useruuid, courseUUID, courseData)) {
                     data.modifyCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -77,8 +90,9 @@ const uploadBulkData = async (user, data) => {
             try {
                 const roundUUID = data.addRoundQueue[i].roundUUID;
                 const courseUUID = data.addRoundQueue[i].courseUUID;
-                const roundData = JSON.stringify(data.addRoundQueue[i]);
-                if(await addRound(user.useruuid, roundUUID, courseUUID, roundData)) {
+                const playedAt = data.addRoundQueue[i].date;
+                const roundData = data.addRoundQueue[i];
+                if(await addRound(user.useruuid, roundUUID, courseUUID, playedAt, roundData)) {
                     data.addRoundQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -98,8 +112,9 @@ const uploadBulkData = async (user, data) => {
         for (let i = 0; i < data.modifyRoundQueue.length; i++) {
             try {
                 const roundUUID = data.modifyRoundQueue[i].roundUUID;
-                const roundData = JSON.stringify(data.modifyRoundQueue[i]);
-                if(await modifyRound(user.useruuid, roundUUID, roundData)) {
+                const playedAt = data.modifyRoundQueue[i].date;
+                const roundData = data.modifyRoundQueue[i];
+                if(await modifyRound(user.useruuid, roundUUID, playedAt, roundData)) {
                     data.modifyRoundQueue[i] = null;
                     updatesSucceeded++;
                 }

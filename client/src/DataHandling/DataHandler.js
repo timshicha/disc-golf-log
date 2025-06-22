@@ -1,4 +1,4 @@
-import db from "./db";
+import db from "./Db";
 import { v4 as uuidv4 } from "uuid";
 
 class DataHandler {
@@ -244,11 +244,20 @@ class DataHandler {
     // Bulk add (such as when reading from cloud).
     // Changes will not be saved to the update queue or uploaded to cloud
     static bulkAdd = async (courses, rounds) => {
+        console.log(courses, rounds);
         for (let i = 0; i < courses.length; i++) {
-            await db.courses.put(JSON.parse(courses[i]));
+            try {
+                await db.courses.put(courses[i]);
+            } catch (error) {
+                console.log(`Could not add course to Dexie: ${error}`)
+            }
         }
         for (let i = 0; i < rounds.length; i++) {
-            await db.rounds.put(JSON.parse(rounds[i]));
+            try {
+                await db.rounds.put(rounds[i]);
+            } catch (error) {
+                console.log(`Could not add round to Dexie: ${error}`)
+            }
         }
     }
 

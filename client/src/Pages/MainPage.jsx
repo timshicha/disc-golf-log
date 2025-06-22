@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import AddCourseModal from "./Modals/AddCourseModal";
-import CourseSlot from "./Components/CourseSlot";
-import ModalTitle from "./Modals/ModalComponents/ModalTitle";
-import RenameModal from "./Modals/RenameModal";
-import { compareDates, compareStrings } from "../js_utils/sorting";
-import DataHandler from "../data_handling/data_handler";
-import ModifyHolesModal from "./Modals/ModifyHolesModal";
-import { Modals, Pages } from "../js_utils/Enums";
-import CourseOptionsModal from "./Modals/CourseOptionsModal";
-import StickyDiv from "./Components/StickyDiv";
-import ModalButton from "./Modals/ModalComponents/ModalButton";
-import SearchBar from "./Components/SearchBar";
-import SortCoursesDropdown from "./Components/SortCoursesDropdown";
+import AddCourseModal from "../Jsx/Modals/AddCourseModal";
+import CourseSlot from "../Jsx/Components/CourseSlot";
+import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle";
+import RenameModal from "../Jsx/Modals/RenameModal";
+import { compareDates, compareStrings } from "../Utilities/sorting";
+import DataHandler from "../DataHandling/DataHandler";
+import ModifyHolesModal from "../Jsx/Modals/ModifyHolesModal";
+import { Modals, Pages } from "../Utilities/Enums";
+import CourseOptionsModal from "../Jsx/Modals/CourseOptionsModal";
+import StickyDiv from "../Jsx/Components/StickyDiv";
+import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
+import SearchBar from "../Jsx/Components/SearchBar";
+import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -74,8 +74,15 @@ function MainPage (props) {
 
     const addCourseCallback = (course) => {
         setCurrentCourse(course);
-        props.navigateTo(Pages.COURSE);
         props.setCurrentCourse(course);
+        // See if user's setting is to auto-open course on creation
+        if(localStorage.getItem("auto-open-course-on-creation") === "true") {
+            props.navigateTo(Pages.COURSE);
+        }
+        // Otherwise reload courses so new one appears
+        else {
+            reloadCourses();
+        }
     }
 
     return (

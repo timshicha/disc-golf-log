@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import MainPage from "./MainPage";
-import SettingsPage from "./SettingsPage";
-import NavBar, { NavBarBackButton, NavBarTitle } from "./Components/NavBar";
-import "../css/general.css";
-import titleLogo from "../assets/images/title-logo.png";
-import cogwheel from "../assets/images/cogwheel.png";
-import CoursePage from "./CoursePage";
-import { Pages } from "../js_utils/Enums";
-import { version as currentVersion } from "../../package.json";
-import { isVersionBehind } from "../js_utils/sorting";
-import { uploadQueueToCloud } from "../serverCalls/data.mjs";
+import MainPage from "./Pages/MainPage";
+import SettingsPage from "./Pages/SettingsPage";
+import NavBar, { NavBarBackButton, NavBarTitle } from "./Jsx/Components/NavBar";
+import titleLogo from "./assets/images/title-logo.png";
+import cogwheel from "./assets/images/cogwheel.png";
+import CoursePage from "./Pages/CoursePage";
+import { Pages } from "./Utilities/Enums";
+import { version as currentVersion } from "../package.json";
+import { isVersionBehind } from "./Utilities/sorting";
+import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -31,7 +30,7 @@ if(email) {
     // ago, push changes to cloud (if there are changes)
     const updateInterval = 1000 * 60 * 60;
     if(new Date() - new Date(lastUpdated) >= updateInterval) {
-        uploadQueueToCloud(email).then(result => {
+        httpUploadQueueToCloud(email).then(result => {
             if(result.success === true) {
                 localStorage.setItem("last-pushed-to-cloud", Date ());
             }
