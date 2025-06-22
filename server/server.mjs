@@ -8,6 +8,7 @@ import { configDotenv } from "dotenv";
 import { registerGoogleAuthEndpoint } from "./auth/google.mjs";
 import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkData.mjs";
 import { registerEmailAuthEndpoint } from "./auth/email.mjs";
+import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -53,6 +54,9 @@ registerPostDataEndpoint(app);
 
 // If the user wants to get all their data from the cloud (such as when logging in)
 registerGetDataEndpoint(app);
+
+// If the user wants to change thier username
+registerChangeUsernameEndpoint(app);
 
 // If on localhost, manually set up to listen via https
 if(ENV === "localhost") {

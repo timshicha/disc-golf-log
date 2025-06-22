@@ -8,6 +8,9 @@ import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
+import editIcon from "../assets/images/editIcon.png";
+import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
+import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -30,12 +33,17 @@ class SettingsPage extends React.Component {
             lastPushedToCloudString: ". . .",
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
+            usernameModified: localStorage.getItem("username-modified") === "true",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
             logoutLoading: false,
             uploadChangesToCloudLoading: false,
-            uploadChangesToCloudError: null
+            uploadChangesToCloudError: null,
+            changingUsername: false,
+            newUsername: "",
+            changeUsernameError: null,
+            changeUsernameLoading: false
         };
         this.updateLastPushedToCloudString();
     }
@@ -71,13 +79,15 @@ class SettingsPage extends React.Component {
         localStorage.setItem("auto-open-course-on-creation", event.target.checked);
     }
 
-    onLogin = (email, username) => {
+    onLogin = (email, username, usernameModified) => {
         this.setState({
             email: email,
             username: username,
             currentModal: null,
-            uploadChangesToCloudError: null
+            uploadChangesToCloudError: null,
+            usernameModifed: usernameModified
         });
+        console.log(usernameModified);
         this.updateLastPushedToCloudString();
     }
 
@@ -137,6 +147,40 @@ class SettingsPage extends React.Component {
         this.setState({ uploadChangesToCloudLoading: false });
     }
 
+    onChangeUsernameClick = () => {
+        this.setState({ changingUsername: true });
+    }
+
+    onChangeUsernameCancel = () => {
+        this.setState({ changingUsername: false });
+    }
+
+    onNewUsernameChange = (event) => {
+        this.setState({ newUsername: event.target.value });
+    }
+
+    onChangeUsernameSubmit = async () => {
+        this.setState({ changeUsernameLoading: true });
+        // Logic for changing username
+        const result = await httpChangeUsername(this.state.newUsername);
+        if(result.success) {
+            localStorage.setItem("username", this.state.newUsername);
+            localStorage.setItem("username-modified", true);
+            this.setState({
+                changeUsernameLoading: false,
+                changingUsername: false,
+                username: this.state.newUsername,
+                usernameModified: true
+            });
+        }
+        else {
+            this.setState({
+                changeUsernameLoading: false,
+                changeUsernameError: result.error
+            });
+        }
+    }
+
     render = () => {
         return (
             <div>
@@ -154,11 +198,33 @@ class SettingsPage extends React.Component {
                     {this.state.email &&
                         <>
                             <SettingsBlock>
-                                <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white float-right">Log out</ModalButton>
-                                <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
-                                <div className="text-desc text-gray-dark italic">{this.state.username}</div>
-                                <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
-                                <div className="text-desc text-gray-dark italic">{this.state.email}</div>                                
+                                {!this.state.changingUsername &&
+                                <>
+                                    <ModalButton className="float-right bg-gray-dark py-[9px]" disabled={this.state.usernameModified} onClick={this.onChangeUsernameClick}>
+                                        <img src={editIcon} className="w-[25px]"/>
+                                    </ModalButton>
+                                    <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
+                                    <div className="text-desc text-gray-dark italic max-w-[calc(100%-48px)] break-words">{this.state.username}</div>
+                                    <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
+                                    <div className="text-desc text-gray-dark italic">{this.state.email}</div>
+                                    <div className="w-[100%] text-center mt-[10px]">
+                                    <ModalButton onClick={() => {this.setState({ currentModal: Modals.CONFIRM_LOGOUT })}} className="bg-red-caution text-white">Log out</ModalButton>
+                                </div>
+                                </>}
+                                {this.state.changingUsername &&
+                                <>
+                                    <div className="text-desc text-red-caution text-[14px] mb-[5px]">You may change your username once. If you need to change it again, you will need to contact support.</div>
+                                    <div className="text-desc text-[14px]"> New username:</div>
+                                    <div className="mb-[10px]">
+                                        <Input id="change-username-input" className="w-[100%]" value={this.state.newUsername} onChange={this.onNewUsernameChange}></Input>
+                                        {this.state.changeUsernameError &&
+                                        <div className="text-desc text-[14px] text-red-caution text-center mt-[5px]">{this.state.changeUsernameError}</div>}
+                                        <div className="text-center">
+                                            <ModalButton className="bg-gray-dark text-white my-[10px] mx-[5px] px-[20px]" disabled={this.state.changeUsernameLoading} onClick={this.onChangeUsernameCancel}>Cancel</ModalButton>
+                                            <ModalButton className="bg-blue-basic text-white my-[10px] mx-[5px] px-[20px]" loading={this.state.changeUsernameLoading} onClick={this.onChangeUsernameSubmit}>Change Username</ModalButton>
+                                        </div>
+                                    </div>
+                                </>}
                             </SettingsBlock>
                             <SettingsBlock>
                                 <div className="w-100% text-center">
