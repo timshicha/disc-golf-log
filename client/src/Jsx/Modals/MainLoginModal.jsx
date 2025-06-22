@@ -32,7 +32,7 @@ const MainLoginModal = (props) => {
     // "local", "cloud", or "both"
     const [selectedDataOption, setSelectedDataOption] = useState("both");
     const [user] = useState({
-        email: null, username: null, data: {}
+        email: null, username: null, data: {}, usernameModified: false
     });
 
     // When a user logs in with Google or email+code, this function is called
@@ -42,6 +42,7 @@ const MainLoginModal = (props) => {
         user.email = result.email;
         user.username = result.username;
         user.data = result.data;
+        user.usernameModified = result.username_modified;
         // If a new user, default to keeping device data
         if(result.isNewUser === true) {
             setSelectedDataOption("local");
@@ -114,11 +115,12 @@ const MainLoginModal = (props) => {
             localStorage.setItem("email", user.email);
             localStorage.setItem("username", user.username);
             localStorage.setItem("last-pushed-to-cloud", Date ());
+            localStorage.setItem("username-modified", user.usernameModified);
             setMainLoginError(null);
             setPostLoginError(null);
             setShowOptionModal(false);
             setSelectedDataOption(null);
-            props.onLogin(user.email, user.username);
+            props.onLogin(user.email, user.username, user.usernameModified);
         }
         else {
             console.log(result);

@@ -31,7 +31,8 @@ const handleSuccessfulLogin = async (req, res, email) => {
             email: user.email,
             data: user.data,
             username: user.username,
-            isNewUser: isNewUser
+            isNewUser: isNewUser,
+            username_modified: user.username_modified
         });
     }
     // If token not set

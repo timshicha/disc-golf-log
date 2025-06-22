@@ -27,9 +27,9 @@ const addUser = async (email, userData) => {
 // Change username
 const changeUsername = async (user, newUsername) => {
     // Make sure this use has not yet changed their username
-    // if(user.username_modified) {
-    //     return { success: false, error: "Username has already been changed once"};
-    // }
+    if(user.username_modified) {
+        return { success: false, error: "Username has already been changed once"};
+    }
     // Make sure this new username is valid
     const validUsername = isValidUsername(newUsername);
     if(!validUsername.isValid) {
@@ -43,7 +43,8 @@ const changeUsername = async (user, newUsername) => {
             return { success: false, error: "This usename is taken" };
         }
         // Otherwise try to update
-        await db`UPDATE ${SCHEMA}.users SET username = ${newUsername}, username_modified = true
+        user.data.username = newUsername;
+        await db`UPDATE ${SCHEMA}.users SET username = ${newUsername}, username_modified = true, data = ${user.data}
             WHERE useruuid = ${user.useruuid}`;
         return { success: true, error: null };
     } catch (error) {

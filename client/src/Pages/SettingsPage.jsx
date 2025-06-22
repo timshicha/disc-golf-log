@@ -8,7 +8,7 @@ import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
-import EditButton from "../Jsx/Components/EditButton.jsx";
+import editIcon from "../assets/images/editIcon.png";
 import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 
@@ -33,6 +33,7 @@ class SettingsPage extends React.Component {
             lastPushedToCloudString: ". . .",
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
+            usernameModified: localStorage.getItem("username-modified") === "true",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -78,13 +79,15 @@ class SettingsPage extends React.Component {
         localStorage.setItem("auto-open-course-on-creation", event.target.checked);
     }
 
-    onLogin = (email, username) => {
+    onLogin = (email, username, usernameModified) => {
         this.setState({
             email: email,
             username: username,
             currentModal: null,
-            uploadChangesToCloudError: null
+            uploadChangesToCloudError: null,
+            usernameModifed: usernameModified
         });
+        console.log(usernameModified);
         this.updateLastPushedToCloudString();
     }
 
@@ -162,9 +165,12 @@ class SettingsPage extends React.Component {
         const result = await httpChangeUsername(this.state.newUsername);
         if(result.success) {
             localStorage.setItem("username", this.state.newUsername);
+            localStorage.setItem("username-modified", true);
             this.setState({
                 changeUsernameLoading: false,
                 changingUsername: false,
+                username: this.state.newUsername,
+                usernameModified: true
             });
         }
         else {
@@ -194,7 +200,9 @@ class SettingsPage extends React.Component {
                             <SettingsBlock>
                                 {!this.state.changingUsername &&
                                 <>
-                                    <EditButton className="float-right w-[38px] bg-gray-dark p-[4px]" onClick={this.onChangeUsernameClick}></EditButton>
+                                    <ModalButton className="float-right bg-gray-dark py-[9px]" disabled={this.state.usernameModified} onClick={this.onChangeUsernameClick}>
+                                        <img src={editIcon} className="w-[25px]"/>
+                                    </ModalButton>
                                     <div className="text-desc text-gray text-[11px] mb-[-3px]">Username</div>
                                     <div className="text-desc text-gray-dark italic max-w-[calc(100%-48px)] break-words">{this.state.username}</div>
                                     <div className="text-desc text-gray text-[11px] mt-[5px] mb-[-3px]">Email</div>
