@@ -77,7 +77,7 @@ const isValidCourseName = (courseName) => {
             const c = courseName[i];
             if(c.charCodeAt(0) < 32 || c.charCodeAt(0) > 126) {
                 result.isValid = false;
-                result.error = `Invalid character: ${c}`;
+                result.error = `Invalid character: '${c}'`;
                 break;
             }
         }

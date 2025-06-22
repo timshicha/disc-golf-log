@@ -37,7 +37,7 @@ const changeUsername = async (user, newUsername) => {
     }
     try {
         // Make sure username is not used by anyone else
-        const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.users WHERE username = ${newUsername}`;
+        const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.users WHERE LOWER(username) = LOWER(${newUsername})`;
         const count = Number(result.count);
         if(count > 0) {
             return { success: false, error: "This usename is taken" };
