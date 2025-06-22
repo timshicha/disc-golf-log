@@ -10,6 +10,7 @@ import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
 import EditButton from "../Jsx/Components/EditButton.jsx";
 import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
+import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -145,7 +146,6 @@ class SettingsPage extends React.Component {
 
     onChangeUsernameClick = () => {
         this.setState({ changingUsername: true });
-        console.log("change");
     }
 
     onChangeUsernameCancel = () => {
@@ -156,11 +156,23 @@ class SettingsPage extends React.Component {
         this.setState({ newUsername: event.target.value });
     }
 
-    onChangeUsernameSubmit = () => {
+    onChangeUsernameSubmit = async () => {
         this.setState({ changeUsernameLoading: true });
         // Logic for changing username
-        // ...
-        this.setState({ changeUsernameLoading: false });
+        const result = await httpChangeUsername(this.state.newUsername);
+        if(result.success) {
+            localStorage.setItem("username", this.state.newUsername);
+            this.setState({
+                changeUsernameLoading: false,
+                changingUsername: false,
+            });
+        }
+        else {
+            this.setState({
+                changeUsernameLoading: false,
+                changeUsernameError: result.error
+            });
+        }
     }
 
     render = () => {
@@ -196,7 +208,7 @@ class SettingsPage extends React.Component {
                                     <div className="text-desc text-red-caution text-[14px] mb-[5px]">You may change your username once. If you need to change it again, you will need to contact support.</div>
                                     <div className="text-desc text-[14px]"> New username:</div>
                                     <div className="mb-[10px]">
-                                        <Input className="w-[100%]" value={this.state.newUsername} onChange={this.onNewUsernameChange}></Input>
+                                        <Input id="change-username-input" className="w-[100%]" value={this.state.newUsername} onChange={this.onNewUsernameChange}></Input>
                                         {this.state.changeUsernameError &&
                                         <div className="text-desc text-[14px] text-red-caution text-center mt-[5px]">{this.state.changeUsernameError}</div>}
                                         <div className="text-center">
