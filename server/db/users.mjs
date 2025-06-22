@@ -1,6 +1,8 @@
 import { isValidUsername } from "../utils/format.mjs";
+import { generateUsername } from "../utils/generators.mjs";
 import db, { SCHEMA } from "./db_setup.mjs";
 import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 // Find a user with a certain email.
 // May fail so be sure to wrap in try block!
@@ -16,12 +18,30 @@ const addUser = async (email, userData) => {
     // Stringigy all data
     const safeEmail = String(email);
     
-    const generatedUserNumber = (await db`SELECT nextval('${SCHEMA}.user_number_seq') AS user_number`)[0].user_number;
-    const generatedUsername = `user${generatedUserNumber}`;
-    userData.username = generatedUsername;
+    // A username will be generated and checked if it's taken. If taken, a new one will be generated.
+    // This will repeat MAX_CYCLES times before failing. If it fails 10 times, we will generate a
+    // uuid. This is not ideal but works.
+    let generatedUsername = generateUsername();
+    const MAX_CYCLES = 50;
+    for (let i = 0; !isUsernameAvailable(generatedUsername) && i < MAX_CYCLES; i++) {
+        generatedUsername = generateUsername();
+        if(i === MAX_CYCLES - 1) {
+            generatedUsername = uuidv4();
+        }
+    }
     
     const [user] = await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${userData}, ${generatedUsername}) RETURNING *`;
     return user;
+}
+
+const isUsernameAvailable = async (username) => {
+    try {
+        const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.users WHERE LOWER(username) = LOWER(${username})`;
+        if(Number(result.count) > 0) return false;
+        return true;
+    } catch (error) {
+        return false;
+    }
 }
 
 // Change username
@@ -37,9 +57,7 @@ const changeUsername = async (user, newUsername) => {
     }
     try {
         // Make sure username is not used by anyone else
-        const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.users WHERE LOWER(username) = LOWER(${newUsername})`;
-        const count = Number(result.count);
-        if(count > 0) {
+        if(!isUsernameAvailable(newUsername)) {
             return { success: false, error: "This usename is taken" };
         }
         // Otherwise try to update
@@ -53,4 +71,4 @@ const changeUsername = async (user, newUsername) => {
     }
 }
 
-export { findUserByEmail, addUser, changeUsername };
+export { findUserByEmail, addUser, isUsernameAvailable, changeUsername };
