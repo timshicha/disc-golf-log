@@ -80,7 +80,7 @@ class Round extends React.Component {
     render () {
         return (
             <div className="mt-[15px] font-bold w-[100%]">
-                <div className="text-[16px] text-gray-subtle w-[98%]">
+                <div className="text-[16px] text-gray-normal w-[98%]">
                     <div className={"min-w-[35px] inline-block text-white text-center mr-[3px] font-bold " +
                     (this.state.total < 0 ? "bg-[green]" : this.state.total === 0 ? "bg-black" : "bg-[red]")}>
                         {this.state.total > 0 ? "+" : ""}{this.state.total}
@@ -111,7 +111,7 @@ class Round extends React.Component {
                         })}
                     </div>
                 </div>
-                <div className="text-[12px] font-normal text-gray-subtle">{this.props.round.comments}</div>
+                <div className="text-desc text-[14px] text-gray-subtle">{this.props.round.comments}</div>
             </div>
         );
     }

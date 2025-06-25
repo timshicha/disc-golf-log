@@ -32,14 +32,21 @@ class CoursePage extends React.Component{
     // On initial render
     componentDidMount = () => {
         // Load rounds from Dexie
-        this.reloadCourseRounds();
+        this.reloadCourseRounds(
+            // If we should auto-scroll to bottom after rounds are loaded
+            localStorage.getItem("auto-scroll-to-bottom-on-course-open") == "true" ? 
+            this.scrollToBottom:
+            null
+        );
     }
 
     // Get a list of rounds for this course
-    reloadCourseRounds = () => {
+    reloadCourseRounds = (callback) => {
         DataHandler.getCourseRounds(this.state.course).then(result => {
             // Sort the rounds by date
-            this.setState({rounds: result});
+            this.setState({rounds: result},
+                callback ? callback: null
+            );
         });
     }
 
@@ -83,17 +90,17 @@ class CoursePage extends React.Component{
             this.forceUpdate();
         });
     }
-
+    
     render = () => {
         return (
-        <div className="mt-[60px]">
+            <div className="mt-[60px]">
             {this.state.currentModal === Modals.ROUND_OPTIONS &&
                 <RoundOptionsModal roundIndex={this.state.roundSelectedIndex}
-                    round={this.state.rounds[this.state.roundSelectedIndex]}
-                    onClose={() => this.setState({ currentModal: null })}
-                    onUpdateDate={this.updateRoundDate}
-                    onUpdateComments={this.updateRoundComments}
-                    onDeleteRound={this.deleteSelectedRound}
+                round={this.state.rounds[this.state.roundSelectedIndex]}
+                onClose={() => this.setState({ currentModal: null })}
+                onUpdateDate={this.updateRoundDate}
+                onUpdateComments={this.updateRoundComments}
+                onDeleteRound={this.deleteSelectedRound}
                 >
                 </RoundOptionsModal>
             }
@@ -102,14 +109,14 @@ class CoursePage extends React.Component{
                 {this.state.rounds.sort((a, b) => compareStrings(a.date, b.date)).map((round, index) => {
                     return (
                         <Round round={round} course={this.state.course} key={round.roundUUID} index={index}
-                            // When the user clicks on the triple dot icon
-                            // on this round
-                            onOpenModal={(index) => {
-                                this.setState({
-                                    roundSelectedIndex: index,
-                                    currentModal: Modals.ROUND_OPTIONS
-                                });
-                            }}
+                        // When the user clicks on the triple dot icon
+                        // on this round
+                        onOpenModal={(index) => {
+                            this.setState({
+                                roundSelectedIndex: index,
+                                currentModal: Modals.ROUND_OPTIONS
+                            });
+                        }}
                         >
                         </Round>
                     );

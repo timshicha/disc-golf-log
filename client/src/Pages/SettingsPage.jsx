@@ -29,8 +29,9 @@ class SettingsPage extends React.Component {
         this.props = props;
         // Pull user settings from local storage
         this.state = {
-            confirmDelete: localStorage.getItem("confirm-delete") === "true",
-            autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") === "true",
+            confirmDelete: localStorage.getItem("confirm-delete") == "true",
+            autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") == "true",
+            autoScrollToBottomOnCourseOpen: localStorage.getItem("auto-scroll-to-bottom-on-course-open") == "true",
             lastPushedToCloudString: ". . .",
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
@@ -78,6 +79,11 @@ class SettingsPage extends React.Component {
     handleAutoOpenCourseOnCreation = (event) => {
         this.setState({ autoOpenCourseOnCreation: event.target.checked });
         localStorage.setItem("auto-open-course-on-creation", event.target.checked);
+    }
+
+    handleAutoScrollToBottomOnCourseOpen = (event) => {
+        this.setState({ autoScrollToBottomOnCourseOpen: event.target.checked });
+        localStorage.setItem("auto-scroll-to-bottom-on-course-open", event.target.checked);
     }
 
     onLogin = (email, username, usernameModified) => {
@@ -279,6 +285,14 @@ class SettingsPage extends React.Component {
                         </input>
                         <div className="text-desc text-gray-mild">
                             Automatically open course after it is created.
+                        </div>
+                    </SettingsBlock>
+                    <SettingsBlock className="min-h-[60px] bg-special">
+                        <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleAutoScrollToBottomOnCourseOpen}
+                            id="auto-scroll-to-bottom-on-course-open-checkbox" checked={this.state.autoScrollToBottomOnCourseOpen}>    
+                        </input>
+                        <div className="text-desc text-gray-mild">
+                            Automatically scroll to the most recent rounds when opening a course.
                         </div>
                     </SettingsBlock>
                     <SettingsBlock>
