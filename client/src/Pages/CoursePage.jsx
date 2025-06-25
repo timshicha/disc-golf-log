@@ -32,8 +32,12 @@ class CoursePage extends React.Component{
     // On initial render
     componentDidMount = () => {
         // Load rounds from Dexie
-        this.reloadCourseRounds(this.scrollToBottom);
-        // Scroll to the bottom
+        this.reloadCourseRounds(
+            // If we should auto-scroll to bottom after rounds are loaded
+            localStorage.getItem("auto-scroll-to-bottom-on-course-open") == "true" ? 
+            this.scrollToBottom:
+            null
+        );
     }
 
     // Get a list of rounds for this course
