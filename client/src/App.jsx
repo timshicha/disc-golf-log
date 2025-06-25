@@ -4,11 +4,13 @@ import SettingsPage from "./Pages/SettingsPage";
 import NavBar, { NavBarBackButton, NavBarTitle } from "./Jsx/Components/NavBar";
 import titleLogo from "./assets/images/title-logo.png";
 import cogwheel from "./assets/images/cogwheel.png";
+import socialIcon from "./assets/images/socialIcon.png";
 import CoursePage from "./Pages/CoursePage";
-import { Pages } from "./Utilities/Enums";
+import { Modals, Pages } from "./Utilities/Enums";
 import { version as currentVersion } from "../package.json";
 import { isVersionBehind } from "./Utilities/sorting";
 import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
+import SocialModal from "./Jsx/Modals/SocialModal";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -51,6 +53,7 @@ if(email) {
 function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
     const [currentCourse, setCurrentCourse] = useState(null);
+    const [currentModal, setCurrentModal] = useState(null);
 
     useEffect(() => {
     }, []);
@@ -69,13 +72,20 @@ function App() {
 
     return (
         <div className="overflow-hidden">
+            {currentModal === Modals.SOCIAL &&
+            <SocialModal onClose={() => {setCurrentModal(null)}}>
+            </SocialModal>}
             {currentPage === Pages.MAIN &&
             <>
                 <NavBar>
                     <NavBarTitle>My Courses</NavBarTitle>
-                    <img src={titleLogo} className="h-[40px]"></img>
                     <div className="flex">
-                        <button className="w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
+                        <button className="absolute left-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
+                            setCurrentModal(Modals.SOCIAL);
+                        }}>
+                            <img className="h-[42px] w-[42px]" src={socialIcon}></img>
+                        </button>
+                        <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
                         }}>
                             <img className="h-[42px] w-[42px]" src={cogwheel}></img>

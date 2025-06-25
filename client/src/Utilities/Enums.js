@@ -11,7 +11,8 @@ export const Modals = {
     COMMENTS: "comments",
     MAIN_LOGIN: "main login",
     CONFIRM_LOGOUT: "confirm logout",
-    LOGIN_CODE_MODAL: "login code modal"
+    LOGIN_CODE_MODAL: "login code modal",
+    SOCIAL: "social modal"
 }
 
 export const Pages = {

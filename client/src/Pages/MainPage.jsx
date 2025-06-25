@@ -12,6 +12,7 @@ import StickyDiv from "../Jsx/Components/StickyDiv";
 import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
 import SearchBar from "../Jsx/Components/SearchBar";
 import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
+import SocialModal from "../Jsx/Modals/SocialModal";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -87,6 +88,7 @@ function MainPage (props) {
 
     return (
         <div className="p-[10px] height-[100dvh]] overflow-hidden">
+
             {currentModal === Modals.RENAME &&
                 // If the user clicks the X, bring them back to course options
                 <RenameModal replaceImg="back-arrow" onSubmit={handleRenameCourse}
