@@ -13,6 +13,7 @@ import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 configDotenv();
 const PORT = process.env.PORT || 8080;
 const CLIENT_HOSTNAME = process.env.CLIENT_HOSTNAME;
+const CLIENT_HOSTNAME2 = process.env.CLIENT_HOSTNAME2;
 const ENV = process.env.ENV;
 
 const app = express();
@@ -26,8 +27,17 @@ const limiter = rateLimit({
     legacyHeaders: false
 });
 
+const whitelist = [CLIENT_HOSTNAME, CLIENT_HOSTNAME2];
+
 const corsOptions = {
-    origin: CLIENT_HOSTNAME,
+    origin: (origin, callback) => {
+        if(!origin || whitelist.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS."));
+        }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
