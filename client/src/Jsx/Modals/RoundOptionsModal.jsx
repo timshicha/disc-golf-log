@@ -28,7 +28,7 @@ const RoundOptionsModal = (props) => {
                 </ModalButton>
                 <ModalButton className="w-[95%] bg-gray-dark mt-[10px] text-white" onClick={() => {
                     setCurrentModal(Modals.COMMENTS);
-                }}>Add comment</ModalButton>
+                }}>{props.round.comments ? "Modify comments" : "Add comments"}</ModalButton>
                 <ModalButton onClick={() => {
                     // If confirm delete, show modal first
                     if(localStorage.getItem("confirm-delete") === "true") {

@@ -16,8 +16,13 @@ let version = localStorage.getItem("version") || "0.0.0";
 
 // v1.0.1 update
 // Confirm delete default = true
-if(isVersionBehind(version, "1.0.1")) {
+if(isVersionBehind(version, "1.1.1")) {
     localStorage.setItem("confirm-delete", true);
+}
+// v1.0.5 update
+// Auto scroll to bottom of the page when opening a course
+if(isVersionBehind(version, "1.1.5")) {
+    localStorage.setItem("auto-scroll-to-bottom-on-course-open", true);
 }
 
 localStorage.setItem("version", currentVersion);

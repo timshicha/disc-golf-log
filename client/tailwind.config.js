@@ -8,6 +8,7 @@ export default {
             colors: {
                 "gray-dark": "#444444",
                 "gray-mild": "#666666",
+                "gray-normal": "#888888",
                 "gray-subtle": "#aaaaaa",
                 "gray-light": "#dddddd",
                 "gray-lighter": "#eeeeee",
