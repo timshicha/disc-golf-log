@@ -1,9 +1,22 @@
+import React, { useState } from "react";
 import LargeModal from "./Frames/LargeModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
+import ModalButton from "./ModalComponents/ModalButton";
 
 const SocialModal = (props) => {
 
     const username = localStorage.getItem("username") || null;
+
+    const [searchUsernameString, setSeachUsernameString] = useState("");
+
+    const onSearchUsernameChange = (event) => {
+        setSeachUsernameString(event.target.value);
+        console.log(event.target.value);
+    }
+
+    const onHandleSearchUsername = () => {
+
+    }
 
     return (
         <LargeModal {...props}>
@@ -15,6 +28,11 @@ const SocialModal = (props) => {
             <div className="text-desc text-gray-mild mt-[50%]">
                 Log in to view social page.
             </div>}
+            <div className="text-desc text-[12px] text-left ml-[15px] mt-[10px]">Search by username:</div>
+            <div className="block">
+                <input type="text" onChange={(onSearchUsernameChange)}></input>
+                <ModalButton onClick={onHandleSearchUsername} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
+            </div>
         </LargeModal>
     );
 }
