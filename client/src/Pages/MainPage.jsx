@@ -12,7 +12,6 @@ import StickyDiv from "../Jsx/Components/StickyDiv";
 import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
 import SearchBar from "../Jsx/Components/SearchBar";
 import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
-import SocialModal from "../Jsx/Modals/SocialModal";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 

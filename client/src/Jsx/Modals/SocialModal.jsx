@@ -3,10 +3,14 @@ import ModalTitle from "./ModalComponents/ModalTitle";
 
 const SocialModal = (props) => {
 
+    const username = localStorage.getItem("username") || "";
+
     return (
         <LargeModal {...props}>
             <ModalTitle>Social</ModalTitle>
-            <div className="mt-[50%] text-desc text-black">Social page coming soon!</div>
+            <div className="bg-gray-light w-[95%] mx-auto h-[50px]">
+                <div className="w-[fit-content] text-desc text-gray-mild ml-[10px]">{username}</div>
+            </div>
         </LargeModal>
     );
 }
