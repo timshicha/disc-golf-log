@@ -5,8 +5,7 @@ import ModalButton from "./ModalComponents/ModalButton";
 
 const SocialModal = (props) => {
 
-    const username = localStorage.getItem("username") || null;
-
+    const [username, setUsername] = useState(props.username);
     const [searchUsernameString, setSeachUsernameString] = useState("");
 
     const onSearchUsernameChange = (event) => {
@@ -21,13 +20,9 @@ const SocialModal = (props) => {
     return (
         <LargeModal {...props}>
             <ModalTitle>Social</ModalTitle>
-            {username ?
             <div className="bg-gray-light w-[95%] mx-auto h-[50px]">
                 <div className="w-[fit-content] text-desc text-gray-mild ml-[10px]">{username}</div>
-            </div> :
-            <div className="text-desc text-gray-mild mt-[50%]">
-                Log in to view social page.
-            </div>}
+            </div>
             <div className="text-desc text-[12px] text-left ml-[15px] mt-[10px]">Search by username:</div>
             <div className="block">
                 <input type="text" onChange={(onSearchUsernameChange)}></input>

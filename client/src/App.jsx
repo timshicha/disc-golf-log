@@ -73,7 +73,7 @@ function App() {
     return (
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
-            <SocialModal onClose={() => {setCurrentModal(null)}}>
+            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")}>
             </SocialModal>}
             {currentPage === Pages.MAIN &&
             <>
