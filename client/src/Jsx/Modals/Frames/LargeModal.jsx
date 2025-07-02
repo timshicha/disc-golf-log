@@ -24,7 +24,7 @@ class LargeModal extends React.Component {
             <>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
                 <div onSubmit={this.props.onSubmit} className={"fixed top-[50%] left-[50%] z-1000\
-                    bg-gray-subtle rounded-[10px] p-[10px] text-center\
+                    bg-gray-subtle rounded-[10px] p-[15px] text-center\
                     translate-x-[-50%] translate-y-[-50%] w-[500px] max-w-[95%] h-[600px] max-h-[90%]\
                     text-[20px] font-sans font-bold [&_input,textarea]:inline-block\
                     [&_input,textarea]:p-[5px] [&_input,textarea]:bg-gray-lighter [&_input]:placeholder-gray-300 " + this.props.className} ref={this.ref}>
