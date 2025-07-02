@@ -11,6 +11,12 @@ const findUserByEmail = async (email) => {
     return user;
 }
 
+// Find a user by username
+const findUserByUsername = async (username) => {
+    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE username = ${username} LIMIT 1`;
+    return user;
+}
+
 // Add a user with email
 const addUser = async (email, userData) => {
     // Create a userUUID
@@ -71,4 +77,4 @@ const changeUsername = async (user, newUsername) => {
     }
 }
 
-export { findUserByEmail, addUser, isUsernameAvailable, changeUsername };
+export { findUserByEmail, findUserByUsername, addUser, isUsernameAvailable, changeUsername };
