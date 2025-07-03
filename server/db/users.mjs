@@ -12,9 +12,15 @@ const findUserByEmail = async (email) => {
 }
 
 // Find a user by username
-const findUserByUsername = async (username) => {
-    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE username = ${username} LIMIT 1`;
-    return user;
+const findUserByUsername = async (username, caseSensitive=true) => {
+    if(caseSensitive) {
+        const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE username = ${username} LIMIT 1`;
+        return user;
+    }
+    else {
+        const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE UPPER(username) = UPPER(${username}) LIMIT 1`;
+        return user;
+    }
 }
 
 // Add a user with email

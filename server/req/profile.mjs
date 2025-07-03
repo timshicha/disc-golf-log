@@ -15,7 +15,7 @@ export const registerGetProfileEndpoint = (app) => {
         }
         
         try {
-            const searchUser = await findUserByUsername(req.params.username);
+            const searchUser = await findUserByUsername(req.params.username, false);
             if(!searchUser) {
                 throw new Error ("Could not find user.");
             }
