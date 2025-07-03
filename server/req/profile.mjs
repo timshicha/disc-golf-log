@@ -21,6 +21,7 @@ export const registerGetProfileEndpoint = (app) => {
             }
             const result = await getAllCourseNames(searchUser.useruuid);
             res.status(200).json({
+                username: searchUser.username,
                 courses: result
             });
         } catch (error) {
