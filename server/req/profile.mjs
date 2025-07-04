@@ -19,11 +19,22 @@ export const registerGetProfileEndpoint = (app) => {
             if(!searchUser) {
                 throw new Error ("Could not find user.");
             }
-            const result = await getAllCourseNames(searchUser.useruuid);
-            res.status(200).json({
-                username: searchUser.username,
-                courses: result
-            });
+            // If profile is private (and this is not the user)
+            if(!searchUser.public_profile && user.useruuid !== searchUser.useruuid) {
+                res.status(200).json({
+                    username: searchUser.username,
+                    visible: false
+                });
+            }
+            // If their profile is public
+            else {
+                const result = await getAllCourseNames(searchUser.useruuid);
+                res.status(200).json({
+                    username: searchUser.username,
+                    courses: result,
+                    visible: true
+                });
+            }
         } catch (error) {
             res.status(400).send("Could not get data.");
             console.log(error);

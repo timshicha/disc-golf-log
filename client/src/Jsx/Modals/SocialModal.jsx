@@ -11,6 +11,7 @@ const SocialModal = (props) => {
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
     const [courseList, setCourseList] = useState([]);
+    const [privateProfile, setPrivateProfile] = useState(false);
 
 
     const loadProfile = async (username) => {
@@ -19,8 +20,17 @@ const SocialModal = (props) => {
         // If successfully retrieved profile, display it
         if(result.success) {
             setUsername(result.data.username);
-            setCourseList(result.data.courses);
-            setCoursesPlayed(result.data.courses.length);
+            // If profile is visible
+            if(result.data.visible) {
+                setPrivateProfile(false);
+                setCourseList(result.data.courses);
+                setCoursesPlayed(result.data.courses.length);
+            }
+            else {
+                setPrivateProfile(true);
+                setCourseList([]);
+                setCoursesPlayed(0);
+            }
         }
     }
 
@@ -43,29 +53,35 @@ const SocialModal = (props) => {
             </div>
             <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-scroll">
                 <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
-                <div className="text-[14px] text-gray-medium w-[90%] mx-auto">
-                    <div className="w-[50%] inline-block">
-                        Courses: {coursesPlayed}
-                    </div>
-                    <div className="w-[50%] inline-block">
-                        Rounds: {roundsPlayed}
-                    </div>
-                </div>
-                <hr className="my-[5px]"/>
-                <div className="text-gray-dark">Courses:</div>
-                {(courseList && courseList.length > 0) ?
-                    courseList.map((course, index) => {return (
-                        <div className="ml-[5px] text-gray-medium" key={index}>- {course}</div>
-                    )})
-                    :
-                    <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                {privateProfile &&
+                    <div className="text-desc text-center">This user's profile is private.</div>
                 }
-                <hr className="my-[5px]" />
-                <div className="text-gray-dark">Rounds:</div>
-                <div className="ml-[5px] text-gray-subtle">Coming soon</div>
-                <hr className="my-[5px]" />
-                <div className="text-gray-dark">Friends:</div>
-                <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                {!privateProfile &&
+                <>
+                    <div className="text-[14px] text-gray-medium w-[90%] mx-auto">
+                        <div className="w-[50%] inline-block">
+                            Courses: {coursesPlayed}
+                        </div>
+                        <div className="w-[50%] inline-block">
+                            Rounds: {roundsPlayed}
+                        </div>
+                    </div>
+                    <hr className="my-[5px]"/>
+                    <div className="text-gray-dark">Courses:</div>
+                    {(courseList && courseList.length > 0) ?
+                        courseList.map((course, index) => {return (
+                            <div className="ml-[5px] text-gray-medium" key={index}>- {course}</div>
+                        )})
+                        :
+                        <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                    }
+                    <hr className="my-[5px]" />
+                    <div className="text-gray-dark">Rounds:</div>
+                    <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                    <hr className="my-[5px]" />
+                    <div className="text-gray-dark">Friends:</div>
+                    <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                </>}
             </div>
         </LargeModal>
     );

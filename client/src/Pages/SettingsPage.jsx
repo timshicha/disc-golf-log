@@ -37,7 +37,7 @@ class SettingsPage extends React.Component {
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
-            public_profile: localStorage.getItem("public-profile"),
+            public_profile: localStorage.getItem("public-profile") === "true",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
