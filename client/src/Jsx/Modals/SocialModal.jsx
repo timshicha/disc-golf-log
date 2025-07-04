@@ -10,7 +10,7 @@ const SocialModal = (props) => {
     const searchUsernameRef = useRef(null);
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
-    const [courseList, setCourseList] = useState(["alaska", "bob"]);
+    const [courseList, setCourseList] = useState([]);
 
 
     const loadProfile = async (username) => {

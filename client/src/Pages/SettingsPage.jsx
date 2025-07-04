@@ -12,6 +12,7 @@ import editIcon from "../assets/images/editIcon.png";
 import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 import { isValidUsername } from "../Utilities/format.js";
+import { httpUpdateProfileVisibility } from "../ServerCalls/profile.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -36,6 +37,7 @@ class SettingsPage extends React.Component {
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
+            public_profile: localStorage.getItem("public-profile"),
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -165,6 +167,18 @@ class SettingsPage extends React.Component {
         this.setState({ newUsername: event.target.value });
     }
 
+    onUpdateProfileVisibilityClick = async () => {
+        const newPublicProfile = !this.state.public_profile;
+        const result = await httpUpdateProfileVisibility(newPublicProfile);
+        if(result.success) {
+            this.setState({ public_profile: newPublicProfile });
+            localStorage.setItem("public-profile", newPublicProfile);
+        }
+        else {
+            console.log(result.error);
+        }
+    }
+
     onChangeUsernameSubmit = async () => {
         this.setState({ changeUsernameLoading: true });
         // Logic for changing username
@@ -249,6 +263,14 @@ class SettingsPage extends React.Component {
                                     {this.state.uploadChangesToCloudError && 
                                         <div className="text-desc text-red-caution mt-[3px]">{this.state.uploadChangesToCloudError}</div>
                                     }
+                                </div>
+                            </SettingsBlock>
+                            <SettingsBlock>
+                                <div className="text-desc text-gray-mild text-left">
+                                    Your profile is currently {this.state.public_profile ? "public" : "private"}.
+                                </div>
+                                <div className="text-center mt-[10px]">
+                                    <ModalButton onClick={this.onUpdateProfileVisibilityClick} className="bg-gray-dark text-white">Set to {this.state.public_profile ? "private" : "public"}</ModalButton>
                                 </div>
                             </SettingsBlock>
                         </>

@@ -33,4 +33,39 @@ const httpGetUserProfile = async (username) => {
     };
 }
 
-export { httpGetUserProfile };
+const httpUpdateProfileVisibility = async (public_profile) => {
+    let result;
+    let status;
+    try {
+        result = await fetch(SERVER_URI + "/settings/public_profile", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                public_profile: public_profile
+            })
+        });
+        if(!result.ok) {
+            status = result.status;
+            throw new Error(`HTTP request failed with status ${result.status}.`);
+        }
+        else {
+            result = await result.json();
+        }
+    } catch (error) {
+        console.log(`Could not update profile visibility: ${error}`);
+        return {
+            success: false,
+            error: error,
+            status: status
+        };
+    }
+    return {
+        success: true,
+        data: result
+    };
+}
+
+export { httpGetUserProfile, httpUpdateProfileVisibility };

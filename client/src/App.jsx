@@ -26,6 +26,11 @@ if(isVersionBehind(version, "1.1.1")) {
 if(isVersionBehind(version, "1.1.5")) {
     localStorage.setItem("auto-scroll-to-bottom-on-course-open", true);
 }
+// v1.0.6 update
+// Set profile to private by default
+if(isVersionBehind(version, "1.1.6")) {
+    localStorage.setItem("public-profile", false);
+}
 
 localStorage.setItem("version", currentVersion);
 

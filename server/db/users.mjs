@@ -83,4 +83,23 @@ const changeUsername = async (user, newUsername) => {
     }
 }
 
-export { findUserByEmail, findUserByUsername, addUser, isUsernameAvailable, changeUsername };
+// Adjust profile visibility
+const setProfileVisibility = async (user, public_profile=false) => {
+    try {
+        if(!user) {
+            return { success: false, error: "User not provided."};
+        }
+        if(public_profile === true || public_profile === false) {
+            await db`UPDATE ${SCHEMA}.users SET public_profile = ${public_profile}
+                WHERE useruuid = ${user.useruuid}`;
+            return { success: true, error: null };
+        }
+    } catch (error) {
+        console.log(`Could not change profile visibility: ${error}`);
+        return { success: false, error: "An error occured in the server." };
+    }
+}
+
+export { findUserByEmail, findUserByUsername, addUser, isUsernameAvailable, changeUsername,
+    setProfileVisibility
+};
