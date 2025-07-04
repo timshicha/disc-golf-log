@@ -52,5 +52,11 @@ const deleteAllRounds = async (userUUID) => {
     return result;
 }
 
+const getUserRoundsCount = async (userUUID) => {
+    const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
+    return parseInt(result?.count || 0);
+}
 
-export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds };
+
+export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getUserRoundsCount };

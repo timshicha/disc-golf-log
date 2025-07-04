@@ -27,6 +27,7 @@ const SocialModal = (props) => {
                 setPrivateProfile(false);
                 setCourseList(result.data.courses);
                 setCoursesPlayed(result.data.courses.length);
+                setRoundsPlayed(result.data.roundCount);
             }
             else {
                 setPrivateProfile(true);

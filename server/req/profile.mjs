@@ -1,5 +1,6 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCourseNames } from "../db/courses.mjs";
+import { getUserRoundsCount } from "../db/rounds.mjs";
 import { findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
 /**
@@ -31,10 +32,12 @@ export const registerGetProfileEndpoint = (app) => {
             }
             // If their profile is public
             else {
-                const result = await getAllCourseNames(searchUser.useruuid);
+                const courses = await getAllCourseNames(searchUser.useruuid);
+                const roundCount = await getUserRoundsCount(searchUser.useruuid);
                 res.status(200).json({
                     username: searchUser.username,
-                    courses: result,
+                    courses: courses,
+                    roundCount: roundCount,
                     visible: true
                 });
             }
