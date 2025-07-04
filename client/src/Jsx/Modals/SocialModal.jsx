@@ -11,6 +11,7 @@ const SocialModal = (props) => {
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
     const [courseList, setCourseList] = useState([]);
+    const [recentRoundsList, setRecentRoundsList] = useState([]);
     const [privateProfile, setPrivateProfile] = useState(false);
     const [userDoesNotExistError, setUserDoesNotExistError] = useState(false);
 
@@ -26,6 +27,7 @@ const SocialModal = (props) => {
             if(result.data.visible) {
                 setPrivateProfile(false);
                 setCourseList(result.data.courses);
+                setRecentRoundsList(result.data.rounds);
                 setCoursesPlayed(result.data.courses.length);
                 setRoundsPlayed(result.data.roundCount);
             }
@@ -44,8 +46,10 @@ const SocialModal = (props) => {
     }
 
     useEffect(() => {
-        setUsername(props.username);
-        loadProfile(props.username);
+        if(props.username) {
+            setUsername(props.username);
+            loadProfile(props.username);
+        }
     }, []);
 
     const onHandleSearchUsername = () => {
@@ -61,7 +65,7 @@ const SocialModal = (props) => {
                 <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
             </div>
             <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-scroll">
-                {!userDoesNotExistError &&
+                {!userDoesNotExistError && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                     {privateProfile &&
@@ -88,7 +92,14 @@ const SocialModal = (props) => {
                         }
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Rounds:</div>
-                        <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                        <div className="ml-[5px] text-gray-subtle">
+                            {recentRoundsList.map((round, index) => {
+                                return (
+                                    <div key={index}>{round.name} {round.score}
+                                    </div>
+                                );
+                            })}
+                        </div>
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Friends:</div>
                         <div className="ml-[5px] text-gray-subtle">Coming soon</div>

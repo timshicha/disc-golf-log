@@ -58,5 +58,12 @@ const getUserRoundsCount = async (userUUID) => {
     return parseInt(result?.count || 0);
 }
 
+const getMostRecentRounds = async (userUUID, numberOfRounds=3) => {
+    const result = await db`SELECT c.data->'name' AS name, r.data->'score' AS score, r.played_at as played_at FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}
+        ORDER BY played_at DESC LIMIT ${numberOfRounds}`;
+    return result;
+}
 
-export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getUserRoundsCount };
+
+export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getUserRoundsCount, getMostRecentRounds };

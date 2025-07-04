@@ -1,6 +1,6 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCourseNames } from "../db/courses.mjs";
-import { getUserRoundsCount } from "../db/rounds.mjs";
+import { getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
 import { findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
 /**
@@ -34,10 +34,12 @@ export const registerGetProfileEndpoint = (app) => {
             else {
                 const courses = await getAllCourseNames(searchUser.useruuid);
                 const roundCount = await getUserRoundsCount(searchUser.useruuid);
+                const rounds = await getMostRecentRounds(searchUser.useruuid);
                 res.status(200).json({
                     username: searchUser.username,
                     courses: courses,
                     roundCount: roundCount,
+                    rounds: rounds,
                     visible: true
                 });
             }
