@@ -17,7 +17,10 @@ export const registerGetProfileEndpoint = (app) => {
         try {
             const searchUser = await findUserByUsername(req.params.username, false);
             if(!searchUser) {
-                throw new Error ("Could not find user.");
+                res.status(404).json({
+                    error: "There are no users with this username"
+                });
+                return;
             }
             // If profile is private (and this is not the user)
             if(!searchUser.public_profile && user.useruuid !== searchUser.useruuid) {
