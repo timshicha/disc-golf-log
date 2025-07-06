@@ -3,6 +3,7 @@ import LargeModal from "./Frames/LargeModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import ModalButton from "./ModalComponents/ModalButton";
 import { httpGetUserProfile } from "../../ServerCalls/profile.mjs";
+import SocialRound from "./ModalComponents/SocialRound";
 
 const SocialModal = (props) => {
 
@@ -95,8 +96,7 @@ const SocialModal = (props) => {
                         <div className="ml-[5px] text-gray-subtle">
                             {recentRoundsList.map((round, index) => {
                                 return (
-                                    <div key={index}>{round.name} {round.score}
-                                    </div>
+                                    <SocialRound round={round} key={index}></SocialRound>
                                 );
                             })}
                         </div>
