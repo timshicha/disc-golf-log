@@ -3,7 +3,8 @@ import LargeModal from "./Frames/LargeModal";
 import ModalTitle from "./ModalComponents/ModalTitle";
 import ModalButton from "./ModalComponents/ModalButton";
 import { httpGetUserProfile } from "../../ServerCalls/profile.mjs";
-import SocialRound from "./ModalComponents/SocialRound";
+import SocialRound from "../Components/SocialRound";
+import SocialCourseSlot from "../Components/SocialCourseSlot";
 
 const SocialModal = (props) => {
 
@@ -65,7 +66,7 @@ const SocialModal = (props) => {
                 <input type="text" className="w-[calc(100%-90px)]" ref={searchUsernameRef} name="username"></input>
                 <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
             </div>
-            <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-scroll">
+            <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-x-hidden">
                 {!userDoesNotExistError && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
@@ -83,15 +84,6 @@ const SocialModal = (props) => {
                             </div>
                         </div>
                         <hr className="my-[5px]"/>
-                        <div className="text-gray-dark">Courses:</div>
-                        {(courseList && courseList.length > 0) ?
-                            courseList.map((course, index) => {return (
-                                <div className="ml-[5px] text-gray-medium" key={index}>- {course}</div>
-                            )})
-                            :
-                            <div className="text-gray-subtle text-center">This player does not have any courses.</div>
-                        }
-                        <hr className="my-[5px]" />
                         <div className="text-gray-dark">Recent rounds:</div>
                         <div className="ml-[5px] text-gray-subtle">
                             {recentRoundsList.map((round, index) => {
@@ -100,6 +92,15 @@ const SocialModal = (props) => {
                                 );
                             })}
                         </div>
+                        <hr className="my-[5px]" />
+                        <div className="text-gray-dark">Courses:</div>
+                        {(courseList && courseList.length > 0) ?
+                            courseList.map((course, index) => {return (
+                                <SocialCourseSlot course={course} key={index}></SocialCourseSlot>
+                            )})
+                            :
+                            <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                        }
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Friends:</div>
                         <div className="ml-[5px] text-gray-subtle">Coming soon</div>

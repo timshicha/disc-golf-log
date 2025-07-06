@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { isoToVisualFormat } from "../../../Utilities/dates";
+import { isoToVisualFormat } from "../../Utilities/dates";
 
 const SocialRound = (props) => {
 

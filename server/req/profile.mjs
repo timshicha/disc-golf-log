@@ -24,7 +24,7 @@ export const registerGetProfileEndpoint = (app) => {
                 return;
             }
             // If profile is private (and this is not the user)
-            if(!searchUser.public_profile && user.useruuid !== searchUser.useruuid) {
+            if(!searchUser.public_profile && user?.useruuid !== searchUser.useruuid) {
                 res.status(200).json({
                     username: searchUser.username,
                     visible: false
