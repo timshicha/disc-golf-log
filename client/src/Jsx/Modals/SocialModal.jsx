@@ -92,7 +92,7 @@ const SocialModal = (props) => {
                             <div className="text-gray-subtle text-center">This player does not have any courses.</div>
                         }
                         <hr className="my-[5px]" />
-                        <div className="text-gray-dark">Rounds:</div>
+                        <div className="text-gray-dark">Recent rounds:</div>
                         <div className="ml-[5px] text-gray-subtle">
                             {recentRoundsList.map((round, index) => {
                                 return (

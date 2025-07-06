@@ -34,7 +34,7 @@ export const registerGetProfileEndpoint = (app) => {
             else {
                 const courses = await getAllCourseNames(searchUser.useruuid);
                 const roundCount = await getUserRoundsCount(searchUser.useruuid);
-                const rounds = await getMostRecentRounds(searchUser.useruuid);
+                const rounds = await getMostRecentRounds(searchUser.useruuid, 5);
                 res.status(200).json({
                     username: searchUser.username,
                     courses: courses,
