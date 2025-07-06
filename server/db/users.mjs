@@ -11,6 +11,18 @@ const findUserByEmail = async (email) => {
     return user;
 }
 
+// Find a user by username
+const findUserByUsername = async (username, caseSensitive=true) => {
+    if(caseSensitive) {
+        const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE username = ${username} LIMIT 1`;
+        return user;
+    }
+    else {
+        const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE UPPER(username) = UPPER(${username}) LIMIT 1`;
+        return user;
+    }
+}
+
 // Add a user with email
 const addUser = async (email, userData) => {
     // Create a userUUID
@@ -71,4 +83,23 @@ const changeUsername = async (user, newUsername) => {
     }
 }
 
-export { findUserByEmail, addUser, isUsernameAvailable, changeUsername };
+// Adjust profile visibility
+const setProfileVisibility = async (user, public_profile=false) => {
+    try {
+        if(!user) {
+            return { success: false, error: "User not provided."};
+        }
+        if(public_profile === true || public_profile === false) {
+            await db`UPDATE ${SCHEMA}.users SET public_profile = ${public_profile}
+                WHERE useruuid = ${user.useruuid}`;
+            return { success: true, error: null };
+        }
+    } catch (error) {
+        console.log(`Could not change profile visibility: ${error}`);
+        return { success: false, error: "An error occured in the server." };
+    }
+}
+
+export { findUserByEmail, findUserByUsername, addUser, isUsernameAvailable, changeUsername,
+    setProfileVisibility
+};
