@@ -110,7 +110,7 @@ const SocialModal = (props) => {
                     </>
                     }
                     {courseSelected &&
-                    <SocialCourse course={courseSelected}>
+                    <SocialCourse course={courseSelected} username={username}>
 
                     </SocialCourse>
                     }

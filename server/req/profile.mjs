@@ -1,6 +1,6 @@
 import { validateToken } from "../auth/tokens.mjs";
-import { getAllCourseNames } from "../db/courses.mjs";
-import { getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
+import { getAllCoursesProfile } from "../db/courses.mjs";
+import { getAllCourseRounds, getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
 import { findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
 /**
@@ -32,7 +32,7 @@ export const registerGetProfileEndpoint = (app) => {
             }
             // If their profile is public
             else {
-                const courses = await getAllCourseNames(searchUser.useruuid);
+                const courses = await getAllCoursesProfile(searchUser.useruuid);
                 const roundCount = await getUserRoundsCount(searchUser.useruuid);
                 const rounds = await getMostRecentRounds(searchUser.useruuid, 5);
                 res.status(200).json({
@@ -43,6 +43,34 @@ export const registerGetProfileEndpoint = (app) => {
                     visible: true
                 });
             }
+        } catch (error) {
+            res.status(400).send("Could not get data.");
+            console.log(error);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
+export const registerGetProfileCourseEndpoint = (app) => {
+    // If the user wants to get the course of a player
+    app.get("/course/:courseuuid", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(user === null) {
+            console.log("user not logged in, dont allow viewing of private profiles");
+        }
+        
+        try {
+            // Make sure the useruuid of the course belongs to someone who this user is
+            // allowed to view
+
+            // If their profile is public
+            const rounds = await getAllCourseRounds(req.params.courseuuid);
+            res.status(200).json({
+                rounds: rounds,
+            });
         } catch (error) {
             res.status(400).send("Could not get data.");
             console.log(error);
