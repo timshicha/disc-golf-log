@@ -23,6 +23,12 @@ const findUserByUsername = async (username, caseSensitive=true) => {
     }
 }
 
+// Find user by userUUID
+const findUser = async (userUUID) => {
+    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = ${userUUID}`;
+    return user;
+}
+
 // Add a user with email
 const addUser = async (email, userData) => {
     // Create a userUUID
@@ -100,6 +106,6 @@ const setProfileVisibility = async (user, public_profile=false) => {
     }
 }
 
-export { findUserByEmail, findUserByUsername, addUser, isUsernameAvailable, changeUsername,
+export { findUserByEmail, findUserByUsername, findUser, addUser, isUsernameAvailable, changeUsername,
     setProfileVisibility
 };

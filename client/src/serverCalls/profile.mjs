@@ -33,7 +33,39 @@ const httpGetUserProfile = async (username) => {
     };
 }
 
-const httpUpdateProfileVisibility = async (public_profile) => {
+const httpGetUserCourse = async (username, courseUUID) => {
+    let result;
+    let status;
+    try {
+        result = await fetch(SERVER_URI + "/course/" + courseUUID, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if(!result.ok) {
+            status = result.status;
+            throw new Error(`HTTP request failed with status ${result.status}.`);
+        }
+        else {
+            result = await result.json();
+        }
+    } catch (error) {
+        console.log(`Could not get profile: ${error}`);
+        return {
+            success: false,
+            error: error,
+            status: status
+        };
+    }
+    return {
+        success: true,
+        data: result
+    };
+}
+
+const httpUpdateProfileVisibility = async (publicProfile) => {
     let result;
     let status;
     try {
@@ -44,7 +76,7 @@ const httpUpdateProfileVisibility = async (public_profile) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                public_profile: public_profile
+                public_profile: publicProfile
             })
         });
         if(!result.ok) {
@@ -68,4 +100,4 @@ const httpUpdateProfileVisibility = async (public_profile) => {
     };
 }
 
-export { httpGetUserProfile, httpUpdateProfileVisibility };
+export { httpGetUserProfile, httpGetUserCourse, httpUpdateProfileVisibility };

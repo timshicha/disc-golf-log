@@ -37,7 +37,7 @@ class SettingsPage extends React.Component {
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
-            public_profile: localStorage.getItem("public-profile") === "true",
+            publicProfile: localStorage.getItem("public-profile") === "true",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -167,12 +167,12 @@ class SettingsPage extends React.Component {
         this.setState({ newUsername: event.target.value });
     }
 
-    onUpdateProfileVisibilityClick = async () => {
-        const newPublicProfile = !this.state.public_profile;
-        const result = await httpUpdateProfileVisibility(newPublicProfile);
+    onUpdateProfileVisibilityClick = async (event) => {
+        const checked = event.target.checked;
+        const result = await httpUpdateProfileVisibility(checked);
         if(result.success) {
-            this.setState({ public_profile: newPublicProfile });
-            localStorage.setItem("public-profile", newPublicProfile);
+            this.setState({ publicProfile: checked });
+            localStorage.setItem("public-profile", checked);
         }
         else {
             console.log(result.error);
@@ -265,12 +265,12 @@ class SettingsPage extends React.Component {
                                     }
                                 </div>
                             </SettingsBlock>
-                            <SettingsBlock>
-                                <div className="text-desc text-gray-mild text-left">
-                                    Your profile is currently {this.state.public_profile ? "public" : "private"}.
-                                </div>
-                                <div className="text-center mt-[10px]">
-                                    <ModalButton onClick={this.onUpdateProfileVisibilityClick} className="bg-gray-dark text-white">Set to {this.state.public_profile ? "private" : "public"}</ModalButton>
+                            <SettingsBlock className="min-h-[60px] bg-special">
+                                <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.onUpdateProfileVisibilityClick}
+                                    id="public-profile-checkbox" checked={this.state.publicProfile}>    
+                                </input>
+                                <div className="text-desc text-gray-mild">
+                                    Public profile. If checked, anyone can search you by your username and see your courses and rounds. If not checked, only friends can see your profile.
                                 </div>
                             </SettingsBlock>
                         </>

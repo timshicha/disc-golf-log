@@ -5,6 +5,8 @@ import ModalButton from "./ModalComponents/ModalButton";
 import { httpGetUserProfile } from "../../ServerCalls/profile.mjs";
 import SocialRound from "../Components/SocialRound";
 import SocialCourseSlot from "../Components/SocialCourseSlot";
+import SocialCourse from "../Components/SocialCourse";
+import { compareStrings } from "../../Utilities/sorting.js";
 
 const SocialModal = (props) => {
 
@@ -16,17 +18,18 @@ const SocialModal = (props) => {
     const [recentRoundsList, setRecentRoundsList] = useState([]);
     const [privateProfile, setPrivateProfile] = useState(false);
     const [userDoesNotExistError, setUserDoesNotExistError] = useState(false);
-
+    const [courseSelected, setCourseSelected] = useState(null);
 
     const loadProfile = async (username) => {
         console.log(username);
         const result = await httpGetUserProfile(username);
         // If successfully retrieved profile, display it
-        if(result.success) {
+        if(result?.success) {
+            console.log(result);
             setUserDoesNotExistError(false);
             setUsername(result.data.username);
             // If profile is visible
-            if(result.data.visible) {
+            if(result?.data?.visible) {
                 setPrivateProfile(false);
                 setCourseList(result.data.courses);
                 setRecentRoundsList(result.data.rounds);
@@ -41,9 +44,10 @@ const SocialModal = (props) => {
         }
         // If error
         else {
-            if(result.status === 404) {
+            if(result?.status === 404) {
                 setUserDoesNotExistError(true);
             }
+            setPrivateProfile(false);
         }
     }
 
@@ -55,6 +59,7 @@ const SocialModal = (props) => {
     }, []);
 
     const onHandleSearchUsername = () => {
+        setCourseSelected(null);
         loadProfile(searchUsernameRef.current.value);
     }
 
@@ -70,10 +75,10 @@ const SocialModal = (props) => {
                 {!userDoesNotExistError && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
-                    {privateProfile &&
-                        <div className="text-desc text-center">This user's profile is private.</div>
+                    {privateProfile === true &&
+                        <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
                     }
-                    {!privateProfile &&
+                    {!privateProfile && !courseSelected &&
                     <>
                         <div className="text-[14px] text-gray-medium w-[90%] mx-auto">
                             <div className="w-[50%] inline-block">
@@ -95,8 +100,8 @@ const SocialModal = (props) => {
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Courses:</div>
                         {(courseList && courseList.length > 0) ?
-                            courseList.map((course, index) => {return (
-                                <SocialCourseSlot course={course} key={index}></SocialCourseSlot>
+                            courseList.sort((a, b) => compareStrings(a.name, b.name)).map((course, index) => {return (
+                                <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
                             )})
                             :
                             <div className="text-gray-subtle text-center">This player does not have any courses.</div>
@@ -104,7 +109,15 @@ const SocialModal = (props) => {
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Friends:</div>
                         <div className="ml-[5px] text-gray-subtle">Coming soon</div>
-                    </>}
+                    </>
+                    }
+                    {courseSelected &&
+                    <SocialCourse course={courseSelected} username={username} onBack={() => {
+                        setCourseSelected(null);
+                    }}>
+
+                    </SocialCourse>
+                    }
                 </>}
                 {userDoesNotExistError &&
                 <div className="text-desc text-center">User not found.</div>}

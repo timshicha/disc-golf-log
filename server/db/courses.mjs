@@ -21,9 +21,10 @@ const getAllCourses = async (userUUID) => {
     return result
 }
 
-const getAllCourseNames = async (userUUID) => {
-    const result = await db`SELECT data->'name' AS name FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
-    return result.map(course => course.name);
+// Get all courses but only keep the details needed for profile
+const getAllCoursesProfile = async (userUUID) => {
+    const result = await db`SELECT courseuuid, data->'name' AS name FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
+    return result;
 }
 
 const deleteAllCourses = async (userUUID) => {
@@ -31,4 +32,4 @@ const deleteAllCourses = async (userUUID) => {
     return result;
 }
 
-export { addCourse, modifyCourse, deleteCourse, getAllCourses, getAllCourseNames, deleteAllCourses };
+export { addCourse, modifyCourse, deleteCourse, getAllCourses, getAllCoursesProfile, deleteAllCourses };

@@ -52,6 +52,11 @@ const deleteAllRounds = async (userUUID) => {
     return result;
 }
 
+const getAllCourseRounds = async (courseUUID, user=undefined) => {
+    const result = await db`SELECT data FROM ${SCHEMA}.rounds WHERE courseuuid = ${courseUUID}`;
+    return result.map(round => round.data);
+}
+
 const getUserRoundsCount = async (userUUID) => {
     const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
         r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
@@ -66,4 +71,4 @@ const getMostRecentRounds = async (userUUID, numberOfRounds=3) => {
 }
 
 
-export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getUserRoundsCount, getMostRecentRounds };
+export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getAllCourseRounds, getUserRoundsCount, getMostRecentRounds };
