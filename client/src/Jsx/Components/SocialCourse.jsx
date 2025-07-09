@@ -3,6 +3,7 @@ import { httpGetUserCourse } from "../../ServerCalls/profile.mjs";
 import backArrowImg from "../../assets/images/backArrow.png";
 import { isoToVisualFormat } from "../../Utilities/dates.js";
 import ObjectTools from "../../Utilities/ObjectTools.js";
+import LoadingImg from "../Components/LoadingImg.jsx";
 
 const SocialCourseRoundBox = (props) => {
     const value = props.value ? props.value : "\u2013";
@@ -43,15 +44,27 @@ const SocialCourseRound = (props) => {
 const SocialCourse = (props) => {
 
     const [rounds, setRounds] = useState([]);
+    const [roundsErrorMessage, setRoundsErrorMessage] = useState(null);
+    const [roundsLoading, setRoundsLoading] = useState(true);
 
     // Try to load the rounds
     useEffect(() => {
+        setRoundsLoading(true);
         httpGetUserCourse(props.username, props.course.courseuuid).then(result => {
-            console.log(result);
-            setRounds(result.data.rounds);
+            const profileRounds = result.data.rounds;
+            setRounds(profileRounds);
+            if(!profileRounds || profileRounds.length === 0) {
+                setRoundsErrorMessage("No rounds played on this course.");
+            }
+            else {
+                setRoundsErrorMessage(null);
+            }
         }).catch(error => {
             console.log(error);
-        });
+            setRoundsErrorMessage("Could not load rounds.");
+        }).finally(() => {
+            setRoundsLoading(false);
+        })
         // Get the rounds of a user
     }, []);
 
@@ -63,9 +76,20 @@ const SocialCourse = (props) => {
                 </button>
                 <div className="inline-block align-middle ml-[8px] text-[20px] text-gray-dark w-[calc(100%-60px)] truncate">{props.course.name}</div>
             </div>
-            {rounds.map((round, index) => {
-                return <SocialCourseRound key={index} index={index} round={round}></SocialCourseRound>
-            }).reverse()}
+            {!roundsLoading &&
+            <>
+                {rounds.map((round, index) => {
+                    return <SocialCourseRound key={index} index={index} round={round}></SocialCourseRound>
+                }).reverse()}
+                {roundsErrorMessage &&
+                <div className="text-center mt-[20px] mb-[20px]">
+                    {roundsErrorMessage}
+                </div>}
+            </>
+            }
+            {roundsLoading &&
+                <LoadingImg className="w-[40px] mx-auto my-[20px]"></LoadingImg>
+            }
         </div>
     )
 };
