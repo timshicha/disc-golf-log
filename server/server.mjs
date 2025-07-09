@@ -9,6 +9,7 @@ import { registerGoogleAuthEndpoint } from "./auth/google.mjs";
 import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkData.mjs";
 import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
+import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -67,6 +68,10 @@ registerGetDataEndpoint(app);
 
 // If the user wants to change thier username
 registerChangeUsernameEndpoint(app);
+
+registerGetProfileEndpoint(app);
+registerUpdateProfileVisibility(app);
+registerGetProfileCourseEndpoint(app);
 
 // If on localhost, manually set up to listen via https
 if(ENV === "localhost") {

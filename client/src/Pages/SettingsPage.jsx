@@ -12,6 +12,7 @@ import editIcon from "../assets/images/editIcon.png";
 import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 import { isValidUsername } from "../Utilities/format.js";
+import { httpUpdateProfileVisibility } from "../ServerCalls/profile.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -36,6 +37,7 @@ class SettingsPage extends React.Component {
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
+            publicProfile: localStorage.getItem("public-profile") === "true",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -165,6 +167,18 @@ class SettingsPage extends React.Component {
         this.setState({ newUsername: event.target.value });
     }
 
+    onUpdateProfileVisibilityClick = async (event) => {
+        const checked = event.target.checked;
+        const result = await httpUpdateProfileVisibility(checked);
+        if(result.success) {
+            this.setState({ publicProfile: checked });
+            localStorage.setItem("public-profile", checked);
+        }
+        else {
+            console.log(result.error);
+        }
+    }
+
     onChangeUsernameSubmit = async () => {
         this.setState({ changeUsernameLoading: true });
         // Logic for changing username
@@ -249,6 +263,14 @@ class SettingsPage extends React.Component {
                                     {this.state.uploadChangesToCloudError && 
                                         <div className="text-desc text-red-caution mt-[3px]">{this.state.uploadChangesToCloudError}</div>
                                     }
+                                </div>
+                            </SettingsBlock>
+                            <SettingsBlock className="min-h-[60px] bg-special">
+                                <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.onUpdateProfileVisibilityClick}
+                                    id="public-profile-checkbox" checked={this.state.publicProfile}>    
+                                </input>
+                                <div className="text-desc text-gray-mild">
+                                    Public profile. If checked, anyone can search you by your username and see your courses and rounds. If not checked, only friends can see your profile.
                                 </div>
                             </SettingsBlock>
                         </>
