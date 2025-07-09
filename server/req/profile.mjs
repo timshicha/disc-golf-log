@@ -1,7 +1,31 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCoursesProfile } from "../db/courses.mjs";
 import { getAllCourseRounds, getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
-import { findUserByUsername, setProfileVisibility } from "../db/users.mjs";
+import { findUser, findUserByUsername, setProfileVisibility } from "../db/users.mjs";
+
+// See if a user is allowed to see another user's data
+export const getVisibleProfile = async (profileUserUsername, viewerUserUUID) => {
+    if(!profileUserUsername) {
+        return null;
+    }
+    const profileUser = await findUserByUsername(profileUserUsername);
+    // If this user doesn't exist
+    if(!profileUser) {
+        return null;
+    }
+    // If this is the same user, always allow
+    if(profileUser.useruuid === viewerUserUUID) {
+        return profileUser;
+    }
+    // If the profile is public, allow
+    if(profileUser.public_profile) {
+        return profileUser;
+    }
+
+    // See if they are friends... later...
+
+    return false;
+}
 
 /**
  * @param {import("express").Express} app
@@ -11,26 +35,24 @@ export const registerGetProfileEndpoint = (app) => {
     app.get("/profile/:username", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
-        if(user === null) {
-            console.log("user not logged in, dont allow viewing of private profiles");
-        }
         
         try {
-            const searchUser = await findUserByUsername(req.params.username, false);
-            if(!searchUser) {
+            const searchUser = await getVisibleProfile(req.params.username, user?.useruuid);
+            // If profile doesn't exist
+            if(searchUser === null) {
                 res.status(404).json({
                     error: "There are no users with this username"
                 });
                 return;
             }
-            // If profile is private (and this is not the user)
-            if(!searchUser.public_profile && user?.useruuid !== searchUser.useruuid) {
+            // If user is not allowed to see this profile
+            if(searchUser === false) {
                 res.status(200).json({
                     username: searchUser.username,
                     visible: false
                 });
             }
-            // If their profile is public
+            // If their profile is public or user is allowed to see it
             else {
                 const courses = await getAllCoursesProfile(searchUser.useruuid);
                 const roundCount = await getUserRoundsCount(searchUser.useruuid);
