@@ -29,7 +29,7 @@ if(isVersionBehind(version, "1.1.5")) {
 // v1.0.6 update
 // Set profile to private by default
 if(isVersionBehind(version, "1.1.6")) {
-    localStorage.setItem("public-profile", false);
+    localStorage.setItem("public-profile", true);
 }
 
 localStorage.setItem("version", currentVersion);
