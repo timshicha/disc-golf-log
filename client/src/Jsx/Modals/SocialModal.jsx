@@ -20,16 +20,16 @@ const SocialModal = (props) => {
     const [userDoesNotExistError, setUserDoesNotExistError] = useState(false);
     const [courseSelected, setCourseSelected] = useState(null);
 
-
     const loadProfile = async (username) => {
         console.log(username);
         const result = await httpGetUserProfile(username);
         // If successfully retrieved profile, display it
-        if(result.success) {
+        if(result?.success) {
+            console.log(result);
             setUserDoesNotExistError(false);
             setUsername(result.data.username);
             // If profile is visible
-            if(result.data.visible) {
+            if(result?.data?.visible) {
                 setPrivateProfile(false);
                 setCourseList(result.data.courses);
                 setRecentRoundsList(result.data.rounds);
@@ -44,9 +44,10 @@ const SocialModal = (props) => {
         }
         // If error
         else {
-            if(result.status === 404) {
+            if(result?.status === 404) {
                 setUserDoesNotExistError(true);
             }
+            setPrivateProfile(false);
         }
     }
 
@@ -74,8 +75,8 @@ const SocialModal = (props) => {
                 {!userDoesNotExistError && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
-                    {privateProfile &&
-                        <div className="text-desc text-center">This user's profile is private.</div>
+                    {privateProfile === true &&
+                        <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
                     }
                     {!privateProfile && !courseSelected &&
                     <>

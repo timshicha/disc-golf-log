@@ -8,23 +8,23 @@ export const getVisibleProfile = async (profileUserUsername, viewerUserUUID) => 
     if(!profileUserUsername) {
         return null;
     }
-    const profileUser = await findUserByUsername(profileUserUsername);
+    const profileUser = await findUserByUsername(profileUserUsername, false);
     // If this user doesn't exist
     if(!profileUser) {
         return null;
     }
     // If this is the same user, always allow
     if(profileUser.useruuid === viewerUserUUID) {
-        return profileUser;
+        return { visible: true, user: profileUser };
     }
     // If the profile is public, allow
     if(profileUser.public_profile) {
-        return profileUser;
+        return { visible: true, user: profileUser };
     }
 
     // See if they are friends... later...
 
-    return false;
+    return { visible: false, user: profileUser };
 }
 
 /**
@@ -37,16 +37,17 @@ export const registerGetProfileEndpoint = (app) => {
         const user = await validateToken(req, res);
         
         try {
-            const searchUser = await getVisibleProfile(req.params.username, user?.useruuid);
+            const searchResult = await getVisibleProfile(req.params.username, user?.useruuid);
             // If profile doesn't exist
-            if(searchUser === null) {
+            if(searchResult === null) {
                 res.status(404).json({
                     error: "There are no users with this username"
                 });
                 return;
             }
+            const searchUser = searchResult.user;
             // If user is not allowed to see this profile
-            if(searchUser === false) {
+            if(!searchResult.visible) {
                 res.status(200).json({
                     username: searchUser.username,
                     visible: false
