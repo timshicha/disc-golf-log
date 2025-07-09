@@ -18,7 +18,7 @@ const SocialModal = (props) => {
     const [courseList, setCourseList] = useState([]);
     const [recentRoundsList, setRecentRoundsList] = useState([]);
     const [privateProfile, setPrivateProfile] = useState(false);
-    const [userDoesNotExistError, setUserDoesNotExistError] = useState(false);
+    const [error, setError] = useState(null);
     const [courseSelected, setCourseSelected] = useState(null);
     const [profileLoading, setProfileLoading] = useState(false);
 
@@ -29,7 +29,7 @@ const SocialModal = (props) => {
         // If successfully retrieved profile, display it
         if(result?.success) {
             console.log(result);
-            setUserDoesNotExistError(false);
+            setError(false);
             setUsername(result.data.username);
             // If profile is visible
             if(result?.data?.visible) {
@@ -48,7 +48,10 @@ const SocialModal = (props) => {
         // If error
         else {
             if(result?.status === 404) {
-                setUserDoesNotExistError(true);
+                setError("User not found.");
+            }
+            else {
+                setError("Could not connect to server.");
             }
             setPrivateProfile(false);
         }
@@ -77,7 +80,7 @@ const SocialModal = (props) => {
             </div>
             {!profileLoading &&
             <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-x-hidden">
-                {!userDoesNotExistError && username &&
+                {!error && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                     {privateProfile === true &&
@@ -124,8 +127,8 @@ const SocialModal = (props) => {
                     </SocialCourse>
                     }
                 </>}
-                {userDoesNotExistError &&
-                <div className="text-desc text-center">User not found.</div>}
+                {error &&
+                <div className="text-desc text-center">{error}</div>}
             </div>
             }
             {profileLoading &&
