@@ -6,6 +6,7 @@ import { httpGetUserProfile } from "../../ServerCalls/profile.mjs";
 import SocialRound from "../Components/SocialRound";
 import SocialCourseSlot from "../Components/SocialCourseSlot";
 import SocialCourse from "../Components/SocialCourse";
+import { compareStrings } from "../../Utilities/sorting.js";
 
 const SocialModal = (props) => {
 
@@ -98,7 +99,7 @@ const SocialModal = (props) => {
                         <hr className="my-[5px]" />
                         <div className="text-gray-dark">Courses:</div>
                         {(courseList && courseList.length > 0) ?
-                            courseList.map((course, index) => {return (
+                            courseList.sort((a, b) => compareStrings(a.name, b.name)).map((course, index) => {return (
                                 <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
                             )})
                             :
