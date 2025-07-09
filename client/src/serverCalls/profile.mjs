@@ -65,7 +65,7 @@ const httpGetUserCourse = async (username, courseUUID) => {
     };
 }
 
-const httpUpdateProfileVisibility = async (public_profile) => {
+const httpUpdateProfileVisibility = async (publicProfile) => {
     let result;
     let status;
     try {
@@ -76,7 +76,7 @@ const httpUpdateProfileVisibility = async (public_profile) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                public_profile: public_profile
+                public_profile: publicProfile
             })
         });
         if(!result.ok) {

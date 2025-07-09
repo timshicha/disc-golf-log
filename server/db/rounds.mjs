@@ -52,7 +52,7 @@ const deleteAllRounds = async (userUUID) => {
     return result;
 }
 
-const getAllCourseRounds = async (courseUUID) => {
+const getAllCourseRounds = async (courseUUID, user=undefined) => {
     const result = await db`SELECT data FROM ${SCHEMA}.rounds WHERE courseuuid = ${courseUUID}`;
     return result.map(round => round.data);
 }

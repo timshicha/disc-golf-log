@@ -90,7 +90,7 @@ export const registerGetProfileCourseEndpoint = (app) => {
             // allowed to view
 
             // If their profile is public
-            const rounds = await getAllCourseRounds(req.params.courseuuid);
+            const rounds = await getAllCourseRounds(req.params.courseuuid, user);
             res.status(200).json({
                 rounds: rounds,
             });
