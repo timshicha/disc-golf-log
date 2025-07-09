@@ -20,7 +20,7 @@ const modifyRound = async (userUUID, roundUUID, playedAt, data) => {
     // If the user ID's match, proceed
     if(roundUserUUID === userUUID) {
         const result = await db`UPDATE ${SCHEMA}.rounds SET
-            data = ${data}, playedAt = ${playedAt}
+            data = ${data}, played_at = ${playedAt}
             WHERE rounduuid = ${roundUUID}`;
         return result.count > 0;
     }
