@@ -7,6 +7,7 @@ import SocialRound from "../Components/SocialRound";
 import SocialCourseSlot from "../Components/SocialCourseSlot";
 import SocialCourse from "../Components/SocialCourse";
 import { compareStrings } from "../../Utilities/sorting.js";
+import LoadingImg from "../Components/LoadingImg.jsx";
 
 const SocialModal = (props) => {
 
@@ -19,8 +20,10 @@ const SocialModal = (props) => {
     const [privateProfile, setPrivateProfile] = useState(false);
     const [userDoesNotExistError, setUserDoesNotExistError] = useState(false);
     const [courseSelected, setCourseSelected] = useState(null);
+    const [profileLoading, setProfileLoading] = useState(false);
 
     const loadProfile = async (username) => {
+        setProfileLoading(true);
         console.log(username);
         const result = await httpGetUserProfile(username);
         // If successfully retrieved profile, display it
@@ -49,6 +52,7 @@ const SocialModal = (props) => {
             }
             setPrivateProfile(false);
         }
+        setProfileLoading(false);
     }
 
     useEffect(() => {
@@ -71,6 +75,7 @@ const SocialModal = (props) => {
                 <input type="text" className="w-[calc(100%-90px)]" ref={searchUsernameRef} name="username"></input>
                 <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
             </div>
+            {!profileLoading &&
             <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-x-hidden">
                 {!userDoesNotExistError && username &&
                 <>
@@ -122,6 +127,10 @@ const SocialModal = (props) => {
                 {userDoesNotExistError &&
                 <div className="text-desc text-center">User not found.</div>}
             </div>
+            }
+            {profileLoading &&
+            <LoadingImg className="w-[40px] mx-auto mt-[30px]"></LoadingImg>
+            }
         </LargeModal>
     );
 }
