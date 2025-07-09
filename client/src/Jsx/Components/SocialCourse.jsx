@@ -10,8 +10,8 @@ const SocialCourseRoundBox = (props) => {
     const bg = value < 0 ? "bg-[#d0ffb5]" : value > 0 ? "bg-[#ffd2d2]" : "bg-[#eeeeee]";
 
     return (
-        <div className={"inline-block text-[18px] w-[10%] text-center text-gray-mild m-[0.5%] py-[2px] " + bg}>
-            {value}
+        <div className={"inline-block text-[15px] w-[10%] text-center m-[0.5%] py-[2px] text-black " + bg}>
+            {value > 0 ? "+" : ""}{value}
         </div>
     );
 }
@@ -24,7 +24,7 @@ const SocialCourseRound = (props) => {
     return (
         <div className="mt-[25px]">
             <div className="block w-[100%] mb-[3px]">
-                <div className={"w-[30px] text-white text-center inline-block mr-[5px] " + totalColorBg}>{total}</div>
+                <div className={"w-[40px] text-white text-center inline-block mr-[5px] " + totalColorBg}>{total > 0 ? "+" : ""}{total}</div>
                 <div className="inline">Round {props.index + 1}</div>
                 <div className="float-right mr-[10px]">{isoToVisualFormat(props.round.date)}</div>
             </div>
