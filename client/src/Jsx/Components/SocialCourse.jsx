@@ -4,10 +4,11 @@ import backArrowImg from "../../assets/images/backArrow.png";
 import { isoToVisualFormat } from "../../Utilities/dates.js";
 import ObjectTools from "../../Utilities/ObjectTools.js";
 import LoadingImg from "../Components/LoadingImg.jsx";
+import { compareDates } from "../../Utilities/sorting.js";
 
 const SocialCourseRoundBox = (props) => {
     const value = props.value ? props.value : "\u2013";
-    const bg = value < 0 ? "bg-[#d0ffb5]" : value > 0 ? "bg-[#ffd2d2]" : "bg-[#eeeeee]";
+    const bg = value < 0 ? "bg-[#d0ffb5]" : value > 0 ? "bg-[#ffb8b8]" : "bg-[#eeeeee]";
 
     return (
         <div className={"inline-block text-[15px] w-[10%] text-center m-[0.5%] py-[2px] text-black " + bg}>
@@ -71,6 +72,7 @@ const SocialCourse = (props) => {
     return (
         <div>
             <div>
+                <hr className="mb-[10px]"></hr>
                 <button className="bg-gray-dark rounded-[7px] border-none h-[35px] align-middle cursor-pointer" onClick={props.onBack}>
                     <img src={backArrowImg} className="w-[25px] h-[25px] mx-[8px]"></img>
                 </button>
@@ -78,7 +80,7 @@ const SocialCourse = (props) => {
             </div>
             {!roundsLoading &&
             <>
-                {rounds.map((round, index) => {
+                {rounds.sort((a, b) => compareDates(a.date, b.date)).map((round, index) => {
                     return <SocialCourseRound key={index} index={index} round={round}></SocialCourseRound>
                 }).reverse()}
                 {roundsErrorMessage &&

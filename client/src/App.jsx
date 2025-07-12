@@ -80,8 +80,10 @@ function App() {
             {currentModal === Modals.SOCIAL &&
             <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")}>
             </SocialModal>}
-            {currentPage === Pages.MAIN &&
-            <>
+
+            {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
+            IT WILL SIMPLY BY COVERED WHEN OTHER PAGES ARE OPENED. */}
+            <div className={currentPage !== Pages.MAIN ? "pointer-events-none opacity-0 absolute" : "absolute"}>
                 <NavBar>
                     <NavBarTitle>My Courses</NavBarTitle>
                     <div className="flex">
@@ -101,8 +103,9 @@ function App() {
                 take up any space. */}
                 <div className="h-[42px]"></div>
                 <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
-            </>
-            }
+            </div>
+            {/* END OF MAIN PAGE. */}
+
             {currentPage === Pages.SETTINGS &&
                 <>
                     <NavBar>
