@@ -8,6 +8,9 @@ import SocialCourseSlot from "../Components/SocialCourseSlot";
 import SocialCourse from "../Components/SocialCourse";
 import { compareStrings } from "../../Utilities/sorting.js";
 import LoadingImg from "../Components/LoadingImg.jsx";
+import { FriendStatus } from "../../Utilities/Enums.js";
+import addFriendIcon from "../../assets/images/addFriendIcon.png";
+import greenCheckMark from "../../assets/images/greenCheckMark.png";
 
 const SocialModal = (props) => {
 
@@ -17,6 +20,7 @@ const SocialModal = (props) => {
     const [roundsPlayed, setRoundsPlayed] = useState(0);
     const [courseList, setCourseList] = useState([]);
     const [recentRoundsList, setRecentRoundsList] = useState([]);
+    const [friendStatus, setFriendStatus] = useState(null);
     const [privateProfile, setPrivateProfile] = useState(false);
     const [error, setError] = useState(null);
     const [courseSelected, setCourseSelected] = useState(null);
@@ -83,6 +87,18 @@ const SocialModal = (props) => {
                 {!error && username &&
                 <>
                     <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
+                    {friendStatus === FriendStatus.NOT_FRIENDS ?
+                        <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]">
+                            <img src={addFriendIcon} className="h-[12px] my-[7px] mx-auto" />
+                            Add friend
+                        </button>
+                    : friendStatus === FriendStatus.FRIENDS ?
+                        <div className="float-right text-[#19d14b]">
+                            <img src={greenCheckMark} className="h-[18px] mx-[5px] inline align-middle" />
+                            <div className="align-middle inline">Friends</div>
+                        </div>
+                    : null
+                    }
                     {privateProfile === true &&
                         <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
                     }
