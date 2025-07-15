@@ -1,30 +1,37 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCoursesProfile } from "../db/courses.mjs";
+import { areFriends } from "../db/friends.mjs";
 import { getAllCourseRounds, getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
 import { findUser, findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
 // See if a user is allowed to see another user's data
-export const getVisibleProfile = async (profileUserUsername, viewerUserUUID) => {
-    if(!profileUserUsername) {
-        return null;
-    }
-    const profileUser = await findUserByUsername(profileUserUsername, false);
-    // If this user doesn't exist
+export const getVisibleProfile = async (profileUser, viewerUser) => {
     if(!profileUser) {
         return null;
     }
     // If this is the same user, always allow
-    if(profileUser.useruuid === viewerUserUUID) {
-        return { visible: true, user: profileUser };
+    if(profileUser.useruuid === viewerUser?.useruuid) {
+        return {
+            visible: true,
+            friends: null,
+            user: profileUser
+        };
     }
     // If the profile is public, allow
     if(profileUser.public_profile) {
-        return { visible: true, user: profileUser };
+        // If a user that's not logged in is viewing, always specify
+        // that they are not friends
+        if(!viewerUser) {
+            return { visible: true, friends: false, user: profileUser };
+        }
+        // Otherwise see if they are friends to specify their friendship
+        const friendship = (viewerUser ? await areFriends(viewerUser.useruuid, profileUser.useruuid) : false);
+        return { visible: true, friends: friendship, user: profileUser };
     }
-
-    // See if they are friends... later...
-
-    return { visible: false, user: profileUser };
+    if(viewerUser && await areFriends(viewerUser.useruuid, profileUser.useruuid)) {
+        return { visible: true, friends: true, user: profileUser };
+    }
+    return { visible: false, friends: false, user: profileUser };
 }
 
 /**
@@ -35,9 +42,11 @@ export const registerGetProfileEndpoint = (app) => {
     app.get("/profile/:username", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
+        // Find the other user
+        const profileUser = await findUserByUsername(req.params.username, false);
         
         try {
-            const searchResult = await getVisibleProfile(req.params.username, user?.useruuid);
+            const searchResult = await getVisibleProfile(profileUser, user);
             // If profile doesn't exist
             if(searchResult === null) {
                 res.status(404).json({
@@ -50,6 +59,7 @@ export const registerGetProfileEndpoint = (app) => {
             if(!searchResult.visible) {
                 res.status(200).json({
                     username: searchUser.username,
+                    friends: searchResult.friends,
                     visible: false
                 });
             }
@@ -63,6 +73,7 @@ export const registerGetProfileEndpoint = (app) => {
                     courses: courses,
                     roundCount: roundCount,
                     rounds: rounds,
+                    friends: searchResult.friends,
                     visible: true
                 });
             }

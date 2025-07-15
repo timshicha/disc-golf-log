@@ -36,7 +36,7 @@ const SocialModal = (props) => {
             setError(false);
             setUsername(result.data.username);
             // If profile is visible
-            if(result?.data?.visible) {
+            if(result.data?.visible) {
                 setPrivateProfile(false);
                 setCourseList(result.data.courses);
                 setRecentRoundsList(result.data.rounds);
@@ -47,6 +47,16 @@ const SocialModal = (props) => {
                 setPrivateProfile(true);
                 setCourseList([]);
                 setCoursesPlayed(0);
+            }
+            // Update friend status
+            if(result.data?.friends) {
+                setFriendStatus(FriendStatus.FRIENDS);
+            }
+            else if(result.data?.friends === false) {
+                setFriendStatus(FriendStatus.NOT_FRIENDS);
+            }
+            else {
+                setFriendStatus(null);
             }
         }
         // If error
