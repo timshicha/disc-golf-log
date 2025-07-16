@@ -12,7 +12,25 @@ import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
 
+const SocialPages = {
+    PROFILE: "profile",
+    FRIENDS: "friends"
+};
+
+const TabButton = (props) => {
+
+    return (
+        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] rounded-t-[10px] " +
+            (props.selected === true ? "bg-gray-light" : "bg-gray-normal")
+        }>
+            {props.children}
+        </button>
+    );
+}
+
 const SocialModal = (props) => {
+
+    const [currentModal, setCurrentModal] = useState(SocialPages.PROFILE);
 
     const [username, setUsername] = useState("");
     const searchUsernameRef = useRef(null);
@@ -86,80 +104,94 @@ const SocialModal = (props) => {
 
     return (
         <LargeModal {...props}>
-            <ModalTitle>Social</ModalTitle>
-            <div className="text-desc text-[12px] text-left mt-[10px]">Search user by username:</div>
-            <div className="block text-left mb-[10px]">
-                <input type="text" className="w-[calc(100%-90px)]" ref={searchUsernameRef} name="username"></input>
-                <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
+            {/* <ModalTitle>Social</ModalTitle> */}
+            {/* NAV TABS */}
+            <div className="text-[15px]">
+                <TabButton selected={currentModal === SocialPages.PROFILE} onClick={() => setCurrentModal(SocialPages.PROFILE)}>Profile</TabButton>
+                <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => setCurrentModal(SocialPages.FRIENDS)}>Friends</TabButton>
             </div>
-            {!profileLoading &&
-            <div className="bg-gray-light max-h-[calc(100%-130px)] mx-auto text-left p-[10px] text-desc overflow-x-hidden">
-                {!error && username &&
-                <>
-                    <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
-                    {friendStatus === FriendStatus.NOT_FRIENDS ?
-                        <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]">
-                            <img src={addFriendIcon} className="h-[12px] my-[7px] mx-auto" />
-                            Add friend
-                        </button>
-                    : friendStatus === FriendStatus.FRIENDS ?
-                        <div className="float-right text-[#19d14b]">
-                            <img src={greenCheckMark} className="h-[18px] mx-[5px] inline align-middle" />
-                            <div className="align-middle inline">Friends</div>
-                        </div>
-                    : null
-                    }
-                    {privateProfile === true &&
-                        <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
-                    }
-                    {!privateProfile && !courseSelected &&
+            {/* END NAV TABS */}
+            <div className={"absolute h-[510px] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+                (currentModal !== SocialPages.PROFILE ? "opacity-[0%] pointer-events-none" : "")}>
+                <div className="text-desc text-[12px] text-left">Search user by username:</div>
+                <div className="block text-left mb-[10px]">
+                    <input type="text" className="w-[calc(100%-90px)]" ref={searchUsernameRef} name="username"></input>
+                    <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
+                </div>
+                {!profileLoading &&
+                <div className="bg-gray-light mx-auto text-left p-[10px] text-desc overflow-x-hidden">
+                    {!error && username &&
                     <>
-                        <div className="text-[14px] text-gray-medium w-[90%] mx-auto">
-                            <div className="w-[50%] inline-block">
-                                Courses: {coursesPlayed}
+                        <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
+                        {friendStatus === FriendStatus.NOT_FRIENDS ?
+                            <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]">
+                                <img src={addFriendIcon} className="h-[12px] my-[7px] mx-auto" />
+                                Add friend
+                            </button>
+                        : friendStatus === FriendStatus.FRIENDS ?
+                            <div className="float-right text-[#19d14b]">
+                                <img src={greenCheckMark} className="h-[18px] mx-[5px] inline align-middle" />
+                                <div className="align-middle inline">Friends</div>
                             </div>
-                            <div className="w-[50%] inline-block">
-                                Rounds: {roundsPlayed}
-                            </div>
-                        </div>
-                        <hr className="my-[5px]"/>
-                        <div className="text-gray-dark">Recent rounds:</div>
-                        <div className="ml-[5px] text-gray-subtle">
-                            {recentRoundsList.map((round, index) => {
-                                return (
-                                    <SocialRound round={round} key={index}></SocialRound>
-                                );
-                            })}
-                        </div>
-                        <hr className="my-[5px]" />
-                        <div className="text-gray-dark">Courses:</div>
-                        {(courseList && courseList.length > 0) ?
-                            courseList.sort((a, b) => compareStrings(a.name, b.name)).map((course, index) => {return (
-                                <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
-                            )})
-                            :
-                            <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                        : null
                         }
-                        <hr className="my-[5px]" />
-                        <div className="text-gray-dark">Friends:</div>
-                        <div className="ml-[5px] text-gray-subtle">Coming soon</div>
-                    </>
-                    }
-                    {courseSelected &&
-                    <SocialCourse course={courseSelected} username={username} onBack={() => {
-                        setCourseSelected(null);
-                    }}>
+                        {privateProfile === true &&
+                            <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
+                        }
+                        {!privateProfile && !courseSelected &&
+                        <>
+                            <div className="text-[14px] text-gray-medium w-[90%] mx-auto">
+                                <div className="w-[50%] inline-block">
+                                    Courses: {coursesPlayed}
+                                </div>
+                                <div className="w-[50%] inline-block">
+                                    Rounds: {roundsPlayed}
+                                </div>
+                            </div>
+                            <hr className="my-[5px]"/>
+                            <div className="text-gray-dark">Recent rounds:</div>
+                            <div className="ml-[5px] text-gray-subtle">
+                                {recentRoundsList.map((round, index) => {
+                                    return (
+                                        <SocialRound round={round} key={index}></SocialRound>
+                                    );
+                                })}
+                            </div>
+                            <hr className="my-[5px]" />
+                            <div className="text-gray-dark">Courses:</div>
+                            {(courseList && courseList.length > 0) ?
+                                courseList.sort((a, b) => compareStrings(a.name, b.name)).map((course, index) => {return (
+                                    <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
+                                )})
+                                :
+                                <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                            }
+                            <hr className="my-[5px]" />
+                            <div className="text-gray-dark">Friends:</div>
+                            <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                        </>
+                        }
+                        {courseSelected &&
+                        <SocialCourse course={courseSelected} username={username} onBack={() => {
+                            setCourseSelected(null);
+                        }}>
 
-                    </SocialCourse>
-                    }
-                </>}
-                {error &&
-                <div className="text-desc text-center">{error}</div>}
+                        </SocialCourse>
+                        }
+                    </>}
+                    {error &&
+                    <div className="text-desc text-center">{error}</div>}
+                </div>
+                }
+                {profileLoading &&
+                <LoadingImg className="w-[40px] mx-auto mt-[30px]"></LoadingImg>
+                }
             </div>
-            }
-            {profileLoading &&
-            <LoadingImg className="w-[40px] mx-auto mt-[30px]"></LoadingImg>
-            }
+
+            <div className={"absolute h-[510px] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+                (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
+                
+            </div>
         </LargeModal>
     );
 }
