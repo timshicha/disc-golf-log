@@ -11,6 +11,7 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
+import { httpSendFriendRequest } from "../../ServerCalls/friends.mjs";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -33,6 +34,7 @@ const SocialModal = (props) => {
     const [currentModal, setCurrentModal] = useState(SocialPages.PROFILE);
 
     const [username, setUsername] = useState("");
+    const [userUUID, setUserUUID] = useState(null);
     const searchUsernameRef = useRef(null);
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
@@ -53,6 +55,7 @@ const SocialModal = (props) => {
             console.log(result);
             setError(false);
             setUsername(result.data.username);
+            setUserUUID(result.data.userUUID);
             // If profile is visible
             if(result.data?.visible) {
                 setPrivateProfile(false);
@@ -102,6 +105,11 @@ const SocialModal = (props) => {
         loadProfile(searchUsernameRef.current.value);
     }
 
+    const sendFriendRequest = () => {
+        console.log("Sending friend request")
+        httpSendFriendRequest(userUUID);
+    }
+
     return (
         <LargeModal {...props}>
             {/* <ModalTitle>Social</ModalTitle> */}
@@ -111,7 +119,7 @@ const SocialModal = (props) => {
                 <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => setCurrentModal(SocialPages.FRIENDS)}>Friends</TabButton>
             </div>
             {/* END NAV TABS */}
-            <div className={"absolute h-[510px] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.PROFILE ? "opacity-[0%] pointer-events-none" : "")}>
                 <div className="text-desc text-[12px] text-left">Search user by username:</div>
                 <div className="block text-left mb-[10px]">
@@ -124,7 +132,7 @@ const SocialModal = (props) => {
                     <>
                         <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                         {friendStatus === FriendStatus.NOT_FRIENDS ?
-                            <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]">
+                            <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]" onClick={sendFriendRequest}>
                                 <img src={addFriendIcon} className="h-[12px] my-[7px] mx-auto" />
                                 Add friend
                             </button>
@@ -188,7 +196,7 @@ const SocialModal = (props) => {
                 }
             </div>
 
-            <div className={"absolute h-[510px] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
                 
             </div>
