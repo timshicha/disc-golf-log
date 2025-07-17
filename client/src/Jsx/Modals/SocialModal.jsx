@@ -74,7 +74,16 @@ const SocialModal = (props) => {
                 setFriendStatus(FriendStatus.FRIENDS);
             }
             else if(result.data?.friends === false) {
-                setFriendStatus(FriendStatus.NOT_FRIENDS);
+                // Check for friend requests sent or received
+                if(result.data.friendRequest === "sent") {
+                    setFriendStatus(FriendStatus.REQUEST_SENT);
+                }
+                else if(result.data.friendRequest === "received") {
+                    setFriendStatus(FriendStatus.REQUEST_RECEIVED);
+                }
+                else {
+                    setFriendStatus(FriendStatus.NOT_FRIENDS);
+                }
             }
             else {
                 setFriendStatus(null);
@@ -130,19 +139,40 @@ const SocialModal = (props) => {
                 <div className="bg-gray-light mx-auto text-left p-[10px] text-desc overflow-x-hidden">
                     {!error && username &&
                     <>
-                        <div className="text-gray-dark text-[16px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
+                        <div className="text-gray-dark text-[20px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
+                        {/* Friend request area of profile */}
+                        <div className="float-right text-center text-[14px] mb-[20px]">
                         {friendStatus === FriendStatus.NOT_FRIENDS ?
-                            <button className="float-right text-white bg-blue-basic text-[14px] p-[5px] px-[8px] rounded-[7px]" onClick={sendFriendRequest}>
-                                <img src={addFriendIcon} className="h-[12px] my-[7px] mx-auto" />
-                                Add friend
-                            </button>
+                            <div>
+                                <div className="mb-[5px] text-gray-dark">Not friends</div>
+                                <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
+                                    <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
+                                    <div className="inline align-middle">
+                                        Add friend
+                                    </div>
+                                </button>
+                            </div>
                         : friendStatus === FriendStatus.FRIENDS ?
-                            <div className="float-right text-[#19d14b]">
+                            <div className="text-[green]">
                                 <img src={greenCheckMark} className="h-[18px] mx-[5px] inline align-middle" />
                                 <div className="align-middle inline">Friends</div>
                             </div>
-                        : null
+                        : friendStatus === FriendStatus.REQUEST_SENT ?
+                            <div className="text-gray-dark">
+                                <div className="mb-[5px] text-[blue]">Friend request sent</div>
+                                <button className="block mx-auto bg-gray-dark text-white text-[16px] p-[3px] px-[10px] rounded-[5px]">Undo</button>
+                            </div>
+                        : friendStatus === FriendStatus.REQUEST_RECEIVED ?
+                            <div>
+                                <div className="mb-[5px] text-[blue]">Friend request received</div>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]">Accept</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]">Decline</button>
+                            </div>
+                        : ""
                         }
+                        </div>
+                        {/* End of friend request area */}
+                        <hr className="w-[100%] my-[5px]"></hr>
                         {privateProfile === true &&
                             <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
                         }

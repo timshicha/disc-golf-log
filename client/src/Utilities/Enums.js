@@ -24,5 +24,6 @@ export const Pages = {
 export const FriendStatus = {
     NOT_FRIENDS: "not friends",
     FRIENDS: "friends",
-    SELF: "self"
+    REQUEST_SENT: "request sent",
+    REQUEST_RECEIVED: "request received"
 };
