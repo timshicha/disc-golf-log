@@ -1,5 +1,5 @@
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
@@ -9,7 +9,7 @@ export const registerSendFriendRequestEndpoint = (app) => {
     app.post("/friends/send_request", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
-        if(user === null) {
+        if(!user) {
             res.status(401).send("Can't validate user.");
             return;
         }
@@ -20,6 +20,19 @@ export const registerSendFriendRequestEndpoint = (app) => {
                 throw new Error ("Server cannot determine who to send the request to.");
             }
             
+            // See if there is already a friend request sent or received
+            const existingRequest = await findFriendRequest(user.useruuid, receiverUUID);
+            if(existingRequest) {
+                // If request already sent
+                if(existingRequest === "sent") {
+                    throw new Error ("You have already sent a friend request to this user.");
+                }
+                // If request already received from this user
+                else {
+                    throw new Error ("This user already sent you a friend request.");
+                }
+            }
+
             // On successful friend request
             if(await createFriendRequest(user.useruuid, receiverUUID)) {
                 res.status(200).json({
@@ -31,7 +44,8 @@ export const registerSendFriendRequestEndpoint = (app) => {
             }
 
         } catch (error) {
-            res.status(400).send(error);
+            console.log(error)
+            res.status(400).send(error.message);
         }
     });
 }

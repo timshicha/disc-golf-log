@@ -142,7 +142,7 @@ const SocialModal = (props) => {
                         <div className="text-gray-dark text-[20px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                         {/* Friend request area of profile */}
                         <div className="float-right text-center text-[14px] mb-[20px]">
-                        {friendStatus === FriendStatus.NOT_FRIENDS ?
+                        {friendStatus === true || FriendStatus.NOT_FRIENDS ?
                             <div>
                                 <div className="mb-[5px] text-gray-dark">Not friends</div>
                                 <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
