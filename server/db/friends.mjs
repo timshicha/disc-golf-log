@@ -33,7 +33,7 @@ export const findFriendRequest = async (userUUID, targetUserUUID) => {
 
 export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
-        (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
+        (sender = ${targetUserUUID} AND receiver = ${userUUID})`;
 }
 
 export const addFriend = async (user1UUID, user2UUID) => {
