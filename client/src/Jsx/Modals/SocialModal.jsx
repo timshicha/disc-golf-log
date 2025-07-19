@@ -45,6 +45,7 @@ const SocialModal = (props) => {
     const [error, setError] = useState(null);
     const [courseSelected, setCourseSelected] = useState(null);
     const [profileLoading, setProfileLoading] = useState(false);
+    const [respondingToFriendRequest, setRespondingToFriendReqeust] = useState(false);
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
@@ -115,16 +116,42 @@ const SocialModal = (props) => {
     }
 
     const sendFriendRequest = () => {
-        console.log("Sending friend request")
-        httpSendFriendRequest(userUUID);
+        setRespondingToFriendReqeust(true);
+        httpSendFriendRequest(userUUID).then(res => {
+
+            // If successfully sent request, update UI
+            if(res.success) {
+                setFriendStatus(FriendStatus.REQUEST_SENT);
+            }
+        }).finally(() => {
+            setRespondingToFriendReqeust(false);
+        })
     }
 
     const acceptFriendRequest = () => {
-        httpRespondToFriendRequest(userUUID, "accept");
+        setRespondingToFriendReqeust(true);
+        httpRespondToFriendRequest(userUUID, "accept").then(res => {
+
+            if(res.success) {
+                // If successful, then set the new UI (to friends)
+                setFriendStatus(FriendStatus.FRIENDS);
+            }
+        }).finally(() => {
+            setRespondingToFriendReqeust(false);
+        });
     }
 
     const declineFriendRequest = () => {
-        httpRespondToFriendRequest(userUUID, "decline");
+        setRespondingToFriendReqeust(true);
+        httpRespondToFriendRequest(userUUID, "decline").then(res => {
+
+            if(res.success) {
+                // If successful, then set the new UI (to not friends)
+                setFriendStatus(FriendStatus.NOT_FRIENDS);
+            }
+        }).finally(() => {
+            setRespondingToFriendReqeust(false);
+        });
     }
 
     return (
@@ -150,7 +177,11 @@ const SocialModal = (props) => {
                         <div className="text-gray-dark text-[20px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                         {/* Friend request area of profile */}
                         <div className="float-right text-center text-[14px] mb-[20px]">
-                        {friendStatus === FriendStatus.NOT_FRIENDS ?
+                        {respondingToFriendRequest ?
+                            <div>
+                                <LoadingImg className="w-[35px] mr-[20px]"></LoadingImg>
+                            </div>
+                        : friendStatus === FriendStatus.NOT_FRIENDS ?
                             <div>
                                 <div className="mb-[5px] text-gray-dark">Not friends</div>
                                 <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
