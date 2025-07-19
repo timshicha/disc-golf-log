@@ -11,7 +11,7 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
-import { httpRespondToFriendRequest, httpSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import { httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -125,7 +125,20 @@ const SocialModal = (props) => {
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
-        })
+        });
+    }
+
+    const undoSendFriendRequest = () => {
+        setRespondingToFriendReqeust(true);
+        httpUndoSendFriendRequest(userUUID).then(res => {
+
+            // If successfully unsent the request, update UI
+            if(res.success) {
+                setFriendStatus(FriendStatus.NOT_FRIENDS);
+            }
+        }).finally(() => {
+            setRespondingToFriendReqeust(false);
+        });
     }
 
     const acceptFriendRequest = () => {
@@ -199,7 +212,7 @@ const SocialModal = (props) => {
                         : friendStatus === FriendStatus.REQUEST_SENT ?
                             <div className="text-gray-dark">
                                 <div className="mb-[5px] text-[blue]">Friend request sent</div>
-                                <button className="block mx-auto bg-gray-dark text-white text-[16px] p-[3px] px-[10px] rounded-[5px]">Undo</button>
+                                <button className="block mx-auto bg-gray-dark text-white text-[16px] p-[3px] px-[10px] rounded-[5px]" onClick={undoSendFriendRequest}>Undo</button>
                             </div>
                         : friendStatus === FriendStatus.REQUEST_RECEIVED ?
                             <div>

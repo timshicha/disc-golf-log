@@ -33,7 +33,7 @@ export const findFriendRequest = async (userUUID, targetUserUUID) => {
 
 export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
-        (sender = ${targetUserUUID} AND receiver = ${userUUID})`;
+        (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
 }
 
 export const addFriend = async (user1UUID, user2UUID) => {
@@ -50,12 +50,12 @@ export const respondFriendReqeust = async (userUUID, targetUserUUID, response) =
         return { success: false, error: "There is no friend request from this user." };
     }
     if(response === "accept") {
-        await removeFriendReqeust(userUUID, targetUserUUID);
+        await removeFriendReqeust(targetUserUUID, userUUID);
         await addFriend(userUUID, targetUserUUID);
         return { success: true };
     }
     else if(response === "decline") {
-        await removeFriendReqeust(userUUID, targetUserUUID);
+        await removeFriendReqeust(targetUserUUID, userUUID);
         return { success: true };
     }
     else {
