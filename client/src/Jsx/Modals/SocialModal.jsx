@@ -11,7 +11,7 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
-import { httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import { httpGetAllFriends, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -165,6 +165,10 @@ const SocialModal = (props) => {
         }).finally(() => {
             setRespondingToFriendReqeust(false);
         });
+    }
+
+    const getAllFriends = () => {
+        httpGetAllFriends();
     }
 
     return (

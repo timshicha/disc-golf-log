@@ -62,3 +62,11 @@ export const respondFriendReqeust = async (userUUID, targetUserUUID, response) =
         return { success: false, error: "Can't determine what the user wants to do with the request." };
     }
 }
+
+export const getAllFriends = async (userUUID) => {
+    const result = await db`SELECT users.username AS username, users.useruuid AS useruuid
+        FROM ${SCHEMA}.users users JOIN ${SCHEMA}.friends friends
+        ON users.useruuid = friends.user2uuid
+        WHERE friends.user1uuid = ${userUUID}`;
+    return result;
+}

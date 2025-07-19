@@ -1,6 +1,6 @@
 import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest, findFriendRequest, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest, getAllFriends, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
@@ -116,6 +116,29 @@ export const registerUndoSendFriendRequestEndpoint = (app) => {
             
             await removeFriendReqeust(user.useruuid, targetUserUUID);
             res.status(200).json({ success: true });
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error.message);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
+export const registerGetAllFriendsEndpoint = (app) => {
+    // Update settings
+    app.get("/friends", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            const result = await getAllFriends(user.useruuid);
+            res.status(200).json({ friends: result });
 
         } catch (error) {
             console.log(error)
