@@ -35,6 +35,7 @@ const SocialModal = (props) => {
 
     const [username, setUsername] = useState("");
     const [userUUID, setUserUUID] = useState(null);
+    const [friends, setFriends] = useState([]);
     const searchUsernameRef = useRef(null);
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
@@ -107,6 +108,7 @@ const SocialModal = (props) => {
         if(props.username) {
             setUsername(props.username);
             loadProfile(props.username);
+            getAllFriends();
         }
     }, []);
 
@@ -167,8 +169,9 @@ const SocialModal = (props) => {
         });
     }
 
-    const getAllFriends = () => {
-        httpGetAllFriends();
+    const getAllFriends = async () => {
+        const allFriendsRes = await httpGetAllFriends();
+        setFriends(allFriendsRes.data.friends);
     }
 
     return (
@@ -282,9 +285,13 @@ const SocialModal = (props) => {
                 }
             </div>
 
+            {/* FRIENDS PAGE */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
-                
+                {friends ? friends.map((friend, index) => {
+                    return <div key={index}>{friend.username}</div>
+                })
+                : ""}
             </div>
         </LargeModal>
     );
