@@ -1,6 +1,6 @@
 import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest, findFriendRequest } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest, respondFriendReqeust } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
@@ -75,13 +75,13 @@ export const registerRespondFriendRequestEndpoint = (app) => {
                 throw new Error ("Server cannot determine what the user wants to do with the request.");
             }
             
-            // Make sure the other user actually sent a request
-            if(await findFriendRequest(user.useruuid, targetUserUUID) !== "received") {
-                throw new Error ("The target user did not sent a friend request to this user.");
+            const result = await respondFriendReqeust(user.useruuid, targetUserUUID, response);
+            if(result.success) {
+                res.status(200).json({ success: true });
             }
-            // Otherwise, remove the request and either add them as friend or don't
-            
-            
+            else {
+                throw new Error (result.error);
+            }
 
         } catch (error) {
             console.log(error)

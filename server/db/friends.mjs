@@ -36,8 +36,11 @@ export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
         (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
 }
 
-export const addFriend = async (userUUID, user2UUID) => {
-    // Add friend code ...
+export const addFriend = async (user1UUID, user2UUID) => {
+    await db`INSERT INTO ${SCHEMA}.friends (user1uuid, user2uuid) VALUES
+        (${user1UUID}, ${user2UUID})`;
+    await db`INSERT INTO ${SCHEMA}.friends (user1uuid, user2uuid) VALUES
+        (${user2UUID}, ${user1UUID})`;
 }
 
 // Response is either "accept" or "decline"
@@ -48,9 +51,12 @@ export const respondFriendReqeust = async (userUUID, targetUserUUID, response) =
     }
     if(response === "accept") {
         await removeFriendReqeust(userUUID, targetUserUUID);
+        await addFriend(userUUID, targetUserUUID);
+        return { success: true };
     }
     else if(response === "decline") {
         await removeFriendReqeust(userUUID, targetUserUUID);
+        return { success: true };
     }
     else {
         return { success: false, error: "Can't determine what the user wants to do with the request." };
