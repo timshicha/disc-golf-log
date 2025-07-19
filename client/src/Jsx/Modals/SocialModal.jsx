@@ -11,7 +11,7 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
-import { httpSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import { httpRespondToFriendRequest, httpSendFriendRequest } from "../../ServerCalls/friends.mjs";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -119,6 +119,14 @@ const SocialModal = (props) => {
         httpSendFriendRequest(userUUID);
     }
 
+    const acceptFriendRequest = () => {
+        httpRespondToFriendRequest(userUUID, "accept");
+    }
+
+    const declineFriendRequest = () => {
+        httpRespondToFriendRequest(userUUID, "decline");
+    }
+
     return (
         <LargeModal {...props}>
             {/* <ModalTitle>Social</ModalTitle> */}
@@ -142,7 +150,7 @@ const SocialModal = (props) => {
                         <div className="text-gray-dark text-[20px] mb-[5px] inline-block bg-gray-dark text-white py-[3px] px-[8px]">{username}</div>
                         {/* Friend request area of profile */}
                         <div className="float-right text-center text-[14px] mb-[20px]">
-                        {friendStatus === true || FriendStatus.NOT_FRIENDS ?
+                        {friendStatus === FriendStatus.NOT_FRIENDS ?
                             <div>
                                 <div className="mb-[5px] text-gray-dark">Not friends</div>
                                 <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
@@ -165,8 +173,8 @@ const SocialModal = (props) => {
                         : friendStatus === FriendStatus.REQUEST_RECEIVED ?
                             <div>
                                 <div className="mb-[5px] text-[blue]">Friend request received</div>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]">Accept</button>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]">Decline</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]" onClick={acceptFriendRequest}>Accept</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]" onClick={declineFriendRequest}>Decline</button>
                             </div>
                         : ""
                         }

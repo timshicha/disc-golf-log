@@ -71,11 +71,11 @@ export const registerRespondFriendRequestEndpoint = (app) => {
             }
             // See what the response is
             const requestResponse = req.body.response;
-            if(!response) {
+            if(!requestResponse) {
                 throw new Error ("Server cannot determine what the user wants to do with the request.");
             }
             
-            const result = await respondFriendReqeust(user.useruuid, targetUserUUID, response);
+            const result = await respondFriendReqeust(user.useruuid, targetUserUUID, requestResponse);
             if(result.success) {
                 res.status(200).json({ success: true });
             }
