@@ -1,3 +1,4 @@
+import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
 import { createFriendRequest, findFriendRequest } from "../db/friends.mjs";
 
@@ -42,6 +43,45 @@ export const registerSendFriendRequestEndpoint = (app) => {
             else {
                 throw new Error ("Server could not find the user you're trying to send the request to.");
             }
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error.message);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
+export const registerRespondFriendRequestEndpoint = (app) => {
+    // Update settings
+    app.post("/friends/respond_request", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            // See which request responding to
+            const targetUserUUID = req.body.userUUID;
+            if(!targetUserUUID) {
+                throw new Error ("Server cannot determine which request user is responding to.");
+            }
+            // See what the response is
+            const requestResponse = req.body.response;
+            if(!response) {
+                throw new Error ("Server cannot determine what the user wants to do with the request.");
+            }
+            
+            // Make sure the other user actually sent a request
+            if(await findFriendRequest(user.useruuid, targetUserUUID) !== "received") {
+                throw new Error ("The target user did not sent a friend request to this user.");
+            }
+            // Otherwise, remove the request and either add them as friend or don't
+            
+            
 
         } catch (error) {
             console.log(error)

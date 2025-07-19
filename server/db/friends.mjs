@@ -25,8 +25,34 @@ export const findFriendRequest = async (userUUID, targetUserUUID) => {
     if(!result || result.length == 0) return null;
     // If a friend request was found
     const request = result[0];
-    // If this user send the request to target user
+    // If this user sent the request to target user
     if(request.sender === userUUID) return "sent";
     // Otherwise, they received a request
     else return "received";
+}
+
+export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
+    await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
+        (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
+}
+
+export const addFriend = async (userUUID, user2UUID) => {
+    // Add friend code ...
+}
+
+// Response is either "accept" or "decline"
+export const respondFriendReqeust = async (userUUID, targetUserUUID, response) => {
+    // Make sure the request exists
+    if(await findFriendRequest(userUUID, targetUserUUID) !== "received") {
+        return { success: false, error: "There is no friend request from this user." };
+    }
+    if(response === "accept") {
+        await removeFriendReqeust(userUUID, targetUserUUID);
+    }
+    else if(response === "decline") {
+        await removeFriendReqeust(userUUID, targetUserUUID);
+    }
+    else {
+        return { success: false, error: "Can't determine what the user wants to do with the request." };
+    }
 }
