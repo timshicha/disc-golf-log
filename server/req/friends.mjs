@@ -20,6 +20,11 @@ export const registerSendFriendRequestEndpoint = (app) => {
             if(!receiverUUID) {
                 throw new Error ("Server cannot determine who to send the request to.");
             }
+
+            // Make sure they're not sending a request to themselves
+            if(receiverUUID === user.useruuid) {
+                throw new Error ("Cannot send friend request to yourself.");
+            }
             
             // See if there is already a friend request sent or received
             const existingRequest = await findFriendRequest(user.useruuid, receiverUUID);
