@@ -127,6 +127,35 @@ export const registerUndoSendFriendRequestEndpoint = (app) => {
 /**
  * @param {import("express").Express} app
  */
+export const registerRemoveFriendEndpoint = (app) => {
+    // Update settings
+    app.post("/friends/remove_friend", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            // See which user to unfriend
+            const targetUserUUID = req.body.userUUID;
+            if(!targetUserUUID) {
+                throw new Error ("Server cannot determine which user to unfriend.");
+            }
+            
+            await removeFriend(user.useruuid, targetUserUUID);
+            res.status(200).json({ success: true });
+
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error.message);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
 export const registerGetAllFriendsEndpoint = (app) => {
     // Update settings
     app.get("/friends", async (req, res) => {

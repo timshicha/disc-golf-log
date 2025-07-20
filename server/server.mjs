@@ -10,7 +10,7 @@ import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkDat
 import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
-import { registerGetAllFriendsEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint } from "./req/friends.mjs";
+import { registerGetAllFriendsEndpoint, registerRemoveFriendEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint } from "./req/friends.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -56,28 +56,28 @@ app.get("/ready", async (req, res) => {
     res.status(200).send("Server is ready.");
 });
 
-// If logging in with Google (user wants a token)
+// Auth endpoints
 registerGoogleAuthEndpoint(app);
-// If logging in with email (either email or code from email)
 registerEmailAuthEndpoint(app);
 
-// If the user sends a list of modifications
+// Data related endpoints
 registerPostDataEndpoint(app);
-
-// If the user wants to get all their data from the cloud (such as when logging in)
 registerGetDataEndpoint(app);
 
-// If the user wants to change thier username
+// Change username endpoint
 registerChangeUsernameEndpoint(app);
 
+// Profile related endpoints
 registerGetProfileEndpoint(app);
 registerUpdateProfileVisibility(app);
 registerGetProfileCourseEndpoint(app);
 
+// Friend related endpoints
 registerSendFriendRequestEndpoint(app);
 registerRespondFriendRequestEndpoint(app);
 registerUndoSendFriendRequestEndpoint(app);
 registerGetAllFriendsEndpoint(app);
+registerRemoveFriendEndpoint(app);
 
 // If on localhost, manually set up to listen via https
 if(ENV === "localhost") {
