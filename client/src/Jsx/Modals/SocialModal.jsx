@@ -21,11 +21,25 @@ const SocialPages = {
 const TabButton = (props) => {
 
     return (
-        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] rounded-t-[10px] " +
-            (props.selected === true ? "bg-gray-light" : "bg-gray-normal")
+        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] mb-[-1px] rounded-t-[10px] " +
+            (props.selected === true ? "bg-white" : "bg-gray-normal")
         }>
             {props.children}
         </button>
+    );
+}
+
+const FriendSlot = (props) => {
+
+    return (
+        <div key={props.key} className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
+            <div className="text-left inline-block w-[calc(100%-110px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle">
+                {props.user.username}
+            </div>
+            <div className="inline-block">
+                <button className="bg-gray-dark text-white text-[18px] p-[3px] px-[6px] rounded-[5px] align-middle">Unfriend</button>
+            </div>
+        </div>
     );
 }
 
@@ -183,7 +197,7 @@ const SocialModal = (props) => {
                 <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => setCurrentModal(SocialPages.FRIENDS)}>Friends</TabButton>
             </div>
             {/* END NAV TABS */}
-            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.PROFILE ? "opacity-[0%] pointer-events-none" : "")}>
                 <div className="text-desc text-[12px] text-left">Search user by username:</div>
                 <div className="block text-left mb-[10px]">
@@ -286,10 +300,10 @@ const SocialModal = (props) => {
             </div>
 
             {/* FRIENDS PAGE */}
-            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-gray-light p-[10px] rounded-[5px] overflow-y-auto " +
+            <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
                 {friends ? friends.map((friend, index) => {
-                    return <div key={index}>{friend.username}</div>
+                    return <FriendSlot key={index} user={friend}></FriendSlot>
                 })
                 : ""}
             </div>
