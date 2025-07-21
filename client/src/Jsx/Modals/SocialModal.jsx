@@ -31,13 +31,23 @@ const TabButton = (props) => {
 
 const FriendSlot = (props) => {
 
+    const handleUnfriendClick = (event) => {
+        event.stopPropagation();
+
+        console.log("unfriend");
+    }
+
+    const handleSelectUserClick = (event) => {
+        props.onSelect();
+    }
+
     return (
         <div key={props.key} className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
-            <div className="text-left inline-block w-[calc(100%-110px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle">
+            <div className="text-left inline-block w-[calc(100%-110px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle" onClick={handleSelectUserClick}>
                 {props.user.username}
             </div>
             <div className="inline-block">
-                <button className="bg-gray-dark text-white text-[18px] p-[3px] px-[6px] rounded-[5px] align-middle">Unfriend</button>
+                <button className="bg-gray-dark text-white text-[18px] p-[3px] px-[6px] rounded-[5px] align-middle" onClick={handleUnfriendClick}>Unfriend</button>
             </div>
         </div>
     );
@@ -188,6 +198,14 @@ const SocialModal = (props) => {
         setFriends(allFriendsRes.data.friends);
     }
 
+    const onSelectFriend = (friend) => {
+        console.log("friend profile selected");
+        console.log(friend.useruuid, friend.username);
+        setCourseSelected(null);
+        setCurrentModal(SocialPages.PROFILE);
+        loadProfile(friend.username);
+    }
+
     return (
         <LargeModal {...props}>
             {/* <ModalTitle>Social</ModalTitle> */}
@@ -295,7 +313,9 @@ const SocialModal = (props) => {
                 </div>
                 }
                 {profileLoading &&
-                <LoadingImg className="w-[40px] mx-auto mt-[30px]"></LoadingImg>
+                <div className="bg-gray-light py-[20px]">
+                    <LoadingImg className="w-[40px] mx-auto"></LoadingImg>
+                </div>
                 }
             </div>
 
@@ -303,7 +323,9 @@ const SocialModal = (props) => {
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
                 {friends ? friends.map((friend, index) => {
-                    return <FriendSlot key={index} user={friend}></FriendSlot>
+                    return <FriendSlot key={index} user={friend}
+                        onSelect={() => onSelectFriend(friend)}
+                    ></FriendSlot>
                 })
                 : ""}
             </div>
