@@ -11,7 +11,8 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
-import { httpGetAllFriends, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import { httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import ConfirmModal from "./ConfirmModal.jsx";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -33,8 +34,7 @@ const FriendSlot = (props) => {
 
     const handleUnfriendClick = (event) => {
         event.stopPropagation();
-
-        console.log("unfriend");
+        props.onUnfriend();
     }
 
     const handleSelectUserClick = (event) => {
@@ -42,7 +42,7 @@ const FriendSlot = (props) => {
     }
 
     return (
-        <div key={props.key} className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
+        <div className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
             <div className="text-left inline-block w-[calc(100%-110px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle" onClick={handleSelectUserClick}>
                 {props.user.username}
             </div>
@@ -206,6 +206,10 @@ const SocialModal = (props) => {
         loadProfile(friend.username);
     }
 
+    const unfriend = (friend) => {
+        httpRemoveFriend(friend.useruuid);
+    }
+
     return (
         <LargeModal {...props}>
             {/* <ModalTitle>Social</ModalTitle> */}
@@ -325,6 +329,7 @@ const SocialModal = (props) => {
                 {friends ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
+                        onUnfriend={() => unfriend(friend)}
                     ></FriendSlot>
                 })
                 : ""}

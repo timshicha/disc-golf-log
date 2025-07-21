@@ -37,7 +37,7 @@ export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
 }
 
 export const removeFriend = async (userUUID, targetUserUUID) => {
-    await db`DELTE FROM ${SCHEMA}.friends WHERE
+    await db`DELETE FROM ${SCHEMA}.friends WHERE
         (user1uuid = ${userUUID} AND user2uuid = ${targetUserUUID}) OR
         (user1uuid = ${targetUserUUID} AND user2uuid = ${userUUID})`;
 }

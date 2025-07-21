@@ -1,6 +1,6 @@
 import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest, findFriendRequest, getAllFriends, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest, getAllFriends, removeFriend, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
