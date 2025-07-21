@@ -21,8 +21,8 @@ const ENV = process.env.ENV;
 const app = express();
 
 const limiter = rateLimit({
-    // Limit to 50 requests every 10 minutes (should be more than enough)
-    windowMs: 10 * 60 * 1000,
+    // Limit to 50 requests every 3 minutes (should be more than enough)
+    windowMs: 3 * 60 * 1000,
     limit: 50,
     // Don't show info on max limits to prevent spamming
     standardHeaders: false,

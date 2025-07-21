@@ -207,7 +207,12 @@ const SocialModal = (props) => {
     }
 
     const unfriend = (friend) => {
-        httpRemoveFriend(friend.useruuid);
+        httpRemoveFriend(friend.useruuid).then(result => {
+            // On successful unfriending, remove from friend list
+            if(result.success) {
+                setFriends(friends.filter(iterFriend => iterFriend.useruuid !== friend.useruuid));
+            }
+        });
     }
 
     return (
