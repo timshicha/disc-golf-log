@@ -26,7 +26,7 @@ export const getVisibleProfile = async (profileUser, viewerUser) => {
         }
         // Otherwise see if they are friends to specify their friendship
         const friendship = (viewerUser ? await areFriends(viewerUser.useruuid, profileUser.useruuid) : false);
-        // If friends, return the result
+        // If friends
         if(friendship) {
             return { visible: true, friends: true, user: profileUser };
         }
@@ -36,8 +36,15 @@ export const getVisibleProfile = async (profileUser, viewerUser) => {
             return { visible: true, friends: false, friendRequest: friendRequest, user: profileUser };
         }
     }
+    // If they are friends
     if(viewerUser && await areFriends(viewerUser.useruuid, profileUser.useruuid)) {
-        return { visible: true, friends: true, user: profileUser };
+        // If they allow friends to see their profile
+        if(profileUser.public_to_friends) {
+            return { visible: true, friends: true, user: profileUser };
+        }
+        else {
+            return { visible: false, friends: true, user: profileUser };
+        }
     }
     let friendRequest = null;
     // Check if friend request has been sent or received
