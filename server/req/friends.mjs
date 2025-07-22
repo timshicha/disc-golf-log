@@ -1,12 +1,11 @@
 import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest, findFriendRequest, getAllFriends, removeFriend, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest, getAllFriendRequests, getAllFriends, removeFriend, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
  */
 export const registerSendFriendRequestEndpoint = (app) => {
-    // Update settings
     app.post("/friends/send_request", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
@@ -60,7 +59,6 @@ export const registerSendFriendRequestEndpoint = (app) => {
  * @param {import("express").Express} app
  */
 export const registerRespondFriendRequestEndpoint = (app) => {
-    // Update settings
     app.post("/friends/respond_request", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
@@ -99,7 +97,6 @@ export const registerRespondFriendRequestEndpoint = (app) => {
  * @param {import("express").Express} app
  */
 export const registerUndoSendFriendRequestEndpoint = (app) => {
-    // Update settings
     app.post("/friends/undo_send_request", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
@@ -128,7 +125,6 @@ export const registerUndoSendFriendRequestEndpoint = (app) => {
  * @param {import("express").Express} app
  */
 export const registerRemoveFriendEndpoint = (app) => {
-    // Update settings
     app.post("/friends/remove_friend", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
@@ -157,7 +153,6 @@ export const registerRemoveFriendEndpoint = (app) => {
  * @param {import("express").Express} app
  */
 export const registerGetAllFriendsEndpoint = (app) => {
-    // Update settings
     app.get("/friends", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
@@ -166,9 +161,29 @@ export const registerGetAllFriendsEndpoint = (app) => {
             return;
         }
         try {
-            const result = await getAllFriends(user.useruuid);
-            res.status(200).json({ friends: result });
+            const friends = await getAllFriends(user.useruuid);
+            res.status(200).json({ friends: friends });
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error.message);
+        }
+    });
+}
 
+/**
+ * @param {import("express").Express} app
+ */
+export const registerGetAllFriendRequestsEndpoint = (app) => {
+    app.get("/friend_requests", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            const friendRequests = await getAllFriendRequests(user.useruuid);
+            res.status(200).json({ friendRequests: friendRequests });
         } catch (error) {
             console.log(error)
             res.status(400).send(error.message);

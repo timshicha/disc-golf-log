@@ -12,7 +12,7 @@ import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
 import refreshIcon from "../../assets/images/refreshIcon.png";
-import { httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
+import { httpGetAllFriendRequests, httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 import ConfirmModal from "./ConfirmModal.jsx";
 
 const SocialPages = {
@@ -54,6 +54,14 @@ const FriendSlot = (props) => {
     );
 }
 
+const FriendRequestSlot = (props) => {
+    return (
+        <div className="w-[100%] bg-gray-light">
+            {props.username}
+        </div>
+    )
+}
+
 const SocialModal = (props) => {
 
     const [currentModal, setCurrentModal] = useState(SocialPages.PROFILE);
@@ -61,6 +69,7 @@ const SocialModal = (props) => {
     const [username, setUsername] = useState("");
     const [userUUID, setUserUUID] = useState(null);
     const [friends, setFriends] = useState([]);
+    const [friendRequests, setFriendRequests] = useState([]);
     const searchUsernameRef = useRef(null);
     const [coursesPlayed, setCoursesPlayed] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
@@ -199,6 +208,10 @@ const SocialModal = (props) => {
         setFriendsLoading(true);
         const allFriendsRes = await httpGetAllFriends();
         setFriends(allFriendsRes.data.friends);
+
+        const allFriendRequestsRes = await httpGetAllFriendRequests();
+        setFriendRequests(allFriendRequestsRes);
+
         setFriendsLoading(false);
     }
 
@@ -345,6 +358,13 @@ const SocialModal = (props) => {
                     <div className="inline-block text-center">Friends</div>
                     <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px]"></img></button>
                 </div>
+                {(friendRequests && friendRequests.length > 0) &&
+                <>
+                    {friendRequests.map((friendRequest, index) => {
+                        return <FriendRequestSlot friendRequest={friendRequest}></FriendRequestSlot>
+                    })}
+                </>
+                }
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
@@ -355,8 +375,7 @@ const SocialModal = (props) => {
                 <>
                     <div className="text-desc text-gray-dark my-[20px]">You don't have any friends.</div>
                     <div className="text-center text-gray-subtle text-[13px]">It's probably because they don't want to play with someone that always wins.</div>
-                </>
-                    
+                </> 
                 }
             </div>
         </LargeModal>

@@ -10,7 +10,7 @@ import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkDat
 import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
-import { registerGetAllFriendsEndpoint, registerRemoveFriendEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint } from "./req/friends.mjs";
+import { registerGetAllFriendsEndpoint, registerRemoveFriendEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint, registerGetAllFriendRequestsEndpoint } from "./req/friends.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -78,6 +78,7 @@ registerRespondFriendRequestEndpoint(app);
 registerUndoSendFriendRequestEndpoint(app);
 registerGetAllFriendsEndpoint(app);
 registerRemoveFriendEndpoint(app);
+registerGetAllFriendRequestsEndpoint(app);
 
 // If on localhost, manually set up to listen via https
 if(ENV === "localhost") {

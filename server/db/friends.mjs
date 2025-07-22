@@ -31,6 +31,15 @@ export const findFriendRequest = async (userUUID, targetUserUUID) => {
     else return "received";
 }
 
+export const getAllFriendRequests = async (userUUID) => {
+    const result = await db`SELECT users.useruuid, users.username FROM
+        ${SCHEMA}.friend_requests friend_requests JOIN
+        ${SCHEMA}.users users
+        ON friend_requests.sender = users.useruuid
+        WHERE receiver = ${userUUID}`;
+    return result;
+}
+
 export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
         (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
