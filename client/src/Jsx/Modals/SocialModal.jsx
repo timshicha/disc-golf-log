@@ -102,7 +102,6 @@ const SocialModal = (props) => {
         const result = await httpGetUserProfile(username);
         // If successfully retrieved profile, display it
         if(result?.success) {
-            console.log(result);
             setError(false);
             setUsername(result.data.username);
             setUserUUID(result.data.userUUID);
@@ -194,11 +193,14 @@ const SocialModal = (props) => {
     const acceptFriendRequest = (acceptUserUUID) => {
         const useruuid = acceptUserUUID ? acceptUserUUID : userUUID;
         setRespondingToFriendReqeust(true);
-        httpRespondToFriendRequest(useruuid, "accept").then(res => {
+        httpRespondToFriendRequest(useruuid, "accept").then(async res => {
 
             if(res.success) {
                 // If successful, then set the new UI (to friends)
                 setFriendStatus(FriendStatus.FRIENDS);
+                setFriendRequests(friendRequests.filter(friend => friend.useruuid !== acceptUserUUID));
+                // Add to friends list
+                await getAllFriends();
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
@@ -213,6 +215,8 @@ const SocialModal = (props) => {
             if(res.success) {
                 // If successful, then set the new UI (to not friends)
                 setFriendStatus(FriendStatus.NOT_FRIENDS);
+                // Also update friend request list
+                setFriendRequests(friendRequests.filter(friend => friend.useruuid !== declineUserUUID));
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
@@ -377,6 +381,7 @@ const SocialModal = (props) => {
                     <div className="text-black text-[15px]">Friend Requests</div>
                     {friendRequests.map((friendRequest, index) => {
                         return <FriendRequestSlot user={friendRequest}
+                            key={index}
                             onSelect={() => {
                                 loadProfile(friendRequest.username);
                                 setCurrentModal(SocialPages.PROFILE);
