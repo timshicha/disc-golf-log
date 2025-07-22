@@ -12,6 +12,8 @@ import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
 import refreshIcon from "../../assets/images/refreshIcon.png";
+import checkMark from "../../assets/images/checkMark.png";
+import whiteX from "../../assets/images/whiteX.png";
 import { httpGetAllFriendRequests, httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 import ConfirmModal from "./ConfirmModal.jsx";
 
@@ -55,9 +57,20 @@ const FriendSlot = (props) => {
 }
 
 const FriendRequestSlot = (props) => {
+
+    const handleSelectUserClick = (event) => {
+        props.onSelect();
+    }
+
     return (
-        <div className="w-[100%] bg-gray-light">
-            {props.username}
+        <div className="relative w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
+            <div className="text-left inline-block w-[calc(100%-100px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle" onClick={handleSelectUserClick}>
+                {props.user.username}
+            </div>
+            <div className="absolute right-[8px] inline-block">
+                <button className="bg-[green] align-middle p-[5px] rounded-[5px] mr-[5px]" onClick={props.onAccept}><img className="w-[24px]" src={checkMark}></img></button>
+                <button className="bg-[red] align-middle p-[5px] rounded-[5px]" onClick={props.onDecline}><img className="w-[24px]" src={whiteX}></img></button>
+            </div>
         </div>
     )
 }
@@ -178,9 +191,10 @@ const SocialModal = (props) => {
         });
     }
 
-    const acceptFriendRequest = () => {
+    const acceptFriendRequest = (acceptUserUUID) => {
+        const useruuid = acceptUserUUID ? acceptUserUUID : userUUID;
         setRespondingToFriendReqeust(true);
-        httpRespondToFriendRequest(userUUID, "accept").then(res => {
+        httpRespondToFriendRequest(useruuid, "accept").then(res => {
 
             if(res.success) {
                 // If successful, then set the new UI (to friends)
@@ -191,9 +205,10 @@ const SocialModal = (props) => {
         });
     }
 
-    const declineFriendRequest = () => {
+    const declineFriendRequest = (declineUserUUID) => {
+        const useruuid = declineUserUUID ? declineUserUUID : userUUID;
         setRespondingToFriendReqeust(true);
-        httpRespondToFriendRequest(userUUID, "decline").then(res => {
+        httpRespondToFriendRequest(useruuid, "decline").then(res => {
 
             if(res.success) {
                 // If successful, then set the new UI (to not friends)
@@ -210,7 +225,7 @@ const SocialModal = (props) => {
         setFriends(allFriendsRes.data.friends);
 
         const allFriendRequestsRes = await httpGetAllFriendRequests();
-        setFriendRequests(allFriendRequestsRes);
+        setFriendRequests(allFriendRequestsRes.data.friendRequests);
 
         setFriendsLoading(false);
     }
@@ -355,16 +370,25 @@ const SocialModal = (props) => {
                         </LoadingImg>
                     </div>
                     }
-                    <div className="inline-block text-center">Friends</div>
                     <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px]"></img></button>
                 </div>
                 {(friendRequests && friendRequests.length > 0) &&
                 <>
+                    <div className="text-black text-[15px]">Friend Requests</div>
                     {friendRequests.map((friendRequest, index) => {
-                        return <FriendRequestSlot friendRequest={friendRequest}></FriendRequestSlot>
+                        return <FriendRequestSlot user={friendRequest}
+                            onSelect={() => {
+                                loadProfile(friendRequest.username);
+                                setCurrentModal(SocialPages.PROFILE);
+                            }}
+                            onAccept={() => {acceptFriendRequest(friendRequest.useruuid)}}
+                            onDecline={() => {declineFriendRequest(friendRequest.useruuid)}}
+                        ></FriendRequestSlot>
                     })}
+                    <hr className="my-[10px]"></hr>
                 </>
                 }
+                <div className="inline-block text-center">Friends</div>
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
@@ -374,7 +398,7 @@ const SocialModal = (props) => {
                 :
                 <>
                     <div className="text-desc text-gray-dark my-[20px]">You don't have any friends.</div>
-                    <div className="text-center text-gray-subtle text-[13px]">It's probably because they don't want to play with someone that always wins.</div>
+                    <div className="text-center text-gray-subtle text-[13px]">It's  because no one wants to play with someone that always wins.</div>
                 </> 
                 }
             </div>
