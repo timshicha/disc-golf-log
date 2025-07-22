@@ -11,6 +11,7 @@ import LoadingImg from "../Components/LoadingImg.jsx";
 import { FriendStatus } from "../../Utilities/Enums.js";
 import addFriendIcon from "../../assets/images/addFriendIcon.png";
 import greenCheckMark from "../../assets/images/greenCheckMark.png";
+import refreshIcon from "../../assets/images/refreshIcon.png";
 import { httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 import ConfirmModal from "./ConfirmModal.jsx";
 
@@ -71,6 +72,7 @@ const SocialModal = (props) => {
     const [courseSelected, setCourseSelected] = useState(null);
     const [profileLoading, setProfileLoading] = useState(false);
     const [respondingToFriendRequest, setRespondingToFriendReqeust] = useState(false);
+    const [friendsLoading, setFriendsLoading] = useState(false);
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
@@ -194,8 +196,10 @@ const SocialModal = (props) => {
     }
 
     const getAllFriends = async () => {
+        setFriendsLoading(true);
         const allFriendsRes = await httpGetAllFriends();
         setFriends(allFriendsRes.data.friends);
+        setFriendsLoading(false);
     }
 
     const onSelectFriend = (friend) => {
@@ -331,7 +335,16 @@ const SocialModal = (props) => {
             {/* FRIENDS PAGE */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
-                <ModalTitle>Friends</ModalTitle>
+                <div className="mb-[20px]">
+                    {friendsLoading &&
+                    <div className="bg-gray-light p-[5px] absolute left-[10px] rounded-[30px]">
+                        <LoadingImg className="w-[30px]">
+                        </LoadingImg>
+                    </div>
+                    }
+                    <div className="inline-block text-center">Friends</div>
+                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px]"></img></button>
+                </div>
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
