@@ -331,13 +331,20 @@ const SocialModal = (props) => {
             {/* FRIENDS PAGE */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
                 (currentModal !== SocialPages.FRIENDS ? "opacity-[0%] pointer-events-none" : "")}>
-                {friends ? friends.map((friend, index) => {
+                <ModalTitle>Friends</ModalTitle>
+                {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
                         onUnfriend={() => unfriend(friend)}
                     ></FriendSlot>
-                })
-                : ""}
+                    })
+                :
+                <>
+                    <div className="text-desc text-gray-dark my-[20px]">You don't have any friends.</div>
+                    <div className="text-center text-gray-subtle text-[13px]">It's probably because they don't want to play with someone that always wins.</div>
+                </>
+                    
+                }
             </div>
         </LargeModal>
     );
