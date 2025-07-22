@@ -20,3 +20,10 @@ export const Pages = {
     SETTINGS: "settings",
     COURSE: "course"
 }
+
+export const FriendStatus = {
+    NOT_FRIENDS: "not friends",
+    FRIENDS: "friends",
+    REQUEST_SENT: "request sent",
+    REQUEST_RECEIVED: "request received"
+};
