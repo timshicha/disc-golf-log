@@ -151,14 +151,9 @@ export const registerUpdateProfileVisibility = (app) => {
         console.log(req.body)
         try {
             // If updating profile visibility
-            if(req.body.public_profile === true || req.body.public_profile === false) {
-                const result = await setProfileVisibility(user, req.body.public_profile);
-                if(!result.success) {
-                    throw new Error (result.error);
-                }
-            }
-            else {
-                throw new Error ("Server did not receive a profile setting option.");
+            const result = await setProfileVisibility(user, req.body.public_profile, req.body.public_to_friends);
+            if(!result.success) {
+                throw new Error (result.error);
             }
             res.status(200).json({
                 success: true

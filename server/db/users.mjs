@@ -90,15 +90,35 @@ const changeUsername = async (user, newUsername) => {
 }
 
 // Adjust profile visibility
-const setProfileVisibility = async (user, public_profile=false) => {
+const setProfileVisibility = async (user, public_profile, public_to_friends) => {
     try {
         if(!user) {
             return { success: false, error: "User not provided."};
         }
-        if(public_profile === true || public_profile === false) {
-            await db`UPDATE ${SCHEMA}.users SET public_profile = ${public_profile}
+        // If both settings need to be changed
+        if((public_profile === true || public_profile === false) &&
+            (public_to_friends === true || public_to_friends === false)) {
+            await db`UPDATE ${SCHEMA}.users SET
+                public_profile = ${public_profile}, public_to_friends = ${public_to_friends}
                 WHERE useruuid = ${user.useruuid}`;
             return { success: true, error: null };
+        }
+        // If only public profile
+        else if(public_profile === true || public_profile === false) {
+            await db`UPDATE ${SCHEMA}.users SET
+                public_profile = ${public_profile}
+                WHERE useruuid = ${user.useruuid}`;
+            return { success: true, error: null };
+        }
+        // If only public to friends
+        else if(public_to_friends === true || public_to_friends === false) {
+            await db`UPDATE ${SCHEMA}.users SET
+                public_to_friends = ${public_to_friends}
+                WHERE useruuid = ${user.useruuid}`;
+            return { success: true, error: null };
+        }
+        else {
+            return { success: false, error: "Nothing to update." };
         }
     } catch (error) {
         console.log(`Could not change profile visibility: ${error}`);
