@@ -95,6 +95,7 @@ const SocialModal = (props) => {
     const [profileLoading, setProfileLoading] = useState(false);
     const [respondingToFriendRequest, setRespondingToFriendReqeust] = useState(false);
     const [friendsLoading, setFriendsLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("username") ? true : false);
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
@@ -393,18 +394,22 @@ const SocialModal = (props) => {
                     <hr className="my-[10px]"></hr>
                 </>
                 }
-                <div className="inline-block text-center">Friends</div>
+                {loggedIn &&
+                    <div className="inline-block text-center">Friends</div>
+                }
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
                         onUnfriend={() => unfriend(friend)}
                     ></FriendSlot>
                     })
-                :
+                : loggedIn ?
                 <>
                     <div className="text-desc text-gray-dark my-[20px]">You don't have any friends.</div>
                     <div className="text-center text-gray-subtle text-[13px]">It's  because no one wants to play with someone that always wins.</div>
                 </> 
+                :
+                <div className="text-center text-gray-subtle text-[13px] mt-[70px]">Log in to find friends.</div>
                 }
             </div>
         </LargeModal>
