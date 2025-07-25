@@ -1,5 +1,7 @@
 import { addUser, findUserByEmail } from "../db/users.mjs";
-import { generateToken } from "./tokens.mjs";
+import { generateToken, tokenOptions } from "./tokens.mjs";
+
+
 
 /**
  * 
@@ -20,12 +22,7 @@ const handleSuccessfulLogin = async (req, res, email) => {
     const token = await generateToken(email);
     // If a token was generated, set as a cookie
     if(token) {
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-            maxAge: 2_592_000_000
-        });
+        res.cookie("token", token, tokenOptions);
         console.log(`Token set for ${email}: ${token}`);
         res.status(200).json({
             email: user.email,

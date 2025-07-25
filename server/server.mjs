@@ -11,6 +11,7 @@ import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
 import { registerGetAllFriendsEndpoint, registerRemoveFriendEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint, registerGetAllFriendRequestsEndpoint } from "./req/friends.mjs";
+import { registerLogoutEndpoint } from "./auth/logout.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -59,6 +60,7 @@ app.get("/ready", async (req, res) => {
 // Auth endpoints
 registerGoogleAuthEndpoint(app);
 registerEmailAuthEndpoint(app);
+registerLogoutEndpoint(app);
 
 // Data related endpoints
 registerPostDataEndpoint(app);

@@ -1,6 +1,13 @@
 import db, { SCHEMA } from "../db/db_setup.mjs";
 import { randomUUID } from "crypto";
 
+export const tokenOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 2_592_000_000
+}
+
 const generateToken = async (email) => {
     // Attempt to create a token
     try {
@@ -36,12 +43,7 @@ const validateToken = async (req, res) => {
             throw("Can't map token to a user.");
         }
         // Renew cookie
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-            maxAge: 2_592_000_000
-        });
+        res.cookie("token", token, tokenOptions);
         return user;
     }
     catch (error) {
