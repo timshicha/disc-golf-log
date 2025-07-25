@@ -6,6 +6,7 @@ import { tokenOptions } from "./tokens.mjs";
 const registerLogoutEndpoint = (app) => {
     // If logging in (user wants a token)
     app.get("/logout", async (req, res) => {
+        console.log("Logout:", req.cookies.token);
     
         try {
             res.clearCookie("token", tokenOptions);

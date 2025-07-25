@@ -107,4 +107,38 @@ const httpConfirmEmailCode = async (email, code) => {
     };
 }
 
-export { httpRequestEmailCode, httpConfirmEmailCode };
+const httpLogout = async () => {
+    let result;
+    let status;
+    try {
+        result = await fetch(SERVER_URI + "/logout", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if(!result.ok) {
+            status = result.status;
+            throw new Error(`HTTP request failed with status ${result.status}`);
+        }
+        localStorage.clear("logout");
+
+    } catch (error) {
+        console.log(`Could not logout: ${error}`);
+        localStorage.setItem("logout", true);
+        return {
+            success: false,
+            error: error,
+            status: status
+        };
+    }
+    // If code was sent
+    return {
+        success: true,
+        data: await result.json()
+    };
+}
+
+
+export { httpRequestEmailCode, httpConfirmEmailCode, httpLogout };

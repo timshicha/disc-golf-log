@@ -1,6 +1,18 @@
+import { httpLogout } from "./auth.mjs";
+
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 export const httpSendFriendRequest = async (userUUID) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
@@ -36,6 +48,16 @@ export const httpSendFriendRequest = async (userUUID) => {
 }
 
 export const httpUndoSendFriendRequest = async (userUUID) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
@@ -71,6 +93,16 @@ export const httpUndoSendFriendRequest = async (userUUID) => {
 }
 
 export const httpRespondToFriendRequest = async (targetUserUUID, response) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
@@ -107,6 +139,16 @@ export const httpRespondToFriendRequest = async (targetUserUUID, response) => {
 }
 
 export const httpGetAllFriends = async () => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
@@ -139,6 +181,16 @@ export const httpGetAllFriends = async () => {
 }
 
 export const httpGetAllFriendRequests = async () => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
@@ -171,6 +223,16 @@ export const httpGetAllFriendRequests = async () => {
 }
 
 export const httpRemoveFriend = async (userUUID) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {
