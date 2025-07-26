@@ -96,6 +96,7 @@ const SocialModal = (props) => {
     const [respondingToFriendRequest, setRespondingToFriendReqeust] = useState(false);
     const [friendsLoading, setFriendsLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useState(localStorage.getItem("username") ? true : false);
+    const [friendsPagePrompt, setFriendPagePrompt] = useState(null);
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
@@ -226,13 +227,26 @@ const SocialModal = (props) => {
 
     const getAllFriends = async () => {
         setFriendsLoading(true);
-        const allFriendsRes = await httpGetAllFriends();
-        setFriends(allFriendsRes.data.friends);
+        try {
 
-        const allFriendRequestsRes = await httpGetAllFriendRequests();
-        setFriendRequests(allFriendRequestsRes.data.friendRequests);
+            if(!username) {
+                setFriendPagePrompt("Log in to find friends.");
+                return;
+            }
 
-        setFriendsLoading(false);
+            const allFriendsRes = await httpGetAllFriends();
+            const allFriendRequestsRes = await httpGetAllFriendRequests();
+
+            if(allFriendsRes.success && allFriendRequestsRes.success) {
+                setFriends(allFriendsRes.data.friends);
+                setFriendRequests(allFriendsRes.data.friendRequests);
+            }
+        } catch (error) {
+            console.log(error);
+            setFriendPagePrompt("Could not connect to the server.");
+        } finally {
+            setFriendsLoading(false);
+        }
     }
 
     const onSelectFriend = (friend) => {
@@ -409,7 +423,7 @@ const SocialModal = (props) => {
                     <div className="text-center text-gray-subtle text-[13px]">It's  because no one wants to play with someone that always wins.</div>
                 </> 
                 :
-                <div className="text-center text-gray-subtle text-[13px] mt-[70px]">Log in to find friends.</div>
+                <div className="text-center text-gray-subtle text-[13px] mt-[70px]">{friendsPagePrompt}</div>
                 }
             </div>
         </LargeModal>
