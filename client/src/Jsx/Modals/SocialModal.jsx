@@ -143,7 +143,13 @@ const SocialModal = (props) => {
         // If error
         else {
             if(result?.status === 404) {
-                setError("User not found.");
+                // If it's because no username is provided (or nothing has been searched)
+                if(!username) {
+                    setError(null);
+                }
+                else {
+                    setError("User not found.");
+                }
             }
             else {
                 setError("Could not connect to server.");
