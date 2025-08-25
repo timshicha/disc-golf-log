@@ -95,6 +95,8 @@ const SocialModal = (props) => {
     const [profileLoading, setProfileLoading] = useState(false);
     const [respondingToFriendRequest, setRespondingToFriendReqeust] = useState(false);
     const [friendsLoading, setFriendsLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("username") ? true : false);
+    const [friendsPagePrompt, setFriendPagePrompt] = useState(null);
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
@@ -155,7 +157,7 @@ const SocialModal = (props) => {
         if(props.username) {
             setUsername(props.username);
             loadProfile(props.username);
-            getAllFriends();
+            // getAllFriends();
         }
     }, []);
 
@@ -225,13 +227,26 @@ const SocialModal = (props) => {
 
     const getAllFriends = async () => {
         setFriendsLoading(true);
-        const allFriendsRes = await httpGetAllFriends();
-        setFriends(allFriendsRes.data.friends);
+        try {
 
-        const allFriendRequestsRes = await httpGetAllFriendRequests();
-        setFriendRequests(allFriendRequestsRes.data.friendRequests);
+            if(!username) {
+                setFriendPagePrompt("Log in to find friends.");
+                return;
+            }
 
-        setFriendsLoading(false);
+            const allFriendsRes = await httpGetAllFriends();
+            const allFriendRequestsRes = await httpGetAllFriendRequests();
+
+            if(allFriendsRes.success && allFriendRequestsRes.success) {
+                setFriends(allFriendsRes.data.friends);
+                setFriendRequests(allFriendsRes.data.friendRequests);
+            }
+        } catch (error) {
+            console.log(error);
+            setFriendPagePrompt("Could not connect to the server.");
+        } finally {
+            setFriendsLoading(false);
+        }
     }
 
     const onSelectFriend = (friend) => {
@@ -257,7 +272,10 @@ const SocialModal = (props) => {
             {/* NAV TABS */}
             <div className="text-[15px]">
                 <TabButton selected={currentModal === SocialPages.PROFILE} onClick={() => setCurrentModal(SocialPages.PROFILE)}>Profile</TabButton>
-                <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => setCurrentModal(SocialPages.FRIENDS)}>Friends</TabButton>
+                <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => {
+                    setCurrentModal(SocialPages.FRIENDS);
+                    getAllFriends();
+                }}>Friends</TabButton>
             </div>
             {/* END NAV TABS */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
@@ -280,13 +298,17 @@ const SocialModal = (props) => {
                             </div>
                         : friendStatus === FriendStatus.NOT_FRIENDS ?
                             <div>
-                                <div className="mb-[5px] text-gray-dark">Not friends</div>
-                                <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
-                                    <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
-                                    <div className="inline align-middle">
-                                        Add friend
-                                    </div>
-                                </button>
+                                {loggedIn &&
+                                    <>
+                                        <div className="mb-[5px] text-gray-dark">Not friends</div>
+                                        <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
+                                            <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
+                                            <div className="inline align-middle">
+                                                Add friend
+                                            </div>
+                                        </button>
+                                    </>
+                                }
                             </div>
                         : friendStatus === FriendStatus.FRIENDS ?
                             <div className="text-[green]">
@@ -393,18 +415,22 @@ const SocialModal = (props) => {
                     <hr className="my-[10px]"></hr>
                 </>
                 }
-                <div className="inline-block text-center">Friends</div>
+                {loggedIn &&
+                    <div className="inline-block text-center">Friends</div>
+                }
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}
                         onSelect={() => onSelectFriend(friend)}
                         onUnfriend={() => unfriend(friend)}
                     ></FriendSlot>
                     })
-                :
+                : loggedIn ?
                 <>
                     <div className="text-desc text-gray-dark my-[20px]">You don't have any friends.</div>
                     <div className="text-center text-gray-subtle text-[13px]">It's  because no one wants to play with someone that always wins.</div>
                 </> 
+                :
+                <div className="text-center text-gray-subtle text-[13px] mt-[70px]">{friendsPagePrompt}</div>
                 }
             </div>
         </LargeModal>

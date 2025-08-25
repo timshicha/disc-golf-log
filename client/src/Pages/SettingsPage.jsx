@@ -13,6 +13,7 @@ import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 import { isValidUsername } from "../Utilities/format.js";
 import { httpUpdateProfileVisibility } from "../ServerCalls/profile.mjs";
+import { httpLogout } from "../ServerCalls/auth.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -111,6 +112,7 @@ class SettingsPage extends React.Component {
             logoutLoading: false,
             currentModal: null
         });
+        httpLogout();
     }
     
     handleUploadChangesToCloud = async () => {
