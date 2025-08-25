@@ -157,7 +157,7 @@ const SocialModal = (props) => {
         if(props.username) {
             setUsername(props.username);
             loadProfile(props.username);
-            getAllFriends();
+            // getAllFriends();
         }
     }, []);
 
@@ -272,7 +272,10 @@ const SocialModal = (props) => {
             {/* NAV TABS */}
             <div className="text-[15px]">
                 <TabButton selected={currentModal === SocialPages.PROFILE} onClick={() => setCurrentModal(SocialPages.PROFILE)}>Profile</TabButton>
-                <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => setCurrentModal(SocialPages.FRIENDS)}>Friends</TabButton>
+                <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => {
+                    setCurrentModal(SocialPages.FRIENDS);
+                    getAllFriends();
+                }}>Friends</TabButton>
             </div>
             {/* END NAV TABS */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
