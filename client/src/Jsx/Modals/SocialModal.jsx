@@ -295,13 +295,17 @@ const SocialModal = (props) => {
                             </div>
                         : friendStatus === FriendStatus.NOT_FRIENDS ?
                             <div>
-                                <div className="mb-[5px] text-gray-dark">Not friends</div>
-                                <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
-                                    <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
-                                    <div className="inline align-middle">
-                                        Add friend
-                                    </div>
-                                </button>
+                                {loggedIn &&
+                                    <>
+                                        <div className="mb-[5px] text-gray-dark">Not friends</div>
+                                        <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
+                                            <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
+                                            <div className="inline align-middle">
+                                                Add friend
+                                            </div>
+                                        </button>
+                                    </>
+                                }
                             </div>
                         : friendStatus === FriendStatus.FRIENDS ?
                             <div className="text-[green]">
