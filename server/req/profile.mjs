@@ -54,6 +54,8 @@ export const getVisibleProfile = async (profileUser, viewerUser) => {
     return { visible: false, friends: false, friendRequest: friendRequest, user: profileUser };
 }
 
+
+
 /**
  * @param {import("express").Express} app
  */
@@ -62,10 +64,22 @@ export const registerGetProfileEndpoint = (app) => {
     app.get("/profile/:username", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
+        let profileUser;
         // Find the other user
-        const profileUser = await findUserByUsername(req.params.username, false);
+        // If username provided, find the user
+        if(req.params.username) {
+            profileUser = await findUserByUsername(req.params.username, false);
+        }
+        // Otherwise search for self
+        else {
+            profileUser = user;
+        }
         
         try {
+            if(!profileUser) {
+                res.status(404).send("Enter a valid username.");
+                return;
+            }
             const searchResult = await getVisibleProfile(profileUser, user);
             // If profile doesn't exist
             if(searchResult === null) {
@@ -101,6 +115,34 @@ export const registerGetProfileEndpoint = (app) => {
                     visible: true
                 });
             }
+        } catch (error) {
+            res.status(400).send("Could not get data.");
+            console.log(error);
+        }
+    });
+
+    // If the user wants to get their own profile
+    app.get("/profile", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Not logged in.");
+        }
+        
+        try {
+            const courses = await getAllCoursesProfile(user.useruuid);
+            const roundCount = await getUserRoundsCount(user.useruuid);
+            const rounds = await getMostRecentRounds(user.useruuid, 5);
+            res.status(200).json({
+                username: user.username,
+                userUUID: user.useruuid,
+                courses: courses,
+                roundCount: roundCount,
+                rounds: rounds,
+                friends: user.friends,
+                friendRequest: user.friendRequest,
+                visible: true
+            });
         } catch (error) {
             res.status(400).send("Could not get data.");
             console.log(error);
@@ -148,7 +190,6 @@ export const registerUpdateProfileVisibility = (app) => {
             res.status(401).send("Can't validate user.");
             return;
         }
-        console.log(req.body)
         try {
             // If updating profile visibility
             const result = await setProfileVisibility(user, req.body.public_profile, req.body.public_to_friends);

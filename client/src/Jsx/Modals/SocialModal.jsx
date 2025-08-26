@@ -100,8 +100,8 @@ const SocialModal = (props) => {
 
     const loadProfile = async (username) => {
         setProfileLoading(true);
-        console.log(username);
-        const result = await httpGetUserProfile(username);
+        // If username not provided, send blank to search for own profile
+        const result = await httpGetUserProfile(username || "");
         // If successfully retrieved profile, display it
         if(result?.success) {
             setError(false);
@@ -145,11 +145,14 @@ const SocialModal = (props) => {
             if(result?.status === 404) {
                 // If it's because no username is provided (or nothing has been searched)
                 if(!username) {
-                    setError(null);
+                    setError("Search for a user.");
                 }
                 else {
                     setError("User not found.");
                 }
+            }
+            else if(result?.status === 401) {
+                setError("No profile to show. You are not logged in.");
             }
             else {
                 setError("Could not connect to server.");
@@ -162,7 +165,7 @@ const SocialModal = (props) => {
     useEffect(() => {
         if(props.username) {
             setUsername(props.username);
-            loadProfile(props.username);
+            loadProfile();
             // getAllFriends();
         }
     }, []);
@@ -256,8 +259,6 @@ const SocialModal = (props) => {
     }
 
     const onSelectFriend = (friend) => {
-        console.log("friend profile selected");
-        console.log(friend.useruuid, friend.username);
         setCourseSelected(null);
         setCurrentModal(SocialPages.PROFILE);
         loadProfile(friend.username);
@@ -338,7 +339,7 @@ const SocialModal = (props) => {
                         {/* End of friend request area */}
                         <hr className="w-[100%] my-[5px]"></hr>
                         {privateProfile === true &&
-                            <div className="text-desc text-center">This user's profile is private.{console.log("ok")}</div>
+                            <div className="text-desc text-center">This user's profile is private.</div>
                         }
                         {!privateProfile && !courseSelected &&
                         <>
