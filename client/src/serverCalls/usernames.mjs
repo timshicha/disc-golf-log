@@ -1,8 +1,19 @@
 import DataHandler from "../DataHandling/DataHandler";
+import { httpLogout } from "./auth.mjs";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const httpChangeUsername = async (newUsername) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
     let result;
     let status;
     try {

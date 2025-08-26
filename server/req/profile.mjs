@@ -1,31 +1,60 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCoursesProfile } from "../db/courses.mjs";
+import { areFriends, findFriendRequest } from "../db/friends.mjs";
 import { getAllCourseRounds, getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
 import { findUser, findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
 // See if a user is allowed to see another user's data
-export const getVisibleProfile = async (profileUserUsername, viewerUserUUID) => {
-    if(!profileUserUsername) {
-        return null;
-    }
-    const profileUser = await findUserByUsername(profileUserUsername, false);
-    // If this user doesn't exist
+export const getVisibleProfile = async (profileUser, viewerUser) => {
     if(!profileUser) {
         return null;
     }
     // If this is the same user, always allow
-    if(profileUser.useruuid === viewerUserUUID) {
-        return { visible: true, user: profileUser };
+    if(profileUser.useruuid === viewerUser?.useruuid) {
+        return {
+            visible: true,
+            friends: null,
+            user: profileUser
+        };
     }
     // If the profile is public, allow
     if(profileUser.public_profile) {
-        return { visible: true, user: profileUser };
+        // If a user that's not logged in is viewing, always specify
+        // that they are not friends
+        if(!viewerUser) {
+            return { visible: true, friends: false, user: profileUser };
+        }
+        // Otherwise see if they are friends to specify their friendship
+        const friendship = (viewerUser ? await areFriends(viewerUser.useruuid, profileUser.useruuid) : false);
+        // If friends
+        if(friendship) {
+            return { visible: true, friends: true, user: profileUser };
+        }
+        // Otherwise see if a request has already been sent or received
+        else {
+            const friendRequest = await findFriendRequest(viewerUser.useruuid, profileUser.useruuid);
+            return { visible: true, friends: false, friendRequest: friendRequest, user: profileUser };
+        }
     }
-
-    // See if they are friends... later...
-
-    return { visible: false, user: profileUser };
+    // If they are friends
+    if(viewerUser && await areFriends(viewerUser.useruuid, profileUser.useruuid)) {
+        // If they allow friends to see their profile
+        if(profileUser.public_to_friends) {
+            return { visible: true, friends: true, user: profileUser };
+        }
+        else {
+            return { visible: false, friends: true, user: profileUser };
+        }
+    }
+    let friendRequest = null;
+    // Check if friend request has been sent or received
+    if(viewerUser) {
+        friendRequest = await findFriendRequest(viewerUser.useruuid, profileUser.useruuid);
+    }
+    return { visible: false, friends: false, friendRequest: friendRequest, user: profileUser };
 }
+
+
 
 /**
  * @param {import("express").Express} app
@@ -35,9 +64,23 @@ export const registerGetProfileEndpoint = (app) => {
     app.get("/profile/:username", async (req, res) => {
         // Validate token
         const user = await validateToken(req, res);
+        let profileUser;
+        // Find the other user
+        // If username provided, find the user
+        if(req.params.username) {
+            profileUser = await findUserByUsername(req.params.username, false);
+        }
+        // Otherwise search for self
+        else {
+            profileUser = user;
+        }
         
         try {
-            const searchResult = await getVisibleProfile(req.params.username, user?.useruuid);
+            if(!profileUser) {
+                res.status(404).send("Enter a valid username.");
+                return;
+            }
+            const searchResult = await getVisibleProfile(profileUser, user);
             // If profile doesn't exist
             if(searchResult === null) {
                 res.status(404).json({
@@ -50,6 +93,9 @@ export const registerGetProfileEndpoint = (app) => {
             if(!searchResult.visible) {
                 res.status(200).json({
                     username: searchUser.username,
+                    userUUID: searchUser.useruuid,
+                    friends: searchResult.friends,
+                    friendRequest: searchResult.friendRequest,
                     visible: false
                 });
             }
@@ -60,12 +106,43 @@ export const registerGetProfileEndpoint = (app) => {
                 const rounds = await getMostRecentRounds(searchUser.useruuid, 5);
                 res.status(200).json({
                     username: searchUser.username,
+                    userUUID: searchUser.useruuid,
                     courses: courses,
                     roundCount: roundCount,
                     rounds: rounds,
+                    friends: searchResult.friends,
+                    friendRequest: searchResult.friendRequest,
                     visible: true
                 });
             }
+        } catch (error) {
+            res.status(400).send("Could not get data.");
+            console.log(error);
+        }
+    });
+
+    // If the user wants to get their own profile
+    app.get("/profile", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Not logged in.");
+        }
+        
+        try {
+            const courses = await getAllCoursesProfile(user.useruuid);
+            const roundCount = await getUserRoundsCount(user.useruuid);
+            const rounds = await getMostRecentRounds(user.useruuid, 5);
+            res.status(200).json({
+                username: user.username,
+                userUUID: user.useruuid,
+                courses: courses,
+                roundCount: roundCount,
+                rounds: rounds,
+                friends: user.friends,
+                friendRequest: user.friendRequest,
+                visible: true
+            });
         } catch (error) {
             res.status(400).send("Could not get data.");
             console.log(error);
@@ -113,17 +190,11 @@ export const registerUpdateProfileVisibility = (app) => {
             res.status(401).send("Can't validate user.");
             return;
         }
-        console.log(req.body)
         try {
             // If updating profile visibility
-            if(req.body.public_profile === true || req.body.public_profile === false) {
-                const result = await setProfileVisibility(user, req.body.public_profile);
-                if(!result.success) {
-                    throw new Error (result.error);
-                }
-            }
-            else {
-                throw new Error ("Server did not receive a profile setting option.");
+            const result = await setProfileVisibility(user, req.body.public_profile, req.body.public_to_friends);
+            if(!result.success) {
+                throw new Error (result.error);
             }
             res.status(200).json({
                 success: true

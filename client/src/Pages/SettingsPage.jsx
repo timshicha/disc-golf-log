@@ -13,6 +13,7 @@ import Input from "../Jsx/Modals/ModalComponents/Input.jsx";
 import { httpChangeUsername } from "../ServerCalls/usernames.mjs";
 import { isValidUsername } from "../Utilities/format.js";
 import { httpUpdateProfileVisibility } from "../ServerCalls/profile.mjs";
+import { httpLogout } from "../ServerCalls/auth.mjs";
 
 const SettingsBlock = (props) => {
     return (
@@ -38,6 +39,7 @@ class SettingsPage extends React.Component {
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
             publicProfile: localStorage.getItem("public-profile") === "true",
+            publicToFriends: localStorage.getItem("public-to-friends") !== "false",
             currentModal: null,
             // Keep track of which requests to the server are loading so we can
             // show a loading circle over those buttons
@@ -110,6 +112,7 @@ class SettingsPage extends React.Component {
             logoutLoading: false,
             currentModal: null
         });
+        httpLogout();
     }
     
     handleUploadChangesToCloud = async () => {
@@ -169,10 +172,22 @@ class SettingsPage extends React.Component {
 
     onUpdateProfileVisibilityClick = async (event) => {
         const checked = event.target.checked;
-        const result = await httpUpdateProfileVisibility(checked);
+        const result = await httpUpdateProfileVisibility(checked, undefined);
         if(result.success) {
             this.setState({ publicProfile: checked });
             localStorage.setItem("public-profile", checked);
+        }
+        else {
+            console.log(result.error);
+        }
+    }
+
+    onUpdateProfileVisibilityToFriendsClick = async (event) => {
+        const checked = event.target.checked;
+        const result = await httpUpdateProfileVisibility(undefined, checked);
+        if(result.success) {
+            this.setState({ publicToFriends: checked });
+            localStorage.setItem("public-to-friends", checked);
         }
         else {
             console.log(result.error);
@@ -271,6 +286,14 @@ class SettingsPage extends React.Component {
                                 </input>
                                 <div className="text-desc text-gray-mild">
                                     Public profile. If checked, anyone can search you by your username and see your courses and rounds. If not checked, only friends can see your profile.
+                                </div>
+                            </SettingsBlock>
+                            <SettingsBlock className="min-h-[60px] bg-special">
+                                <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.onUpdateProfileVisibilityToFriendsClick}
+                                    id="public-to-friends-checkbox" checked={this.state.publicToFriends}>    
+                                </input>
+                                <div className="text-desc text-gray-mild">
+                                    Profile visible to friends. If checked, your friends can see your profile even when your profile in private.
                                 </div>
                             </SettingsBlock>
                         </>

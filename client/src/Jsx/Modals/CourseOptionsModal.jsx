@@ -51,7 +51,10 @@ const CourseOptionsModal = (props) => {
             <ConfirmDeleteModal modalTitle={`Delete "${props.course.name}"?`}
             replaceImg="back-arrow"
             onSubmit={deleteCourse}
-            onClose={() => setCurrentModal(null)}
+            onClose={() => {
+                setCurrentModal(COURSE_OPTIONS);
+                props.setModal(null);
+            }}
             onBack={() => setCurrentModal(Modals.COURSE_OPTIONS)}
             >
             </ConfirmDeleteModal>
