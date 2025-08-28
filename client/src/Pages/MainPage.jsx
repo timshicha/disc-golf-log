@@ -150,7 +150,7 @@ function MainPage (props) {
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p className="text-center text-desc mt-[25px]">
+                <p className="text-center text-desc mt-[25px] w-[100dvw]">
                     You don't have any courses.
                 </p>
             }
