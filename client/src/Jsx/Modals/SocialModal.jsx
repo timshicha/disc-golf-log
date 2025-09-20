@@ -382,7 +382,7 @@ const SocialModal = (props) => {
                             {/* If they have friends, show the friends */}
                             {friendsList && friendsList.length > 0 && friendsList.map((friend) => {
                                 return (
-                                    <SocialFriendSlot>{friend.username}</SocialFriendSlot>
+                                    <SocialFriendSlot onClick={() => loadProfile(friend.username)}>{friend.username}</SocialFriendSlot>
                                 );
                             })}
                             {/* If no friends, say no friends */}
