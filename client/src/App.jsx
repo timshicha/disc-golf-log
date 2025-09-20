@@ -107,7 +107,6 @@ function App() {
                         }}>
                             <img className="h-[42px] w-[42px]" src={cogwheel}></img>
                         </button>
-                            <button onClick={refreshCourses} className="ml-10 text-black">refresh</button>
                     </div>
                 </NavBar>
                 {/* Add spacer to account for navbar which doesn't
