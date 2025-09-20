@@ -16,6 +16,7 @@ import checkMark from "../../assets/images/checkMark.png";
 import whiteX from "../../assets/images/whiteX.png";
 import { httpGetAllFriendRequests, httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 import ConfirmModal from "./ConfirmModal.jsx";
+import SocialFriendSlot from "../Components/SocialFriendSlot.jsx";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -90,6 +91,7 @@ const SocialModal = (props) => {
     const [recentRoundsList, setRecentRoundsList] = useState([]);
     const [friendStatus, setFriendStatus] = useState(null);
     const [privateProfile, setPrivateProfile] = useState(false);
+    const [friendsList, setFriendsList] = useState([]);
     const [error, setError] = useState(null);
     const [courseSelected, setCourseSelected] = useState(null);
     const [profileLoading, setProfileLoading] = useState(false);
@@ -114,6 +116,7 @@ const SocialModal = (props) => {
                 setRecentRoundsList(result.data.rounds);
                 setCoursesPlayed(result.data.courses.length);
                 setRoundsPlayed(result.data.roundCount);
+                setFriendsList(result.data.friendsList);
             }
             else {
                 setPrivateProfile(true);
@@ -351,15 +354,20 @@ const SocialModal = (props) => {
                                     Rounds: {roundsPlayed}
                                 </div>
                             </div>
-                            <hr className="my-[5px]"/>
-                            <div className="text-gray-dark">Recent rounds:</div>
-                            <div className="ml-[5px] text-gray-subtle">
-                                {recentRoundsList.map((round, index) => {
-                                    return (
-                                        <SocialRound round={round} key={index}></SocialRound>
-                                    );
-                                })}
-                            </div>
+                            {/* Don't show recent rounds section if they never played any rounds */}
+                            {recentRoundsList && recentRoundsList.length > 0 &&
+                                <>
+                                <hr className="my-[5px]"/>
+                                <div className="text-gray-dark">Recent rounds:</div>
+                                <div className="ml-[5px] text-gray-subtle">
+                                    {recentRoundsList.map((round, index) => {
+                                        return (
+                                            <SocialRound round={round} key={index}></SocialRound>
+                                        );
+                                    })}
+                                </div>
+                                </>
+                            }
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Courses:</div>
                             {(courseList && courseList.length > 0) ?
@@ -367,11 +375,21 @@ const SocialModal = (props) => {
                                     <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
                                 )})
                                 :
-                                <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                                <div className="text-center">{username} does not have any courses.</div>
                             }
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Friends:</div>
-                            <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                            {/* If they have friends, show the friends */}
+                            {friendsList && friendsList.length > 0 && friendsList.map((friend) => {
+                                return (
+                                    <SocialFriendSlot onClick={() => loadProfile(friend.username)}>{friend.username}</SocialFriendSlot>
+                                );
+                            })}
+                            {/* If no friends, say no friends */}
+                            {(!friendsList || friendsList.length === 0) &&
+                                <div className="text-center">{username} does not have any friends.</div>
+                            }
+
                         </>
                         }
                         {courseSelected &&

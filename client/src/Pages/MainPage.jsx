@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import AddCourseModal from "../Jsx/Modals/AddCourseModal";
 import CourseSlot from "../Jsx/Components/CourseSlot";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle";
@@ -15,7 +15,7 @@ import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
-function MainPage (props) {
+const MainPage = forwardRef((props, ref) => {
     const [courses, setCourses] = useState([]);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
@@ -34,6 +34,10 @@ function MainPage (props) {
             reloadCourses();
         });
     }, []);
+
+    useImperativeHandle(ref, () => ({
+        reloadCourses: reloadCourses
+    }));
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
@@ -162,6 +166,6 @@ function MainPage (props) {
             }
         </div>
     );
-}
+});
 
 export default MainPage;
