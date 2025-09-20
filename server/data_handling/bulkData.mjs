@@ -1,6 +1,6 @@
 
 
-import { addCourse, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addCourse, addCourses, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
 import { addRound, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
 import { isValidCourseName } from "../utils/format.mjs";
 
@@ -14,28 +14,28 @@ const uploadBulkData = async (user, data) => {
     let errors = [];
     // For all courses that are being added
     if(Array.isArray(data.addCourseQueue)) {
+        const courses = [];
         for (let i = 0; i < data.addCourseQueue.length; i++) {
-            try {
-                const validName = isValidCourseName(data.addCourseQueue[i].name);
-                const courseUUID = data.addCourseQueue[i].courseUUID;
-                const courseData = data.addCourseQueue[i];
-                // Validate course name
-                if(!validName.isValid) {
-                    updatesFailed++;
-                    errors.push(`Could not add course: ${validName.error}`);
-                }
-                else if(await addCourse(user.useruuid, courseUUID, courseData)) {
-                    data.addCourseQueue[i] = null;
-                    updatesSucceeded++
-                }
-                else {
-                    updatesFailed++;
-                    errors.push("Could not add course: A course with this ID already exists");
-                }
-            } catch (error) {
-                errors.push(`Could not add course: ${error}`);
+            // If invalid course name
+            const validName = isValidCourseName(data.addCourseQueue[i].name);
+            if(!validName.isValid) {
                 updatesFailed++;
+                errors.push(`Could not add course: ${validName.error}`);
+                continue;
             }
+            courses.push({
+                courseuuid: data.addCourseQueue[i].courseUUID,
+                useruuid: user.useruuid,
+                data: data.addCourseQueue[i]
+            });
+        }
+        try {
+            const succeeded = await addCourses(courses);
+            updatesSucceeded += succeeded;
+            updatesFailed += (courses.length - succeeded);
+            console.log("Uploaded " + succeeded + " courses");
+        } catch (error) {
+            console.log("Uploading list of courses failed");
         }
     }
     // For all courses that are being modified

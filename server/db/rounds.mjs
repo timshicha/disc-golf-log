@@ -12,6 +12,15 @@ const addRound = async (userUUID, roundUUID, courseUUID, playedAt, data) => {
     return false;
 }
 
+const addRounds = async (roundList) => {
+    const result = await db`INSERT INTO ${SCHEMA}.rounds
+        ${db(roundList, "rounduuid", "courseuuid", "played_at", "data")}
+        ON CONFLICT (rounduuid) DO NOTHING
+    `;
+    console.log("rounds added:", result.count);
+    return result.count;
+}
+
 const modifyRound = async (userUUID, roundUUID, playedAt, data) => {
     // Make sure this round belongs to this user. Do this by getting the course ID of this round,
     // and then seeing if the user ID of that course is this user's ID.
@@ -71,4 +80,4 @@ const getMostRecentRounds = async (userUUID, numberOfRounds=3) => {
 }
 
 
-export { addRound, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getAllCourseRounds, getUserRoundsCount, getMostRecentRounds };
+export { addRound, addRounds, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getAllCourseRounds, getUserRoundsCount, getMostRecentRounds };
