@@ -1,6 +1,6 @@
 import { validateToken } from "../auth/tokens.mjs";
 import { getAllCoursesProfile } from "../db/courses.mjs";
-import { areFriends, findFriendRequest } from "../db/friends.mjs";
+import { areFriends, findFriendRequest, getAllFriends } from "../db/friends.mjs";
 import { getAllCourseRounds, getMostRecentRounds, getUserRoundsCount } from "../db/rounds.mjs";
 import { findUser, findUserByUsername, setProfileVisibility } from "../db/users.mjs";
 
@@ -101,6 +101,7 @@ export const registerGetProfileEndpoint = (app) => {
             }
             // If their profile is public or user is allowed to see it
             else {
+                const friendsList = await getAllFriends(searchUser.useruuid);
                 const courses = await getAllCoursesProfile(searchUser.useruuid);
                 const roundCount = await getUserRoundsCount(searchUser.useruuid);
                 const rounds = await getMostRecentRounds(searchUser.useruuid, 5);
@@ -112,6 +113,7 @@ export const registerGetProfileEndpoint = (app) => {
                     rounds: rounds,
                     friends: searchResult.friends,
                     friendRequest: searchResult.friendRequest,
+                    friendsList: friendsList,
                     visible: true
                 });
             }
@@ -130,6 +132,7 @@ export const registerGetProfileEndpoint = (app) => {
         }
         
         try {
+            const friendsList = await getAllFriends(user.useruuid);
             const courses = await getAllCoursesProfile(user.useruuid);
             const roundCount = await getUserRoundsCount(user.useruuid);
             const rounds = await getMostRecentRounds(user.useruuid, 5);
@@ -141,6 +144,7 @@ export const registerGetProfileEndpoint = (app) => {
                 rounds: rounds,
                 friends: user.friends,
                 friendRequest: user.friendRequest,
+                friendsList: friendsList,
                 visible: true
             });
         } catch (error) {

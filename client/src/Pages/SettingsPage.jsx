@@ -99,6 +99,8 @@ class SettingsPage extends React.Component {
             usernameModifed: usernameModified
         });
         this.updateLastPushedToCloudString();
+        // Force the home page to refresh courses so they appear when user goes back
+        this.props.refreshCourses();
     }
 
     onLogout = () => {
