@@ -354,15 +354,20 @@ const SocialModal = (props) => {
                                     Rounds: {roundsPlayed}
                                 </div>
                             </div>
-                            <hr className="my-[5px]"/>
-                            <div className="text-gray-dark">Recent rounds:</div>
-                            <div className="ml-[5px] text-gray-subtle">
-                                {recentRoundsList.map((round, index) => {
-                                    return (
-                                        <SocialRound round={round} key={index}></SocialRound>
-                                    );
-                                })}
-                            </div>
+                            {/* Don't show recent rounds section if they never played any rounds */}
+                            {recentRoundsList && recentRoundsList.length > 0 &&
+                                <>
+                                <hr className="my-[5px]"/>
+                                <div className="text-gray-dark">Recent rounds:</div>
+                                <div className="ml-[5px] text-gray-subtle">
+                                    {recentRoundsList.map((round, index) => {
+                                        return (
+                                            <SocialRound round={round} key={index}></SocialRound>
+                                        );
+                                    })}
+                                </div>
+                                </>
+                            }
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Courses:</div>
                             {(courseList && courseList.length > 0) ?
@@ -370,15 +375,21 @@ const SocialModal = (props) => {
                                     <SocialCourseSlot course={course} key={index} onClick={() => setCourseSelected(course)}></SocialCourseSlot>
                                 )})
                                 :
-                                <div className="text-gray-subtle text-center">This player does not have any courses.</div>
+                                <div className="text-center">{username} does not have any courses.</div>
                             }
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Friends:</div>
-                            {friendsList.map((friend) => {
+                            {/* If they have friends, show the friends */}
+                            {friendsList && friendsList.length > 0 && friendsList.map((friend) => {
                                 return (
                                     <SocialFriendSlot>{friend.username}</SocialFriendSlot>
                                 );
                             })}
+                            {/* If no friends, say no friends */}
+                            {(!friendsList || friendsList.length === 0) &&
+                                <div className="text-center">{username} does not have any friends.</div>
+                            }
+
                         </>
                         }
                         {courseSelected &&
