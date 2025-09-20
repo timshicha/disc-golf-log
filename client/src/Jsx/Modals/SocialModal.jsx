@@ -16,6 +16,7 @@ import checkMark from "../../assets/images/checkMark.png";
 import whiteX from "../../assets/images/whiteX.png";
 import { httpGetAllFriendRequests, httpGetAllFriends, httpRemoveFriend, httpRespondToFriendRequest, httpSendFriendRequest, httpUndoSendFriendRequest } from "../../ServerCalls/friends.mjs";
 import ConfirmModal from "./ConfirmModal.jsx";
+import SocialFriendSlot from "../Components/SocialFriendSlot.jsx";
 
 const SocialPages = {
     PROFILE: "profile",
@@ -90,6 +91,7 @@ const SocialModal = (props) => {
     const [recentRoundsList, setRecentRoundsList] = useState([]);
     const [friendStatus, setFriendStatus] = useState(null);
     const [privateProfile, setPrivateProfile] = useState(false);
+    const [friendsList, setFriendsList] = useState([]);
     const [error, setError] = useState(null);
     const [courseSelected, setCourseSelected] = useState(null);
     const [profileLoading, setProfileLoading] = useState(false);
@@ -114,6 +116,7 @@ const SocialModal = (props) => {
                 setRecentRoundsList(result.data.rounds);
                 setCoursesPlayed(result.data.courses.length);
                 setRoundsPlayed(result.data.roundCount);
+                setFriendsList(result.data.friendsList);
             }
             else {
                 setPrivateProfile(true);
@@ -371,7 +374,11 @@ const SocialModal = (props) => {
                             }
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Friends:</div>
-                            <div className="ml-[5px] text-gray-subtle">Coming soon</div>
+                            {friendsList.map((friend) => {
+                                return (
+                                    <SocialFriendSlot>{friend.username}</SocialFriendSlot>
+                                );
+                            })}
                         </>
                         }
                         {courseSelected &&
