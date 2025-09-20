@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import MainPage from "./Pages/MainPage";
 import SettingsPage from "./Pages/SettingsPage";
 import NavBar, { NavBarBackButton, NavBarTitle } from "./Jsx/Components/NavBar";
@@ -59,6 +59,7 @@ function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
+    const mainPageRef = useRef(null);
 
     useEffect(() => {
     }, []);
@@ -72,6 +73,15 @@ function App() {
         }
         else {
             setCurrentPage(Pages.MAIN);
+        }
+    }
+
+    const refreshCourses = () => {
+        if(mainPageRef.current) {
+            mainPageRef.current.reloadCourses();
+        }
+        else {
+            console.log("Could not reload courses.");
         }
     }
 
@@ -97,12 +107,13 @@ function App() {
                         }}>
                             <img className="h-[42px] w-[42px]" src={cogwheel}></img>
                         </button>
+                            <button onClick={refreshCourses} className="ml-10 text-black">refresh</button>
                     </div>
                 </NavBar>
                 {/* Add spacer to account for navbar which doesn't
                 take up any space. */}
                 <div className="h-[42px]"></div>
-                <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse}></MainPage>
+                <MainPage navigateTo={navigateTo} setCurrentCourse={setCurrentCourse} ref={mainPageRef}></MainPage>
             </div>
             {/* END OF MAIN PAGE. */}
 
@@ -112,7 +123,7 @@ function App() {
                         <NavBarTitle>Settings</NavBarTitle>
                         <NavBarBackButton onClick={() => navigateTo("main")}></NavBarBackButton>
                     </NavBar>
-                    <SettingsPage navigateTo={navigateTo}></SettingsPage>
+                    <SettingsPage navigateTo={navigateTo} refreshCourses={refreshCourses}></SettingsPage>
                 </>
             }
             {currentPage === Pages.COURSE &&
