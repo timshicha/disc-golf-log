@@ -26,8 +26,8 @@ const SocialPages = {
 const TabButton = (props) => {
 
     return (
-        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] mb-[-1px] rounded-t-[10px] " +
-            (props.selected === true ? "bg-white" : "bg-gray-normal")
+        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] mb-[-1px] rounded-t-[10px] " + props.className +
+            (props.selected === true ? " bg-white" : " bg-gray-normal")
         }>
             {props.children}
         </button>
@@ -218,6 +218,7 @@ const SocialModal = (props) => {
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
+            props.refreshFriendRequestCount();
         });
     }
 
@@ -234,6 +235,7 @@ const SocialModal = (props) => {
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
+            props.refreshFriendRequestCount();
         });
     }
 
@@ -251,13 +253,14 @@ const SocialModal = (props) => {
 
             if(allFriendsRes.success && allFriendRequestsRes.success) {
                 setFriends(allFriendsRes.data.friends);
-                setFriendRequests(allFriendsRes.data.friendRequests);
+                setFriendRequests(allFriendRequestsRes.data.friendRequests);
             }
         } catch (error) {
             console.log(error);
             setFriendPagePrompt("Could not connect to the server.");
         } finally {
             setFriendsLoading(false);
+            props.refreshFriendRequestCount();
         }
     }
 
@@ -285,7 +288,15 @@ const SocialModal = (props) => {
                 <TabButton selected={currentModal === SocialPages.FRIENDS} onClick={() => {
                     setCurrentModal(SocialPages.FRIENDS);
                     getAllFriends();
-                }}>Friends</TabButton>
+                }} className="relative">
+                    Friends
+                    {/* If there are friend requests, show banner with number on social button */}
+                    {props.friendRequestCount > 0 &&
+                        <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
+                            {props.friendRequestCount}
+                        </div>
+                    }
+                </TabButton>
             </div>
             {/* END NAV TABS */}
             <div className={"absolute h-[calc(100%-60px)] w-[95%] left-[calc(50%)] translate-x-[-50%] bg-white p-[10px] rounded-[5px] overflow-y-auto " +
@@ -421,7 +432,7 @@ const SocialModal = (props) => {
                         </LoadingImg>
                     </div>
                     }
-                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px]"></img></button>
+                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px] cursor-pointer"></img></button>
                 </div>
                 {(friendRequests && friendRequests.length > 0) &&
                 <>
@@ -441,7 +452,9 @@ const SocialModal = (props) => {
                 </>
                 }
                 {loggedIn &&
-                    <div className="inline-block text-center">Friends</div>
+                    <>
+                        <div className="inline-block text-center">Friends</div>
+                    </>
                 }
                 {friends && friends.length > 0 ? friends.map((friend, index) => {
                     return <FriendSlot key={index} user={friend}

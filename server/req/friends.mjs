@@ -1,6 +1,6 @@
 import { response } from "express";
 import { validateToken } from "../auth/tokens.mjs";
-import { createFriendRequest, findFriendRequest, getAllFriendRequests, getAllFriends, removeFriend, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
+import { createFriendRequest, findFriendRequest, getAllFriendRequests, getAllFriends, getFriendRequestCount, removeFriend, removeFriendReqeust, respondFriendReqeust } from "../db/friends.mjs";
 
 /**
  * @param {import("express").Express} app
@@ -184,6 +184,27 @@ export const registerGetAllFriendRequestsEndpoint = (app) => {
         try {
             const friendRequests = await getAllFriendRequests(user.useruuid);
             res.status(200).json({ friendRequests: friendRequests });
+        } catch (error) {
+            console.log(error)
+            res.status(400).send(error.message);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
+export const registerGetFriendRequestCountEndpoint = (app) => {
+    app.get("/friend_request_count", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(!user) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            const friendRequestCount = await getFriendRequestCount(user.useruuid);
+            res.status(200).json({ friendRequestCount: friendRequestCount });
         } catch (error) {
             console.log(error)
             res.status(400).send(error.message);
