@@ -98,7 +98,7 @@ function App() {
     return (
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
-            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount}>
+            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount} friendRequestCount={friendRequestCount}>
             </SocialModal>}
 
             {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
