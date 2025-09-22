@@ -260,6 +260,7 @@ const SocialModal = (props) => {
             setFriendPagePrompt("Could not connect to the server.");
         } finally {
             setFriendsLoading(false);
+            props.refreshFriendRequestCount();
         }
     }
 
