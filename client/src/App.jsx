@@ -11,6 +11,7 @@ import { version as currentVersion } from "../package.json";
 import { isVersionBehind } from "./Utilities/sorting";
 import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
+import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -61,7 +62,10 @@ function App() {
     const [currentModal, setCurrentModal] = useState(null);
     const mainPageRef = useRef(null);
 
-    useEffect(() => {
+    useEffect(async () => {
+        const friendRequestCount = await httpGetFriendRequestCount();
+        console.log(friendRequestCount);
+
     }, []);
 
     const navigateTo = (newPage) => {

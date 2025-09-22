@@ -421,7 +421,7 @@ const SocialModal = (props) => {
                         </LoadingImg>
                     </div>
                     }
-                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px]"></img></button>
+                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px] cursor-pointer"></img></button>
                 </div>
                 {(friendRequests && friendRequests.length > 0) &&
                 <>
