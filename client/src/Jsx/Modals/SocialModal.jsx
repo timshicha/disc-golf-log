@@ -251,7 +251,7 @@ const SocialModal = (props) => {
 
             if(allFriendsRes.success && allFriendRequestsRes.success) {
                 setFriends(allFriendsRes.data.friends);
-                setFriendRequests(allFriendsRes.data.friendRequests);
+                setFriendRequests(allFriendRequestsRes.data.friendRequests);
             }
         } catch (error) {
             console.log(error);
