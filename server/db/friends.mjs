@@ -40,6 +40,16 @@ export const getAllFriendRequests = async (userUUID) => {
     return result;
 }
 
+export const getFriendRequestCount = async (userUUID) => {
+    const result = await db`SELECT COUNT (*) FROM
+        ${SCHEMA}.friend_requests friend_requests JOIN
+        ${SCHEMA}.users users
+        ON friend_requests.sender = users.useruuid
+        WHERE receiver = ${userUUID}`;
+        console.log(result);
+    return result[0].count;
+}
+
 export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
         (sender = ${userUUID} AND receiver = ${targetUserUUID})`;

@@ -5,6 +5,15 @@ const addCourse = async (userUUID, courseUUID, data) => {
     return result.count > 0;
 }
 
+const addCourses = async (courseList) => {
+    const result = await db`INSERT INTO ${SCHEMA}.courses
+        ${db(courseList, "courseuuid", "useruuid", "data")}
+        ON CONFLICT (courseuuid) DO NOTHING
+    `;
+    console.log("courses added:", result.count);
+    return result.count;
+}
+
 const modifyCourse = async (userUUID, courseUUID, data) => {
     const result = await db`UPDATE ${SCHEMA}.courses SET data = ${data}
         WHERE useruuid = ${userUUID} AND courseuuid = ${courseUUID}`;
@@ -32,4 +41,4 @@ const deleteAllCourses = async (userUUID) => {
     return result;
 }
 
-export { addCourse, modifyCourse, deleteCourse, getAllCourses, getAllCoursesProfile, deleteAllCourses };
+export { addCourse, addCourses, modifyCourse, deleteCourse, getAllCourses, getAllCoursesProfile, deleteAllCourses };

@@ -11,6 +11,7 @@ import { version as currentVersion } from "../package.json";
 import { isVersionBehind } from "./Utilities/sorting";
 import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
+import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -59,10 +60,19 @@ function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
+    const [friendRequestCount, setFriendRequestCount] = useState(0);
     const mainPageRef = useRef(null);
 
     useEffect(() => {
+        refreshFriendRequestCount();
     }, []);
+
+    const refreshFriendRequestCount = async () => {
+        const res = await httpGetFriendRequestCount();
+        if(res?.data?.friendRequestCount) {
+            setFriendRequestCount(res.data.friendRequestCount);
+        }
+    }
 
     const navigateTo = (newPage) => {
         if(newPage === "settings") {
@@ -88,7 +98,7 @@ function App() {
     return (
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
-            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")}>
+            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount} friendRequestCount={friendRequestCount}>
             </SocialModal>}
 
             {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
@@ -101,6 +111,12 @@ function App() {
                             setCurrentModal(Modals.SOCIAL);
                         }}>
                             <img className="h-[42px] w-[42px]" src={socialIcon}></img>
+                            {/* If there are friend requests, show banner with number on social button */}
+                            {friendRequestCount > 0 &&
+                                <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
+                                    {friendRequestCount}
+                                </div>
+                            }
                         </button>
                         <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");

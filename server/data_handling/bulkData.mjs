@@ -1,7 +1,7 @@
 
 
-import { addCourse, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
-import { addRound, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
+import { addCourse, addCourses, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addRound, addRounds, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
 import { isValidCourseName } from "../utils/format.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
@@ -14,28 +14,28 @@ const uploadBulkData = async (user, data) => {
     let errors = [];
     // For all courses that are being added
     if(Array.isArray(data.addCourseQueue)) {
+        const courses = [];
         for (let i = 0; i < data.addCourseQueue.length; i++) {
-            try {
-                const validName = isValidCourseName(data.addCourseQueue[i].name);
-                const courseUUID = data.addCourseQueue[i].courseUUID;
-                const courseData = data.addCourseQueue[i];
-                // Validate course name
-                if(!validName.isValid) {
-                    updatesFailed++;
-                    errors.push(`Could not add course: ${validName.error}`);
-                }
-                else if(await addCourse(user.useruuid, courseUUID, courseData)) {
-                    data.addCourseQueue[i] = null;
-                    updatesSucceeded++
-                }
-                else {
-                    updatesFailed++;
-                    errors.push("Could not add course: A course with this ID already exists");
-                }
-            } catch (error) {
-                errors.push(`Could not add course: ${error}`);
+            // If invalid course name
+            const validName = isValidCourseName(data.addCourseQueue[i].name);
+            if(!validName.isValid) {
                 updatesFailed++;
+                errors.push(`Could not add course: ${validName.error}`);
+                continue;
             }
+            courses.push({
+                courseuuid: data.addCourseQueue[i].courseUUID,
+                useruuid: user.useruuid,
+                data: data.addCourseQueue[i]
+            });
+        }
+        try {
+            const succeeded = await addCourses(courses);
+            updatesSucceeded += succeeded;
+            updatesFailed += (courses.length - succeeded);
+            console.log("Uploaded " + succeeded + " courses");
+        } catch (error) {
+            console.log("Uploading list of courses failed:", error);
         }
     }
     // For all courses that are being modified
@@ -86,25 +86,22 @@ const uploadBulkData = async (user, data) => {
 
     // For all rounds that are being added
     if(Array.isArray(data.addRoundQueue)) {
+        const rounds = [];
         for (let i = 0; i < data.addRoundQueue.length; i++) {
-            try {
-                const roundUUID = data.addRoundQueue[i].roundUUID;
-                const courseUUID = data.addRoundQueue[i].courseUUID;
-                const playedAt = data.addRoundQueue[i].date;
-                const roundData = data.addRoundQueue[i];
-                if(await addRound(user.useruuid, roundUUID, courseUUID, playedAt, roundData)) {
-                    data.addRoundQueue[i] = null;
-                    updatesSucceeded++;
-                }
-                else {
-                    errors.push("Could not add round: (Likely issue) User does not have a course with the provided course ID");
-                    updatesFailed++;
-                }
-                
-            } catch (error) {
-                errors.push(`Could not add round: ${error}`);
-                updatesFailed++;
-            }
+            rounds.push({
+                courseuuid: data.addRoundQueue[i].roundUUID,
+                rounduuid: data.addRoundQueue[i].roundUUID,
+                played_at: data.addRoundQueue[i].date,
+                data: data.addRoundQueue[i]
+            });
+        }
+        try {
+            const succeeded = await addRounds(rounds);
+            updatesSucceeded += succeeded;
+            updatesFailed += (rounds.length - succeeded);
+            console.log("Uploaded " + succeeded + " rounds");
+        } catch (error) {
+            console.log("Uploading list of rounds failed:", error);
         }
     }
     // For all rounds that are being modified
