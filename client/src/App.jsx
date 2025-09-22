@@ -60,12 +60,15 @@ function App() {
     const [currentPage, setCurrentPage] =  useState(Pages.MAIN);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
+    const [friendRequestCount, setFriendRequestCount] = useState(0);
     const mainPageRef = useRef(null);
 
-    useEffect(async () => {
-        const friendRequestCount = await httpGetFriendRequestCount();
-        console.log(friendRequestCount);
-
+    useEffect(() => {
+        httpGetFriendRequestCount().then(res => {
+            if(res?.data?.friendRequestCount) {
+                setFriendRequestCount(res.data.friendRequestCount);
+            }
+        });
     }, []);
 
     const navigateTo = (newPage) => {
@@ -105,6 +108,12 @@ function App() {
                             setCurrentModal(Modals.SOCIAL);
                         }}>
                             <img className="h-[42px] w-[42px]" src={socialIcon}></img>
+                            {/* If there are friend requests, show banner with number on social button */}
+                            {friendRequestCount > 0 &&
+                                <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
+                                    {friendRequestCount}
+                                </div>
+                            }
                         </button>
                         <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
