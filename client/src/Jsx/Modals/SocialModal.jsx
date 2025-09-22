@@ -218,6 +218,7 @@ const SocialModal = (props) => {
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
+            props.refreshFriendRequestCount();
         });
     }
 
@@ -234,6 +235,7 @@ const SocialModal = (props) => {
             }
         }).finally(() => {
             setRespondingToFriendReqeust(false);
+            props.refreshFriendRequestCount();
         });
     }
 

@@ -64,12 +64,15 @@ function App() {
     const mainPageRef = useRef(null);
 
     useEffect(() => {
-        httpGetFriendRequestCount().then(res => {
-            if(res?.data?.friendRequestCount) {
-                setFriendRequestCount(res.data.friendRequestCount);
-            }
-        });
+        refreshFriendRequestCount();
     }, []);
+
+    const refreshFriendRequestCount = async () => {
+        const res = await httpGetFriendRequestCount();
+        if(res?.data?.friendRequestCount) {
+            setFriendRequestCount(res.data.friendRequestCount);
+        }
+    }
 
     const navigateTo = (newPage) => {
         if(newPage === "settings") {
@@ -95,7 +98,7 @@ function App() {
     return (
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
-            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")}>
+            <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount}>
             </SocialModal>}
 
             {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
