@@ -10,7 +10,7 @@ class TripleDotButton extends React.Component {
 
     render = () => {
         return (
-            <img src={tripleDotImg} {...this.props} className={this.props.className}>
+            <img src={tripleDotImg} {...this.props} className={this.props.className} alt="Course options">
             </img>
         );
     }
