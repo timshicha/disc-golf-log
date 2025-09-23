@@ -110,7 +110,7 @@ function App() {
                         <button className="absolute left-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             setCurrentModal(Modals.SOCIAL);
                         }}>
-                            <img className="h-[42px] w-[42px]" src={socialIcon}></img>
+                            <img className="h-[42px] w-[42px]" src={socialIcon} alt="Social"></img>
                             {/* If there are friend requests, show banner with number on social button */}
                             {friendRequestCount > 0 &&
                                 <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
@@ -121,7 +121,7 @@ function App() {
                         <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
                             navigateTo("settings");
                         }}>
-                            <img className="h-[42px] w-[42px]" src={cogwheel}></img>
+                            <img className="h-[42px] w-[42px]" src={cogwheel} alt="Settings"></img>
                         </button>
                     </div>
                 </NavBar>
