@@ -14,7 +14,7 @@ const addRound = async (userUUID, roundUUID, courseUUID, playedAt, data) => {
 
 const addRounds = async (roundList) => {
     const result = await db`INSERT INTO ${SCHEMA}.rounds
-        ${db(roundList, "rounduuid", "courseuuid", "played_at", "data")}
+        ${db(roundList, "courseuuid", "rounduuid", "played_at", "data")}
         ON CONFLICT (rounduuid) DO NOTHING
     `;
     console.log("rounds added:", result.count);
