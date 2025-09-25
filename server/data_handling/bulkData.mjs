@@ -30,10 +30,13 @@ const uploadBulkData = async (user, data) => {
             });
         }
         try {
-            const succeeded = await addCourses(courses);
-            updatesSucceeded += succeeded;
-            updatesFailed += (courses.length - succeeded);
-            console.log("Uploaded " + succeeded + " courses");
+            // If there are courses to add
+            if(courses.length > 0) {
+                const succeeded = await addCourses(courses);
+                updatesSucceeded += succeeded;
+                updatesFailed += (courses.length - succeeded);
+                console.log("Uploaded " + succeeded + " courses");
+            }
         } catch (error) {
             console.log("Uploading list of courses failed:", error);
         }
@@ -89,17 +92,20 @@ const uploadBulkData = async (user, data) => {
         const rounds = [];
         for (let i = 0; i < data.addRoundQueue.length; i++) {
             rounds.push({
-                courseuuid: data.addRoundQueue[i].roundUUID,
+                courseuuid: data.addRoundQueue[i].courseUUID,
                 rounduuid: data.addRoundQueue[i].roundUUID,
                 played_at: data.addRoundQueue[i].date,
                 data: data.addRoundQueue[i]
             });
         }
         try {
-            const succeeded = await addRounds(rounds);
-            updatesSucceeded += succeeded;
-            updatesFailed += (rounds.length - succeeded);
-            console.log("Uploaded " + succeeded + " rounds");
+            // If there are rounds to add
+            if(rounds.length > 0) {
+                const succeeded = await addRounds(rounds);
+                updatesSucceeded += succeeded;
+                updatesFailed += (rounds.length - succeeded);
+                console.log("Uploaded " + succeeded + " rounds");
+            }
         } catch (error) {
             console.log("Uploading list of rounds failed:", error);
         }
