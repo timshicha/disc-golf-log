@@ -26,7 +26,7 @@ const SocialPages = {
 const TabButton = (props) => {
 
     return (
-        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] mb-[-1px] rounded-t-[10px] " + props.className +
+        <button onClick={props.onClick} className={"w-[40%] py-[5px] mx-[5px] mb-[-1px] rounded-t-[10px] cursor-pointer " + props.className +
             (props.selected === true ? " bg-white" : " bg-gray-normal")
         }>
             {props.children}
@@ -240,7 +240,9 @@ const SocialModal = (props) => {
     }
 
     const getAllFriends = async () => {
+        if(!loggedIn) return;
         setFriendsLoading(true);
+        // Only try to load friends if the user is logged in
         try {
 
             if(!username) {
@@ -432,7 +434,10 @@ const SocialModal = (props) => {
                         </LoadingImg>
                     </div>
                     }
-                    <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px] cursor-pointer"></img></button>
+                    {/* Only show refresh friends button if user is logged in  */}
+                    {loggedIn &&
+                        <button className="absolute right-[10px] bg-gray-dark p-[2px] rounded-[7px]" onClick={getAllFriends}><img src={refreshIcon} className="w-[30px] cursor-pointer"></img></button>
+                    }
                 </div>
                 {(friendRequests && friendRequests.length > 0) &&
                 <>
