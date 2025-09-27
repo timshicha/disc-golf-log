@@ -64,7 +64,11 @@ function App() {
     const mainPageRef = useRef(null);
 
     useEffect(() => {
-        refreshFriendRequestCount();
+        // If the user is logged in, fetch the number of
+        // friend requests they have
+        if(localStorage.getItem("email")) {
+            refreshFriendRequestCount();
+        }
     }, []);
 
     const refreshFriendRequestCount = async () => {

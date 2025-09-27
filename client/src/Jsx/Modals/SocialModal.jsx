@@ -374,8 +374,12 @@ const SocialModal = (props) => {
                                 <div className="text-gray-dark">Recent rounds:</div>
                                 <div className="ml-[5px] text-gray-subtle">
                                     {recentRoundsList.map((round, index) => {
+                                        console.log(round)
                                         return (
-                                            <SocialRound round={round} key={index}></SocialRound>
+                                            <SocialRound round={round} key={index} onClick={() => setCourseSelected({
+                                                courseuuid: round.courseuuid,
+                                                name: round.name
+                                            })}></SocialRound>
                                         );
                                     })}
                                 </div>
