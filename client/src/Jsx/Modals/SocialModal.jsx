@@ -346,8 +346,8 @@ const SocialModal = (props) => {
                         : friendStatus === FriendStatus.REQUEST_RECEIVED ?
                             <div>
                                 <div className="mb-[5px] text-[blue]">Friend request received</div>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]" onClick={acceptFriendRequest}>Accept</button>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]" onClick={declineFriendRequest}>Decline</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]" onClick={() => acceptFriendRequest(userUUID)}>Accept</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]" onClick={() => declineFriendRequest(userUUID)}>Decline</button>
                             </div>
                         : ""
                         }
