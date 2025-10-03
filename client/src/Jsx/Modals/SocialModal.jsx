@@ -46,12 +46,12 @@ const FriendSlot = (props) => {
     }
 
     return (
-        <div className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
+        <div className="w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px] cursor-pointer">
             <div className="text-left inline-block w-[calc(100%-110px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle" onClick={handleSelectUserClick}>
                 {props.user.username}
             </div>
             <div className="inline-block">
-                <button className="bg-gray-dark text-white text-[18px] p-[3px] px-[6px] rounded-[5px] align-middle" onClick={handleUnfriendClick}>Unfriend</button>
+                <button className="bg-gray-dark text-white text-[18px] p-[3px] px-[6px] rounded-[5px] align-middle cursor-pointer" onClick={handleUnfriendClick}>Unfriend</button>
             </div>
         </div>
     );
@@ -64,13 +64,13 @@ const FriendRequestSlot = (props) => {
     }
 
     return (
-        <div className="relative w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px]">
+        <div className="relative w-[100%] bg-gray-light text-left py-[7px] rounded-[7px] mt-[10px] cursor-pointer">
             <div className="text-left inline-block w-[calc(100%-100px)] truncate mx-[5px] text-[20px] ml-[10px] align-middle" onClick={handleSelectUserClick}>
                 {props.user.username}
             </div>
             <div className="absolute right-[8px] inline-block">
-                <button className="bg-[green] align-middle p-[5px] rounded-[5px] mr-[5px]" onClick={props.onAccept}><img className="w-[24px]" src={checkMark}></img></button>
-                <button className="bg-[red] align-middle p-[5px] rounded-[5px]" onClick={props.onDecline}><img className="w-[24px]" src={whiteX}></img></button>
+                <button className="bg-[green] align-middle p-[5px] rounded-[5px] mr-[5px] cursor-pointer" onClick={props.onAccept}><img className="w-[24px]" src={checkMark}></img></button>
+                <button className="bg-[red] align-middle p-[5px] rounded-[5px] cursor-pointer" onClick={props.onDecline}><img className="w-[24px]" src={whiteX}></img></button>
             </div>
         </div>
     )
@@ -324,7 +324,7 @@ const SocialModal = (props) => {
                                 {loggedIn &&
                                     <>
                                         <div className="mb-[5px] text-gray-dark">Not friends</div>
-                                        <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px]" onClick={sendFriendRequest}>
+                                        <button className="text-white bg-blue-basic p-[5px] px-[15px] rounded-[7px] cursor-pointer" onClick={sendFriendRequest}>
                                             <img src={addFriendIcon} className="h-[10px] my-[7px] mx-auto inline mr-[5px] align-middle" />
                                             <div className="inline align-middle">
                                                 Add friend
@@ -341,13 +341,13 @@ const SocialModal = (props) => {
                         : friendStatus === FriendStatus.REQUEST_SENT ?
                             <div className="text-gray-dark">
                                 <div className="mb-[5px] text-[blue]">Friend request sent</div>
-                                <button className="block mx-auto bg-gray-dark text-white text-[16px] p-[3px] px-[10px] rounded-[5px]" onClick={undoSendFriendRequest}>Undo</button>
+                                <button className="block mx-auto bg-gray-dark text-white text-[16px] p-[3px] px-[10px] rounded-[5px] cursor-pointer" onClick={undoSendFriendRequest}>Undo</button>
                             </div>
                         : friendStatus === FriendStatus.REQUEST_RECEIVED ?
                             <div>
                                 <div className="mb-[5px] text-[blue]">Friend request received</div>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px]" onClick={acceptFriendRequest}>Accept</button>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px]" onClick={declineFriendRequest}>Decline</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px] cursor-pointer" onClick={() => acceptFriendRequest(userUUID)}>Accept</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] cursor-pointer" onClick={() => declineFriendRequest(userUUID)}>Decline</button>
                             </div>
                         : ""
                         }
