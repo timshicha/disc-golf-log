@@ -24,11 +24,17 @@ const RoundSummaryBox = (props) => {
     return (
         <div className="flex-[0_0_auto] w-[11.1%]">
             <div className="relative">
-                <div className="text-[10px] absolute ml-[2px] mt-[0px] text-gray-subtle">
+                {/* <div className="text-[10px] absolute ml-[2px] mt-[0px] text-gray-subtle">
                     {props.holeabel}
+                </div> */}
+                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + lowestValueBackgroundClass}>
+                    {props.lowestValue}
                 </div>
-                <div className={"w-[100%] p-[0px] m-[0px] h-[35px] text-[20px] text-center border-[1px] border-solid border-[#cccccc] " + averageValueBackgroundClass}>
+                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + averageValueBackgroundClass}>
                     {props.averageValue}
+                </div>
+                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + highestValueBackgroundClass}>
+                    {props.highestValue}
                 </div>
             </div>
         </div>
@@ -78,10 +84,15 @@ const RoundSummary = (props) => {
     }
 
     return (
-        <div className="mt-[15px] font-bold w-[100%]">
-            <div className="text-[16px] text-gray-normal w-[98%]">Summary</div>
-            <div className="inline-block w-full">
-                <div className="w-[98%] flex flex-wrap justify-start">
+        <div className="mt-[15px] font-bold w-[98%]">
+            <div className="text-[16px] text-gray-normal w-[100%]">Summary</div>
+            <div className="inline-block w-[80px] text-[13px] leading-none">
+                <div className="h-[15px]">best</div>
+                <div className="h-[15px]">average</div>
+                <div className="h-[15px]">worst</div>
+            </div>
+            <div className="inline-block w-[calc(100%-80px)] align-top">
+                <div className="w-[100%] flex flex-wrap gap-y-[10px]">
                     {averageValues.map((_, index) => {
                         return (
                             <RoundSummaryBox
