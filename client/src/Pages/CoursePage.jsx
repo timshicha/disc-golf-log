@@ -8,6 +8,7 @@ import { toLocalIsoString } from "../Utilities/dates";
 import StickyDiv from "../Jsx/Components/StickyDiv";
 import { Modals } from "../Utilities/Enums";
 import RoundOptionsModal from "../Jsx/Modals/RoundOptionsModal";
+import RoundSummary from "../Jsx/Components/RoundSummary";
 
 class CoursePage extends React.Component{
     constructor (props) {
@@ -121,6 +122,7 @@ class CoursePage extends React.Component{
                         </Round>
                     );
                 })}
+                <RoundSummary rounds={this.state.rounds} course={this.state.course}></RoundSummary>
                 <div className="h-[200px]"></div>
             </div>
             {/* There is an "Add round" at the bottom of the page. This
