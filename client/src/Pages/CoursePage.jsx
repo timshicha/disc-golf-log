@@ -26,6 +26,7 @@ class CoursePage extends React.Component{
             // if it is open
             roundSelectedIndex: null,
             currentModal: null,
+            rerenderCounter: 0
         };
 
     }
@@ -88,6 +89,7 @@ class CoursePage extends React.Component{
                 roundSelectedIndex: null,
                 currentModal: null
             });
+            this.setState({rerenderCounter: this.state.rerenderCounter + 1});
             this.forceUpdate();
         });
     }
@@ -118,11 +120,14 @@ class CoursePage extends React.Component{
                                 currentModal: Modals.ROUND_OPTIONS
                             });
                         }}
+                        callback={() => {
+                            this.setState({rerenderCounter: this.state.rerenderCounter + 1});
+                        }}
                         >
                         </Round>
                     );
                 })}
-                <RoundSummary rounds={this.state.rounds} course={this.state.course}></RoundSummary>
+                <RoundSummary rounds={this.state.rounds} course={this.state.course} rerenderCounter={this.state.rerenderCounter}></RoundSummary>
                 <div className="h-[200px]"></div>
             </div>
             {/* There is an "Add round" at the bottom of the page. This

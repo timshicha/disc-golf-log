@@ -24,17 +24,19 @@ const RoundSummaryBox = (props) => {
     return (
         <div className="flex-[0_0_auto] w-[11.1%]">
             <div className="relative">
-                {/* <div className="text-[10px] absolute ml-[2px] mt-[0px] text-gray-subtle">
-                    {props.holeabel}
-                </div> */}
-                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + lowestValueBackgroundClass}>
-                    {props.lowestValue}
+                <div className="text-[10px] ml-[2px] mt-[0px] text-gray-subtle text-center">
+                    Hole {props.holeLabel}
                 </div>
-                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + averageValueBackgroundClass}>
-                    {props.averageValue}
-                </div>
-                <div className={"w-[80%] p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + highestValueBackgroundClass}>
-                    {props.highestValue}
+                <div className="mx-auto w-[80%]">
+                    <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + lowestValueBackgroundClass}>
+                        {props.lowestValue}
+                    </div>
+                    <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + averageValueBackgroundClass}>
+                        {props.averageValue}
+                    </div>
+                    <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + highestValueBackgroundClass}>
+                        {props.highestValue}
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,8 +50,10 @@ const RoundSummary = (props) => {
     const [highestValues, setHighestValues] = useState(new Array(props.course.holes).fill(-1000000));
 
     useEffect(() => {
+        console.log("Recalculating summary values");
+        console.log(props.rerenderCounter)
         calculateValues();
-    }, [props.rounds]);
+    }, [props.rounds, props.rerenderCounter]);
 
     const calculateValues = () => {
         const newLowestValues = new Array(props.course.holes).fill(1000000);
@@ -82,6 +86,13 @@ const RoundSummary = (props) => {
         }
         // Set average
         for (let j = 0; j < props.course.holes; j++) {
+            // If no scores for this hole, set to -
+            if(roundCount[j] === 0) {
+                newLowestValues[j] = "-";
+                newHighestValues[j] = "-";
+                newAverageValues[j] = "-";
+                continue;
+            }
             newAverageValues[j] = (totalValues[j] / roundCount[j]).toFixed(1);
         }
         setLowestValues(newLowestValues);
@@ -90,15 +101,15 @@ const RoundSummary = (props) => {
     }
 
     return (
-        <div className="mt-[15px] font-bold w-[98%]">
+        <div className="mt-[15px] font-bold w-full">
             <div className="text-[16px] text-gray-normal w-[100%]">Summary</div>
-            <div className="inline-block w-[80px] text-[13px] leading-none">
+            {/* <div className="inline-block w-[80px] text-[13px] leading-none">
                 <div className="h-[15px]">best</div>
                 <div className="h-[15px]">average</div>
                 <div className="h-[15px]">worst</div>
-            </div>
-            <div className="inline-block w-[calc(100%-80px)] align-top">
-                <div className="w-[100%] flex flex-wrap gap-y-[10px]">
+            </div> */}
+            <div className="inline-block w-full align-top">
+                <div className="w-full flex flex-wrap gap-y-[10px]">
                     {averageValues.map((_, index) => {
                         return (
                             <RoundSummaryBox
