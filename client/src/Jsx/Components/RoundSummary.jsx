@@ -56,12 +56,18 @@ const RoundSummary = (props) => {
         const newHighestValues = new Array(props.course.holes).fill(-1000000);
         // For calculating new averages
         const totalValues = new Array(props.course.holes).fill(0);
+        // We need to manually keep track of how many valid scores there are for each hole
+        // since some rounds may have blank scores for some holes
+        const roundCount = new Array(props.course.holes).fill(0);
         const newAverageValues = new Array(props.course.holes).fill(0);
-        console.log(props.rounds)
         // Go through each round
         for (let i = 0; i < props.rounds.length; i++) {
             // Go through each hole
             for (let j = 0; j < props.course.holes; j++) {
+                if(!props.rounds[i].score[j] && props.rounds[i].score[j] !== 0) {
+                    continue;
+                }
+                roundCount[j]++;
                 // Get lowest
                 if(parseInt(props.rounds[i].score[j]) < newLowestValues[j]) {
                     newLowestValues[j] = props.rounds[i].score[j];
@@ -76,7 +82,7 @@ const RoundSummary = (props) => {
         }
         // Set average
         for (let j = 0; j < props.course.holes; j++) {
-            newAverageValues[j] = (totalValues[j] / props.rounds.length).toFixed(1);
+            newAverageValues[j] = (totalValues[j] / roundCount[j]).toFixed(1);
         }
         setLowestValues(newLowestValues);
         setHighestValues(newHighestValues);
