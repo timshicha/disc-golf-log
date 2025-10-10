@@ -3,6 +3,7 @@ import TripleDotButton from "../Components/TripleDotButton";
 import { isoToVisualFormat } from "../../Utilities/dates";
 import ObjectTools from "../../Utilities/ObjectTools";
 import DataHandler from "../../DataHandling/DataHandler";
+import SmallModal from "../Modals/Frames/SmallModal";
 
 // Background colors for different round boxes
 const RED_BG = "bg-[#ffd2d2]";
@@ -48,6 +49,8 @@ const RoundSummary = (props) => {
     const [lowestValues, setLowestValues] = useState(new Array(props.course.holes).fill(1000000));
     const [averageValues, setAverageValues] = useState(new Array(props.course.holes).fill(0));
     const [highestValues, setHighestValues] = useState(new Array(props.course.holes).fill(-1000000));
+
+    const [showInfo, setShowInfo] = useState(false);
 
     useEffect(() => {
         console.log("Recalculating summary values");
@@ -102,12 +105,28 @@ const RoundSummary = (props) => {
 
     return (
         <div className="mt-[15px] font-bold w-full">
-            <div className="text-[16px] text-gray-normal w-[100%]">Summary</div>
-            {/* <div className="inline-block w-[80px] text-[13px] leading-none">
-                <div className="h-[15px]">best</div>
-                <div className="h-[15px]">average</div>
-                <div className="h-[15px]">worst</div>
-            </div> */}
+            <div>
+                <div className="text-[16px] text-gray-normal inline-block">Summary</div>
+                <TripleDotButton className="ml-[5px] h-[10px] inline-block" onClick={() => setShowInfo(true)}></TripleDotButton>
+                {showInfo &&
+                    <SmallModal onClose={() => setShowInfo(false)} className="w-[fit-content] p-[20px] bg-gray-subtle">
+                        Key:
+                        <div className="relative">
+                            <div className="mx-auto w-[60px]">
+                                <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + GREEN_BG}>
+                                    Best
+                                </div>
+                                <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + GRAY_BG}>
+                                    Average
+                                </div>
+                                <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + RED_BG}>
+                                    Worst
+                                </div>
+                            </div>
+                        </div>
+                    </SmallModal>
+                }
+            </div>
             <div className="inline-block w-full align-top">
                 <div className="w-full flex flex-wrap gap-y-[10px]">
                     {averageValues.map((_, index) => {
