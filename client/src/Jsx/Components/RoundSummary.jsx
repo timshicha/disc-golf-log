@@ -107,15 +107,15 @@ const RoundSummary = (props) => {
     return (
         <div className="mt-[15px] font-bold w-[98%]">
             <div cla>
-                <div className="text-[16px] text-gray-normal inline-block mb-[10px]">Summary</div>
+                <div className="text-[16px] text-gray-normal inline-block mb-[5px]">Summary</div>
                 <TripleDotButton className="ml-[5px] h-[10px] inline-block" onClick={() => setShowInfo(!showInfo)}></TripleDotButton>
                 {showInfo &&
-                    <div className="bg-gray-light p-[5px] pr-[40px] relative my-[10px]">
+                    <div className="bg-gray-light p-[5px] pr-[40px] relative mb-[10px]">
                         <div className="inline-block align-top text-[12px]">
                             For each hole, the best, average, and worst scores are shown:
                         </div>
                         <div className="inline-block mx-[15px]">
-                            <div className="mx-auto w-[60px]">
+                            <div className="w-[60px] my-[5px]">
                                 <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + GREEN_BG}>
                                     Best
                                 </div>
