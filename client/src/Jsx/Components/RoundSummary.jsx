@@ -26,8 +26,8 @@ const RoundSummaryBox = (props) => {
     return (
         <div className="flex-[0_0_auto] w-[11.1%]">
             <div className="relative">
-                <div className="text-[10px] ml-[2px] mt-[0px] text-gray-subtle text-center">
-                    Hole {props.holeLabel}
+                <div className="text-[10px] ml-[2px] mt-[0px] text-gray-subtle text-center h-[15px] truncate">
+                    {props.holeLabel}
                 </div>
                 <div className="mx-auto w-[80%]">
                     <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + lowestValueBackgroundClass}>
