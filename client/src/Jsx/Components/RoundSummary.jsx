@@ -4,6 +4,7 @@ import { isoToVisualFormat } from "../../Utilities/dates";
 import ObjectTools from "../../Utilities/ObjectTools";
 import DataHandler from "../../DataHandling/DataHandler";
 import SmallModal from "../Modals/Frames/SmallModal";
+import CloseX from "../Modals/ModalComponents/CloseX";
 
 // Background colors for different round boxes
 const RED_BG = "bg-[#ffd2d2]";
@@ -104,14 +105,16 @@ const RoundSummary = (props) => {
     }
 
     return (
-        <div className="mt-[15px] font-bold w-full">
-            <div>
-                <div className="text-[16px] text-gray-normal inline-block">Summary</div>
-                <TripleDotButton className="ml-[5px] h-[10px] inline-block" onClick={() => setShowInfo(true)}></TripleDotButton>
+        <div className="mt-[15px] font-bold w-[98%]">
+            <div cla>
+                <div className="text-[16px] text-gray-normal inline-block mb-[10px]">Summary</div>
+                <TripleDotButton className="ml-[5px] h-[10px] inline-block" onClick={() => setShowInfo(!showInfo)}></TripleDotButton>
                 {showInfo &&
-                    <SmallModal onClose={() => setShowInfo(false)} className="w-[fit-content] p-[20px] bg-gray-subtle">
-                        Key:
-                        <div className="relative">
+                    <div className="bg-gray-light p-[5px] pr-[40px] relative my-[10px]">
+                        <div className="inline-block align-top text-[12px]">
+                            For each hole, the best, average, and worst scores are shown:
+                        </div>
+                        <div className="inline-block mx-[15px]">
                             <div className="mx-auto w-[60px]">
                                 <div className={"w-full p-[0px] m-[0px] h-[15px] text-[12px] text-center border-[1px] border-solid border-[#cccccc] leading-none " + GREEN_BG}>
                                     Best
@@ -124,7 +127,8 @@ const RoundSummary = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </SmallModal>
+                        <CloseX className="float-right" onClick={() => setShowInfo(false)}></CloseX>
+                    </div>
                 }
             </div>
             <div className="inline-block w-full align-top">

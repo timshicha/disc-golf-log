@@ -20,17 +20,16 @@ class SmallModal extends React.Component {
     }
 
     render = () => {
-        return createPortal(
+        return (
             <>
-                <div className={"relative z-1000 " + this.props.className} ref={this.ref}>
+                <div className={"z-1000 absolute " + this.props.className} ref={this.ref}>
                     {/* X-button closes the options list window */}
-                    <CloseX replaceImg={this.props.replaceImg} onClick={this.props.onBack || this.props.onClose}></CloseX>
+                    <CloseX className="absolute" replaceImg={this.props.replaceImg} onClick={this.props.onBack || this.props.onClose}></CloseX>
                     {this.props.children}
                 </div>
                 <Backdrop onClick={this.handleClickOutside}></Backdrop>
-            </>,
-            document.body
-        );
+            </>
+        )
     }
 }
 
