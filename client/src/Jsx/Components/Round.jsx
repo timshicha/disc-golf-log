@@ -36,7 +36,7 @@ class RoundBox extends React.Component {
         return (
             <div className="flex-[0_0_auto] w-[11.1%]">
                 <div className="relative">
-                    <div className="text-[10px] absolute ml-[2px] mt-[0px] text-gray-subtle">
+                    <div className="text-[10px] w-full absolute ml-[2px] mt-[0px] text-gray-subtle truncate">
                         {this.holeabel}
                     </div>
                     <input type="number" name="scoreBox" pattern="[-]?[0-9]*[.,]?[0-9]*"
@@ -68,8 +68,9 @@ class Round extends React.Component {
         this.setState({
             total: total
         });
-
-
+        if(this.props.callback) {
+            this.props.callback();
+        }
     }
 
     componentDidMount = () => {
