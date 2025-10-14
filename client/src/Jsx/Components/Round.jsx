@@ -68,8 +68,9 @@ class Round extends React.Component {
         this.setState({
             total: total
         });
-
-
+        if(this.props.callback) {
+            this.props.callback();
+        }
     }
 
     componentDidMount = () => {

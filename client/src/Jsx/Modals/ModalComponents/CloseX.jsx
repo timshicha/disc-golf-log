@@ -12,7 +12,7 @@ class CloseX extends React.Component {
 
     render = () => {
         return (
-            <button type="button" onClick={this.props.onClick} className="absolute right-[10px] top-[5px] p-[5px] bg-transparent cursor-pointer">
+            <button type="button" onClick={this.props.onClick} className={"absolute right-[10px] top-[5px] p-[5px] bg-transparent cursor-pointer " + this.props.className}>
                 <img src={this.props.replaceImg === "back-arrow" ? backArrow : whiteX} className="w-[20px]"></img>
             </button>
         );
