@@ -17,6 +17,9 @@ const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
 const MainPage = forwardRef((props, ref) => {
     const [courses, setCourses] = useState([]);
+    // Separate pinned and unpinned courses
+    const [pinnedCourses, setPinnedCourses] = useState([]);
+    const [unpinnedCourses, setUnpinnedCourses] = useState([]);
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
     const [searchString, setSearchString] = useState("");
@@ -41,18 +44,26 @@ const MainPage = forwardRef((props, ref) => {
 
     const reloadCourses = () => {
         DataHandler.getAllCourses().then(result => {
+            // Separate courses into pinned and unpinned
+            let pinnedCourses = result.filter(course => course.data.pinned);
+            let unpinnedCourses = result.filter(course => !course.data.pinned);
             // If sort alphabetically
             if(sortCourseBy === "Alphabetically") {
-                result = result.sort((a, b) => compareStrings(a.name, b.name));
+                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
+                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
             }
             else if(sortCourseBy === "Recently modified") {
-                result = result.sort((a, b) => compareDates(b.modified, a.modified));
+                pinnedCourses = pinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
+                unpinnedCourses = unpinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
             }
             else if(sortCourseBy === "Most played") {
                 // Update round counts
-                result = result.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
+                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
+                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
             }
             setCourses(result);
+            setPinnedCourses(pinnedCourses);
+            setUnpinnedCourses(unpinnedCourses);
         });
     }
 
@@ -130,11 +141,40 @@ const MainPage = forwardRef((props, ref) => {
                 
                 <div className="h-[46px]"></div>
                 <div className="h-[calc(100dvh-120px)] overflow-scroll px-[10px]">
+                    {/* If there are pinned courses, add a section for pinned courses */}
+                    {pinnedCourses.length > 0 &&  
+                        <>
+                            <div className="text-[12px] text-gray-subtle font-bold text-sans text-center mb-[2px]">Pinned Courses</div>
+                            {/* Filter by search string. If name is undefined, treat as empty string. */}
+                            {pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
+                                return (
+                                    <CourseSlot course={course}
+                                        key={course.courseUUID}
+                                        className="mb-[8px]"
+                                        onClick={() => {
+                                            // If the user selects a course, tell App.jsx
+                                            // to navigate to the Course Page and notify which
+                                            // course was selected.
+                                            props.setCurrentCourse(course);
+                                            props.navigateTo("course");
+                                        }}
+                                        onOpenOptionsList = {() => {
+                                            setCurrentCourse(course);
+                                            setCurrentModal(Modals.COURSE_OPTIONS);
+                                        }}
+                                        onReloadCourses={reloadCourses}>
+                                    </CourseSlot>
+                                );
+                            })}
+                            <hr className="text-gray-subtle border-[1px] mb-[8px]"></hr>
+                        </>
+                    }
                     {/* Filter by search string. If name is undefined, treat as empty string. */}
-                    {courses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
+                    {unpinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
                                 key={course.courseUUID}
+                                className="mt-[8px]"
                                 onClick={() => {
                                     // If the user selects a course, tell App.jsx
                                     // to navigate to the Course Page and notify which
@@ -145,7 +185,8 @@ const MainPage = forwardRef((props, ref) => {
                                 onOpenOptionsList = {() => {
                                     setCurrentCourse(course);
                                     setCurrentModal(Modals.COURSE_OPTIONS);
-                                }}>
+                                }}
+                                onReloadCourses={reloadCourses}>
                             </CourseSlot>
                         );
                     })}
