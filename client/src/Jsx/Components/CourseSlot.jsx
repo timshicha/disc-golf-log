@@ -52,9 +52,9 @@ class CourseSlot extends React.Component{
                 <div className="max-w-[calc(100%-45px)]">
                     <div className="inline-block align-middle cursor-pointer">
                         {this.state.course.data.pinned ?
-                            <FaStar size={20} className="text-yellow-500" onClick={this.onUnpinCourse}></FaStar>
+                            <FaStar size={20} className="text-yellow-500 ontline-[5px] outline-transparent" onClick={this.onUnpinCourse}></FaStar>
                             :
-                            <FaRegStar size={20} className="text-gray-subtle" onClick={this.onPinCourse}></FaRegStar>
+                            <FaRegStar size={20} className="text-gray-subtle outline-[5px] outline-transparent" onClick={this.onPinCourse}></FaRegStar>
                         }
                     </div>
                     <div className="inline-block max-w-[calc(100%-45px)] align-middle ml-[10px]">
