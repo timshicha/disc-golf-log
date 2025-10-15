@@ -18,6 +18,7 @@ class CourseSlot extends React.Component{
         this.props = props;
         this.onOpenOptionsList = props.onOpenOptionsList;
         this.onReloadCourses = props.onReloadCourses;
+        this.className = props.className ? props.className : "";
     }
 
     onPinCourse = (e) => {
@@ -42,7 +43,7 @@ class CourseSlot extends React.Component{
 
     render = () => {
         return (
-            <div onClick={this.onClick} className="w-[calc(100%-20px] bg-gray-light py-[5px] px-[10px] pr-[0px] mx-auto my-[10px] rounded-[7px] cursor-pointer">
+            <div onClick={this.onClick} className={"w-[calc(100%-20px] bg-gray-light py-[5px] px-[10px] pr-[0px] mx-auto rounded-[7px] cursor-pointer " + this.className}>
                 {/* Course settings button (triple dot icon) */}
                 <TripleDotButton className="h-[20px] float-right cursor-pointer rounded-[10px] mt-[8px] mr-[8px] pl-[15px]" onClick={e => {
                     e.stopPropagation();

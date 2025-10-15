@@ -54,8 +54,6 @@ const RoundSummary = (props) => {
     const [showInfo, setShowInfo] = useState(false);
 
     useEffect(() => {
-        console.log("Recalculating summary values");
-        console.log(props.rerenderCounter)
         calculateValues();
     }, [props.rounds, props.rerenderCounter]);
 
@@ -106,7 +104,7 @@ const RoundSummary = (props) => {
 
     return (
         <div className="mt-[15px] font-bold w-[98%]">
-            <div cla>
+            <div>
                 <div className="text-[16px] text-gray-normal inline-block mb-[5px]">Summary</div>
                 <TripleDotButton className="ml-[5px] h-[10px] inline-block" onClick={() => setShowInfo(!showInfo)}></TripleDotButton>
                 {showInfo &&
