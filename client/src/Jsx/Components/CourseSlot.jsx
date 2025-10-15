@@ -1,5 +1,8 @@
 import React from "react";
 import TripleDotButton from "../Components/TripleDotButton";
+import { FaStar } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
+import DataHandler from "../../DataHandling/DataHandler";
 
 class CourseSlot extends React.Component{
     constructor (props) {
@@ -8,11 +11,34 @@ class CourseSlot extends React.Component{
         this.onClick = props.onClick;
 
         this.state = {
-            course: props.course
+            course: props.course,
+            refreshCounter: 0
         };
 
         this.props = props;
         this.onOpenOptionsList = props.onOpenOptionsList;
+        this.onPinCourseCallback = props.onPinCourse;
+        this.onUnpinCourseCallback = props.onUnpinCourse;
+    }
+
+    onPinCourse = (e) => {
+        e.stopPropagation();
+        this.state.course.data.pinned = true;
+        DataHandler.modifyCourse(this.state.course);
+        this.setState({ refreshCounter: this.state.refreshCounter + 1 });
+        if(this.onPinCourseCallback) {
+            this.onPinCourseCallback(this.state.course);
+        }
+    }
+
+    onUnpinCourse = (e) => {
+        e.stopPropagation();
+        this.state.course.data.pinned = false;
+        this.setState({ refreshCounter: this.state.refreshCounter + 1 });
+        DataHandler.modifyCourse(this.state.course);
+        if(this.onUnpinCourseCallback) {
+            this.onUnpinCourseCallback(this.state.course);
+        }
     }
 
     render = () => {
@@ -23,18 +49,30 @@ class CourseSlot extends React.Component{
                     e.stopPropagation();
                     this.onOpenOptionsList();
                 }}></TripleDotButton>
-                {/* Course title */}
-                <div className="text-[18px] h-[25px] max-w-[calc(100%-45px)] font-bold text-sans truncate">
-                    {this.state.course.name}
-                </div>
-                {/* Number of times played text */}
-                <div className="text-[12px] mt-[-3px]">
-                    {this.props.course.roundCount === 1
-                    ?
-                    <>Played 1 time</>
-                    :
-                    <>Played {this.props.course.roundCount} times</>
-                    }
+                <div className="max-w-[calc(100%-45px)]">
+                    <div className="inline-block align-middle cursor-pointer">
+                        {this.state.course.data.pinned ?
+                            <FaStar size={20} className="text-yellow-500" onClick={this.onUnpinCourse}></FaStar>
+                            :
+                            <FaRegStar size={20} className="text-gray-subtle" onClick={this.onPinCourse}></FaRegStar>
+                        }
+                    </div>
+                    <div className="inline-block max-w-[calc(100%-45px)] align-middle ml-[10px]">
+                        {/* Course title */}
+                        <div className="text-[16px] h-[25px] font-bold text-sans truncate">
+                            {this.state.course.name}
+                        </div>
+                        {/* Number of times played text */}
+                        <div className="text-[11px] mt-[-3px]">
+                            {this.props.course.roundCount === 1
+                            ?
+                            <>Played 1 time</>
+                            :
+                            <>Played {this.props.course.roundCount} times</>
+                        }
+                        </div>
+
+                    </div>
                 </div>
             </div>
         );
