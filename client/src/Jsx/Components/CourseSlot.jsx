@@ -17,8 +17,7 @@ class CourseSlot extends React.Component{
 
         this.props = props;
         this.onOpenOptionsList = props.onOpenOptionsList;
-        this.onPinCourseCallback = props.onPinCourse;
-        this.onUnpinCourseCallback = props.onUnpinCourse;
+        this.onReloadCourses = props.onReloadCourses;
     }
 
     onPinCourse = (e) => {
@@ -26,8 +25,8 @@ class CourseSlot extends React.Component{
         this.state.course.data.pinned = true;
         DataHandler.modifyCourse(this.state.course);
         this.setState({ refreshCounter: this.state.refreshCounter + 1 });
-        if(this.onPinCourseCallback) {
-            this.onPinCourseCallback(this.state.course);
+        if(this.onReloadCourses) {
+            this.onReloadCourses();
         }
     }
 
@@ -36,8 +35,8 @@ class CourseSlot extends React.Component{
         this.state.course.data.pinned = false;
         this.setState({ refreshCounter: this.state.refreshCounter + 1 });
         DataHandler.modifyCourse(this.state.course);
-        if(this.onUnpinCourseCallback) {
-            this.onUnpinCourseCallback(this.state.course);
+        if(this.onReloadCourses) {
+            this.onReloadCourses();
         }
     }
 
