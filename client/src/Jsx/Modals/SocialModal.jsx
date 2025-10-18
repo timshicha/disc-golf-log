@@ -374,7 +374,6 @@ const SocialModal = (props) => {
                                 <div className="text-gray-dark">Recent rounds:</div>
                                 <div className="ml-[5px] text-gray-subtle">
                                     {recentRoundsList.map((round, index) => {
-                                        console.log(round)
                                         return (
                                             <SocialRound round={round} key={index} onClick={() => setCourseSelected({
                                                 courseuuid: round.courseuuid,
@@ -397,9 +396,9 @@ const SocialModal = (props) => {
                             <hr className="my-[5px]" />
                             <div className="text-gray-dark">Friends:</div>
                             {/* If they have friends, show the friends */}
-                            {friendsList && friendsList.length > 0 && friendsList.map((friend) => {
+                            {friendsList && friendsList.length > 0 && friendsList.map((friend, index) => {
                                 return (
-                                    <SocialFriendSlot onClick={() => loadProfile(friend.username)}>{friend.username}</SocialFriendSlot>
+                                    <SocialFriendSlot key={index} onClick={() => loadProfile(friend.username)}>{friend.username}</SocialFriendSlot>
                                 );
                             })}
                             {/* If no friends, say no friends */}
