@@ -45,7 +45,7 @@ class CourseSlot extends React.Component{
         return (
             <div onClick={this.onClick} className={"w-[calc(100%-20px] bg-gray-light py-[5px] px-[10px] pr-[0px] mx-auto rounded-[7px] cursor-pointer " + this.className}>
                 {/* Course settings button (triple dot icon) */}
-                <TripleDotButton className="h-[20px] float-right cursor-pointer rounded-[10px] mt-[8px] mr-[8px] pl-[15px]" onClick={e => {
+                <TripleDotButton className="h-[20px] float-right cursor-pointer mt-[8px] mr-[8px] outline-[12px] outline-transparent " onClick={e => {
                     e.stopPropagation();
                     this.onOpenOptionsList();
                 }}></TripleDotButton>

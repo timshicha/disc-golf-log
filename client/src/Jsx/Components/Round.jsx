@@ -87,7 +87,7 @@ class Round extends React.Component {
                         {this.state.total > 0 ? "+" : ""}{this.state.total}
                     </div>
                     Round {this.props.index + 1}
-                    <TripleDotButton className="h-[15px] float-right" onClick={() => {
+                    <TripleDotButton className="h-[15px] float-right outline-[8px] outline-transparent" onClick={() => {
                         this.onOpenModal(this.props.index);
                     }}></TripleDotButton>
                     <div className="float-right mr-[4px]">{isoToVisualFormat(this.props.round.date)}</div>
