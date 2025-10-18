@@ -110,7 +110,7 @@ const RoundSummary = (props) => {
                 {showInfo &&
                     <div className="bg-gray-light p-[5px] pr-[40px] relative mb-[10px]">
                         <div className="inline-block align-top text-[12px]">
-                            For each hole, the best, average, and worst scores are shown:
+                            The summary below shows your personal best, average, and worst scores for each hole:
                         </div>
                         <div className="inline-block mx-[15px]">
                             <div className="w-[60px] my-[5px]">
