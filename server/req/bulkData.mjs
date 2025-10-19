@@ -1,5 +1,5 @@
 import { validateToken } from "../auth/tokens.mjs";
-import { uploadBulkData, replaceAllCloudData, getAllCloudData } from "../data_handling/bulkData.mjs";
+import { uploadBulkData, replaceAllCloudData, getAllCloudData, getAllChangesAfterTimestamp } from "../data_handling/bulkData.mjs";
 
 /**
  * @param {import("express").Express} app
@@ -53,6 +53,35 @@ export const registerGetDataEndpoint = (app) => {
         }
         try {
             const result = await getAllCloudData(user);
+            res.status(200).json({
+                courses: result.courses,
+                rounds: result.rounds,
+                success: true
+            });
+        } catch (error) {
+            res.status(400).send("Failed to retrieve data from cloud.");
+            console.log(error);
+        }
+    });
+}
+
+/**
+ * @param {import("express").Express} app
+ */
+export const registerGetModifiedDataEndpoint = (app) => {
+    // If the user wants to get all their data from the cloud (such as when logging in)
+    app.get("/modified_data", async (req, res) => {
+        // Validate token
+        const user = await validateToken(req, res);
+        if(user === null) {
+            res.status(401).send("Can't validate user.");
+            return;
+        }
+        try {
+            const timestamp = new Date(req.query.timestamp ? req.query.timestamp : 0);
+
+            console.log(req.query.timestamp);
+            const result = await getAllChangesAfterTimestamp(user, timestamp);
             res.status(200).json({
                 courses: result.courses,
                 rounds: result.rounds,

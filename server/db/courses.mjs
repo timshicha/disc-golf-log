@@ -58,7 +58,7 @@ const deleteAllCoursesSoft = async (userUUID) => {
 
 const getAllCourseChangesAfterTimestamp = async (userUUID, timestamp) => {
     const result = await db`SELECT * FROM ${SCHEMA}.courses
-        WHERE useruuid = ${userUUID} AND modifed_at > ${timestamp}`;
+        WHERE useruuid = ${userUUID} AND modified_at > ${timestamp}`;
     return result;
 }
 

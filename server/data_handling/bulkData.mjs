@@ -1,7 +1,7 @@
 
 
-import { addCourse, addCourses, deleteAllCoursesSoft, deleteCourseSoft, getAllCourses, modifyCourse } from "../db/courses.mjs";
-import { addRound, addRounds, deleteRoundSoft, getAllRounds, modifyRound } from "../db/rounds.mjs";
+import { addCourse, addCourses, deleteAllCoursesSoft, deleteCourseSoft, getAllCourseChangesAfterTimestamp, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addRound, addRounds, deleteRoundSoft, getAllRoundChangesAfterTimestamp, getAllRounds, modifyRound } from "../db/rounds.mjs";
 import { isValidCourseName } from "../utils/format.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
