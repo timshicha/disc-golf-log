@@ -106,9 +106,15 @@ const getMostRecentRounds = async (userUUID, numberOfRounds=3) => {
     return result;
 }
 
+const getAllRoundChangesAfterTimestamp = async (userUUID, timestamp) => {
+    const result = await db`SELECT * FROM ${SCHEMA}.courses
+        WHERE useruuid = ${userUUID} AND modifed_at > ${timestamp}`;
+    return result;
+}
+
 
 export { addRound, addRounds, modifyRound,
     deleteRoundHard, deleteRoundSoft, getAllRounds,
     deleteAllRoundsHard, deleteAllRoundsSoft, deleteAllCourseRoundsHard,
     getAllCourseRounds, getUserRoundsCount,
-    getMostRecentRounds };
+    getMostRecentRounds, getAllRoundChangesAfterTimestamp };

@@ -165,6 +165,13 @@ const getAllCloudData = async (user) => {
     return { courses, rounds };
 }
 
+const getAllChangesAfterTimestamp = async (user, timestamp) => {
+    // Get all courses that changed after the timestamp
+    const courses = await getAllCourseChangesAfterTimestamp(user.useruuid, timestamp);
+    const rounds = await getAllRoundChangesAfterTimestamp(user.useruuid, timestamp);
+    return { courses, rounds };
+}
+
 // Delete all data in the cloud and replace with new data
 const replaceAllCloudData = async (user, data) => {
     // Delete all courses (rounds should be deleted through cascading deletion)
@@ -172,4 +179,5 @@ const replaceAllCloudData = async (user, data) => {
     return await uploadBulkData(user, data);
 }
 
-export { uploadBulkData, getAllCloudData, replaceAllCloudData };
+export { uploadBulkData, getAllCloudData,
+    getAllChangesAfterTimestamp, replaceAllCloudData };

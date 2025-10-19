@@ -56,7 +56,14 @@ const deleteAllCoursesSoft = async (userUUID) => {
     return result;
 }
 
+const getAllCourseChangesAfterTimestamp = async (userUUID, timestamp) => {
+    const result = await db`SELECT * FROM ${SCHEMA}.courses
+        WHERE useruuid = ${userUUID} AND modifed_at > ${timestamp}`;
+    return result;
+}
+
 export { addCourse, addCourses, modifyCourse,
     deleteCourseHard, deleteCourseSoft,
     getAllCourses, getAllCoursesProfile,
-    deleteAllCoursesHard, deleteAllCoursesSoft };
+    deleteAllCoursesHard, deleteAllCoursesSoft,
+    getAllCourseChangesAfterTimestamp };
