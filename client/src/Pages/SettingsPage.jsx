@@ -230,6 +230,8 @@ class SettingsPage extends React.Component {
         return (
             <div>
                 <div className="settings-page mt-[70px] mb-[40px]">
+                    <p className="text-desc text-gray-mild my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
+
 
                     {/* If the user is not logged in */}
                     {!this.state.email &&
@@ -317,7 +319,6 @@ class SettingsPage extends React.Component {
                     }
 
                     <div className="w-[100%] h-[2px] bg-gray-light"></div>
-                    <p className="text-desc text-gray-mild my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
                     <SettingsBlock className="min-h-[60px] bg-special">
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleConfirmDeleteToggle}
                             id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
