@@ -106,7 +106,7 @@ const RoundSummary = (props) => {
         <div className="mt-[15px] font-bold w-[98%]">
             <div>
                 <div className="text-[16px] text-gray-normal inline-block mb-[5px]">Summary</div>
-                <TripleDotButton className="ml-[5px] h-[10px] inline-block outline-[10px] outline-transparent" onClick={() => setShowInfo(!showInfo)}></TripleDotButton>
+                <TripleDotButton className="ml-[5px] w-[10px] h-[10px] inline-block" onClick={() => setShowInfo(!showInfo)}></TripleDotButton>
                 {showInfo &&
                     <div className="bg-gray-light p-[5px] pr-[40px] relative mb-[10px]">
                         <div className="inline-block align-top text-[12px]">

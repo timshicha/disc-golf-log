@@ -305,7 +305,7 @@ const SocialModal = (props) => {
                 (currentModal !== SocialPages.PROFILE ? "opacity-[0%] pointer-events-none" : "")}>
                 <div className="text-desc text-[12px] text-left">Search user by username:</div>
                 <div className="block text-left mb-[10px]">
-                    <input type="text" className="w-[calc(100%-90px)]" ref={searchUsernameRef} name="username"></input>
+                    <input type="text" className="w-[calc(100%-90px)]" autoComplete="on" ref={searchUsernameRef} name="username"></input>
                     <ModalButton onClick={() => onHandleSearchUsername()} className="bg-blue-basic text-white h-[43px] ml-[6px]">Search</ModalButton>
                 </div>
                 {!profileLoading &&
