@@ -36,7 +36,7 @@ const modifyRound = async (userUUID, roundUUID, playedAt, data) => {
     return false;
 }
 
-const deleteRound = async (userUUID, roundUUID) => {
+const deleteRoundHard = async (userUUID, roundUUID) => {
     // Make sure this round belongs to this user by seeing if the corresponding course belongs
     // to this user.
     const roundUserUUID = (await db`SELECT useruuid FROM ${SCHEMA}.courses WHERE courseuuid =
@@ -49,35 +49,66 @@ const deleteRound = async (userUUID, roundUUID) => {
     return false;
 }
 
+const deleteRoundSoft = async (userUUID, roundUUID) => {
+    // Make sure this round belongs to this user by seeing if the corresponding course belongs
+    // to this user.
+    const roundUserUUID = (await db`SELECT useruuid FROM ${SCHEMA}.courses WHERE courseuuid =
+        (SELECT courseuuid FROM ${SCHEMA}.rounds WHERE rounduuid = ${roundUUID}) LIMIT 1`)?.[0]?.useruuid;
+    // If the user ID's match, proceed
+    if(roundUserUUID === userUUID) {
+        const result = await db`UPDATE ${SCHEMA}.rounds SET deleted = TRUE WHERE rounduuid = ${roundUUID}`;
+        return result.count > 0;
+    }
+    return false;
+}
+
 const getAllRounds = async (userUUID) => {
+    const result = await db`SELECT r.* FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID} AND c.deleted = FALSE AND r.deleted = FALSE`;
+    return result;
+}
+
+const deleteAllRoundsHard = async (userUUID) => {
     const result = await db`SELECT r.* FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
         r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
     return result;
 }
 
-const deleteAllRounds = async (userUUID) => {
-    const result = await db`SELECT r.* FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
-        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
+const deleteAllRoundsSoft = async (userUUID) => {
+    const result = await db`UPDATE ${SCHEMA}.rounds SET deleted = TRUE FROM ${SCHEMA}.courses c
+        WHERE ${SCHEMA}.rounds.courseuuid = c.courseuuid AND c.useruuid = ${userUUID}`;
+    return result;
+}
+
+const deleteAllCourseRoundsHard = async (userUUID, courseUUID) => {
+    const result = await db`DELETE FROM
+        ${SCHEMA}.rounds r USING ${SCHEMA}.courses c
+        WHERE c.courseuuid = r.courseuuid AND
+        c.useruuid = ${userUUID} AND r.courseuuid = ${courseUUID}`;
     return result;
 }
 
 const getAllCourseRounds = async (courseUUID, user=undefined) => {
-    const result = await db`SELECT data FROM ${SCHEMA}.rounds WHERE courseuuid = ${courseUUID}`;
+    const result = await db`SELECT data FROM ${SCHEMA}.rounds WHERE courseuuid = ${courseUUID} AND deleted = FALSE`;
     return result.map(round => round.data);
 }
 
 const getUserRoundsCount = async (userUUID) => {
     const [result] = await db`SELECT COUNT(*) FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
-        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}`;
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID} AND c.deleted = FALSE AND r.deleted = FALSE`;
     return parseInt(result?.count || 0);
 }
 
 const getMostRecentRounds = async (userUUID, numberOfRounds=3) => {
     const result = await db`SELECT c.data->'name' AS name, c.courseuuid AS courseuuid, r.data->'score' AS score, r.played_at as played_at FROM ${SCHEMA}.rounds r JOIN ${SCHEMA}.courses c ON
-        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID}
+        r.courseuuid = c.courseuuid WHERE c.useruuid = ${userUUID} AND c.deleted = FALSE AND r.deleted = FALSE
         ORDER BY played_at DESC LIMIT ${numberOfRounds}`;
     return result;
 }
 
 
-export { addRound, addRounds, modifyRound, deleteRound, getAllRounds, deleteAllRounds, getAllCourseRounds, getUserRoundsCount, getMostRecentRounds };
+export { addRound, addRounds, modifyRound,
+    deleteRoundHard, deleteRoundSoft, getAllRounds,
+    deleteAllRoundsHard, deleteAllRoundsSoft, deleteAllCourseRoundsHard,
+    getAllCourseRounds, getUserRoundsCount,
+    getMostRecentRounds };

@@ -1,7 +1,7 @@
 
 
-import { addCourse, addCourses, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
-import { addRound, addRounds, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
+import { addCourse, addCourses, deleteAllCoursesSoft, deleteCourseSoft, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addRound, addRounds, deleteRoundSoft, getAllRounds, modifyRound } from "../db/rounds.mjs";
 import { isValidCourseName } from "../utils/format.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
@@ -72,7 +72,7 @@ const uploadBulkData = async (user, data) => {
         for (let i = 0; i < data.deleteCourseQueue.length; i++) {
             try {
                 const courseUUID = data.deleteCourseQueue[i].courseUUID;
-                if(await deleteCourse(user.useruuid, courseUUID)) {
+                if(await deleteCourseSoft(user.useruuid, courseUUID)) {
                     data.deleteCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -136,7 +136,7 @@ const uploadBulkData = async (user, data) => {
         for (let i = 0; i < data.deleteRoundQueue.length; i++) {
             try {
                 const roundUUID = data.deleteRoundQueue[i].roundUUID;
-                if(await deleteRound(user.useruuid, roundUUID)) {
+                if(await deleteRoundSoft(user.useruuid, roundUUID)) {
                     updatesSucceeded++;
                     data.deleteRoundQueue[i] = null;
                 }
@@ -168,7 +168,7 @@ const getAllCloudData = async (user) => {
 // Delete all data in the cloud and replace with new data
 const replaceAllCloudData = async (user, data) => {
     // Delete all courses (rounds should be deleted through cascading deletion)
-    await deleteAllCourses(user.useruuid);
+    await deleteAllCoursesSoft(user.useruuid);
     return await uploadBulkData(user, data);
 }
 
