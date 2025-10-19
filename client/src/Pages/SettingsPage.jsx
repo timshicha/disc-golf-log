@@ -96,7 +96,7 @@ class SettingsPage extends React.Component {
             username: username,
             currentModal: null,
             uploadChangesToCloudError: null,
-            usernameModifed: usernameModified
+            usernameModified: usernameModified
         });
         this.updateLastPushedToCloudString();
         // Force the home page to refresh courses so they appear when user goes back

@@ -96,4 +96,47 @@ const httpRetrieveAllDataFromCloud = async () => {
     };
 }
 
-export { httpUploadQueueToCloud, httpRetrieveAllDataFromCloud };
+const httpRetrieveAllModifiedDataFromCloud = async (timestamp) => {
+    // If user logged out while offline, logout first
+    if(localStorage.getItem("logout")) {
+        if(!(await httpLogout()).success) {
+            return {
+                success: false,
+                error: "A connection to server could not be established."
+            };
+        }
+        localStorage.clear("logout");
+    }
+    let result;
+    let status;
+    try {
+        result = await fetch(`${SERVER_URI}/modified_data?timestamp=${encodeURIComponent(timestamp)}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        if(!result.ok) {
+            status = result.status;
+            throw new Error(`HTTP request failed with status ${result.status}.`);
+        }
+        else {
+            result = await result.json();
+        }
+    } catch (error) {
+        console.log(`Could not retrieve data from cloud: ${error}`);
+        return {
+            success: false,
+            error: error,
+            status: status
+        };
+    }
+    console.log(result);
+    return {
+        success: true,
+        data: result
+    };
+}
+
+export { httpUploadQueueToCloud, httpRetrieveAllDataFromCloud, httpRetrieveAllModifiedDataFromCloud };
