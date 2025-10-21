@@ -81,7 +81,7 @@ const SocialModal = (props) => {
     const [currentModal, setCurrentModal] = useState(SocialPages.PROFILE);
 
     const [username, setUsername] = useState("");
-    const [userUUID, setUserUUID] = useState(null);
+    const [useruuid, setUserUUID] = useState(null);
     const [friends, setFriends] = useState([]);
     const [friendRequests, setFriendRequests] = useState([]);
     const searchUsernameRef = useRef(null);
@@ -108,7 +108,7 @@ const SocialModal = (props) => {
         if(result?.success) {
             setError(false);
             setUsername(result.data.username);
-            setUserUUID(result.data.userUUID);
+            setUserUUID(result.data.useruuid);
             // If profile is visible
             if(result.data?.visible) {
                 setPrivateProfile(false);
@@ -180,7 +180,7 @@ const SocialModal = (props) => {
 
     const sendFriendRequest = () => {
         setRespondingToFriendReqeust(true);
-        httpSendFriendRequest(userUUID).then(res => {
+        httpSendFriendRequest(useruuid).then(res => {
 
             // If successfully sent request, update UI
             if(res.success) {
@@ -193,7 +193,7 @@ const SocialModal = (props) => {
 
     const undoSendFriendRequest = () => {
         setRespondingToFriendReqeust(true);
-        httpUndoSendFriendRequest(userUUID).then(res => {
+        httpUndoSendFriendRequest(useruuid).then(res => {
 
             // If successfully unsent the request, update UI
             if(res.success) {
@@ -205,7 +205,7 @@ const SocialModal = (props) => {
     }
 
     const acceptFriendRequest = (acceptUserUUID) => {
-        const useruuid = acceptUserUUID ? acceptUserUUID : userUUID;
+        const useruuid = acceptUserUUID ? acceptUserUUID : useruuid;
         setRespondingToFriendReqeust(true);
         httpRespondToFriendRequest(useruuid, "accept").then(async res => {
 
@@ -223,7 +223,7 @@ const SocialModal = (props) => {
     }
 
     const declineFriendRequest = (declineUserUUID) => {
-        const useruuid = declineUserUUID ? declineUserUUID : userUUID;
+        const useruuid = declineUserUUID ? declineUserUUID : useruuid;
         setRespondingToFriendReqeust(true);
         httpRespondToFriendRequest(useruuid, "decline").then(res => {
 
@@ -346,8 +346,8 @@ const SocialModal = (props) => {
                         : friendStatus === FriendStatus.REQUEST_RECEIVED ?
                             <div>
                                 <div className="mb-[5px] text-[blue]">Friend request received</div>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px] cursor-pointer" onClick={() => acceptFriendRequest(userUUID)}>Accept</button>
-                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] cursor-pointer" onClick={() => declineFriendRequest(userUUID)}>Decline</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] mr-[5px] cursor-pointer" onClick={() => acceptFriendRequest(useruuid)}>Accept</button>
+                                <button className="inline-block mx-auto bg-gray-dark text-white text-[16px] text-center p-[3px] w-[80px] rounded-[5px] cursor-pointer" onClick={() => declineFriendRequest(useruuid)}>Decline</button>
                             </div>
                         : ""
                         }

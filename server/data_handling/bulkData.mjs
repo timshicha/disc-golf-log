@@ -7,6 +7,7 @@ import { isValidCourseName } from "../utils/format.mjs";
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
 const uploadBulkData = async (user, data) => {
+    console.log(data);
     // Make sure body is defined and is an object
     if(!data || typeof data !== 'object') return null;
     let updatesSucceeded = 0;
@@ -24,7 +25,7 @@ const uploadBulkData = async (user, data) => {
                 continue;
             }
             courses.push({
-                courseuuid: data.addCourseQueue[i].courseUUID,
+                courseuuid: data.addCourseQueue[i].courseuuid,
                 useruuid: user.useruuid,
                 data: data.addCourseQueue[i]
             });
@@ -46,14 +47,14 @@ const uploadBulkData = async (user, data) => {
         for (let i = 0; i < data.modifyCourseQueue.length; i++) {
             try {
                 const validName = isValidCourseName(data.modifyCourseQueue[i].name);
-                const courseUUID = data.modifyCourseQueue[i].courseUUID;
+                const courseuuid = data.modifyCourseQueue[i].courseuuid;
                 const courseData = data.modifyCourseQueue[i];
                 // Validate course name
                 if(!validName.isValid) {
                     updatesFailed++;
                     errors.push(`Could not modify course: ${validName.error}`);
                 }
-                else if(await modifyCourse(user.useruuid, courseUUID, courseData)) {
+                else if(await modifyCourse(user.useruuid, courseuuid, courseData)) {
                     data.modifyCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -71,8 +72,8 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.deleteCourseQueue)) {
         for (let i = 0; i < data.deleteCourseQueue.length; i++) {
             try {
-                const courseUUID = data.deleteCourseQueue[i].courseUUID;
-                if(await deleteCourseSoft(user.useruuid, courseUUID)) {
+                const courseuuid = data.deleteCourseQueue[i].courseuuid;
+                if(await deleteCourseSoft(user.useruuid, courseuuid)) {
                     data.deleteCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -92,8 +93,8 @@ const uploadBulkData = async (user, data) => {
         const rounds = [];
         for (let i = 0; i < data.addRoundQueue.length; i++) {
             rounds.push({
-                courseuuid: data.addRoundQueue[i].courseUUID,
-                rounduuid: data.addRoundQueue[i].roundUUID,
+                courseuuid: data.addRoundQueue[i].courseuuid,
+                rounduuid: data.addRoundQueue[i].rounduuid,
                 played_at: data.addRoundQueue[i].date,
                 data: data.addRoundQueue[i]
             });
@@ -114,10 +115,10 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.modifyRoundQueue)) {
         for (let i = 0; i < data.modifyRoundQueue.length; i++) {
             try {
-                const roundUUID = data.modifyRoundQueue[i].roundUUID;
+                const rounduuid = data.modifyRoundQueue[i].rounduuid;
                 const playedAt = data.modifyRoundQueue[i].date;
                 const roundData = data.modifyRoundQueue[i];
-                if(await modifyRound(user.useruuid, roundUUID, playedAt, roundData)) {
+                if(await modifyRound(user.useruuid, rounduuid, playedAt, roundData)) {
                     data.modifyRoundQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -135,8 +136,8 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.deleteRoundQueue)) {
         for (let i = 0; i < data.deleteRoundQueue.length; i++) {
             try {
-                const roundUUID = data.deleteRoundQueue[i].roundUUID;
-                if(await deleteRoundSoft(user.useruuid, roundUUID)) {
+                const rounduuid = data.deleteRoundQueue[i].rounduuid;
+                if(await deleteRoundSoft(user.useruuid, rounduuid)) {
                     updatesSucceeded++;
                     data.deleteRoundQueue[i] = null;
                 }

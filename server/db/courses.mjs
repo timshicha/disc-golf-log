@@ -1,8 +1,8 @@
 import db, { SCHEMA } from "./db_setup.mjs";
 import { deleteAllCourseRoundsHard } from "./rounds.mjs";
 
-const addCourse = async (userUUID, courseUUID, data) => {
-    const result = await db`INSERT INTO ${SCHEMA}.courses (courseuuid, useruuid, data) VALUES (${courseUUID}, ${userUUID}, ${data})`;
+const addCourse = async (useruuid, courseuuid, data) => {
+    const result = await db`INSERT INTO ${SCHEMA}.courses (courseuuid, useruuid, data) VALUES (${courseuuid}, ${useruuid}, ${data})`;
     return result.count > 0;
 }
 
@@ -15,50 +15,50 @@ const addCourses = async (courseList) => {
     return result.count;
 }
 
-const modifyCourse = async (userUUID, courseUUID, data) => {
+const modifyCourse = async (useruuid, courseuuid, data) => {
     const result = await db`UPDATE ${SCHEMA}.courses SET data = ${data}
-        WHERE useruuid = ${userUUID} AND courseuuid = ${courseUUID}`;
+        WHERE useruuid = ${useruuid} AND courseuuid = ${courseuuid}`;
     return result.count > 0;
 }
 
-const deleteCourseSoft = async (userUUID, courseUUID) => {
+const deleteCourseSoft = async (useruuid, courseuuid) => {
     const result = await db`UPDATE ${SCHEMA}.courses SET deleted = TRUE
-        WHERE courseuuid = ${courseUUID} AND useruuid = ${userUUID}`;
+        WHERE courseuuid = ${courseuuid} AND useruuid = ${useruuid}`;
     // We can hard delete the rounds because the client will always know
     // there are no rounds for a deleted course.
-    await deleteAllCourseRoundsHard(userUUID, courseUUID);
+    await deleteAllCourseRoundsHard(useruuid, courseuuid);
     return result.count > 0;
 }
 
-const deleteCourseHard = async (userUUID, courseUUID) => {
-    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE courseuuid = ${courseUUID} AND useruuid = ${userUUID}`;
+const deleteCourseHard = async (useruuid, courseuuid) => {
+    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE courseuuid = ${courseuuid} AND useruuid = ${useruuid}`;
     return result.count > 0;
 }
 
-const getAllCourses = async (userUUID) => {
-    const result = await db`SELECT * FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID} AND deleted = FALSE`;
+const getAllCourses = async (useruuid) => {
+    const result = await db`SELECT * FROM ${SCHEMA}.courses WHERE useruuid = ${useruuid} AND deleted = FALSE`;
     return result
 }
 
 // Get all courses but only keep the details needed for profile
-const getAllCoursesProfile = async (userUUID) => {
-    const result = await db`SELECT courseuuid, data->'name' AS name FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID} AND deleted = FALSE`;
+const getAllCoursesProfile = async (useruuid) => {
+    const result = await db`SELECT courseuuid, data->'name' AS name FROM ${SCHEMA}.courses WHERE useruuid = ${useruuid} AND deleted = FALSE`;
     return result;
 }
 
-const deleteAllCoursesHard = async (userUUID) => {
-    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE useruuid = ${userUUID}`;
+const deleteAllCoursesHard = async (useruuid) => {
+    const result = await db`DELETE FROM ${SCHEMA}.courses WHERE useruuid = ${useruuid}`;
     return result;
 }
 
-const deleteAllCoursesSoft = async (userUUID) => {
-    const result = await db`UPDATE ${SCHEMA}.courses SET deleted = TRUE WHERE useruuid = ${userUUID}`;
+const deleteAllCoursesSoft = async (useruuid) => {
+    const result = await db`UPDATE ${SCHEMA}.courses SET deleted = TRUE WHERE useruuid = ${useruuid}`;
     return result;
 }
 
-const getAllCourseChangesAfterTimestamp = async (userUUID, timestamp) => {
+const getAllCourseChangesAfterTimestamp = async (useruuid, timestamp) => {
     const result = await db`SELECT * FROM ${SCHEMA}.courses
-        WHERE useruuid = ${userUUID} AND modified_at > ${timestamp}`;
+        WHERE useruuid = ${useruuid} AND modified_at > ${timestamp}`;
     return result;
 }
 

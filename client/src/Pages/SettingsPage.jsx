@@ -4,7 +4,7 @@ import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton.jsx";
 import { download } from "../Utilities/downloads.js";
 import { Modals } from "../Utilities/Enums.js";
 import MainLoginModal from "../Jsx/Modals/MainLoginModal.jsx";
-import { httpUploadQueueToCloud } from "../serverCalls/data.mjs";
+import { httpRetrieveAllModifiedDataFromCloud, httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import { createLastPushedToCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
@@ -120,18 +120,36 @@ class SettingsPage extends React.Component {
     handleUploadChangesToCloud = async () => {
         this.setState({ uploadChangesToCloudLoading: true });
         const email = localStorage.getItem("email");
-        const result = await httpUploadQueueToCloud(false);
-        if(result.success) {
+        let statusCode;
+        try {
+
+            // Try downloading data
+            const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-pushed-to-cloud"));
+            if(!downloadResult.success) {
+                statusCode = downloadResult.status;
+                throw new Error (downloadResult);
+            }
+
+            // Try uploading changes to cloud
+            const result = await httpUploadQueueToCloud(false);
+            if(!result.success) {
+                statusCode = result.status;
+                throw new Error (result);
+            }
+
+            // Manage the data we downloaded
+            await DataHandler.bulkModify(downloadResult.data.courses, downloadResult.data.rounds);
             const date = Date ();
             localStorage.setItem("last-pushed-to-cloud", date);
             this.setState({
                 uploadChangesToCloudError: null
             });
             this.updateLastPushedToCloudString();
-        }
-        else {
+
+        } catch (result) {
+            console.log("Data causing error: ",result);
             let error;
-            if(result.status === 401) {
+            if(statusCode === 401) {
                 // Log them out so they don't try to request again
                 error = "Failed to upload data: You are not logged in.";
                 localStorage.removeItem("email");
@@ -143,13 +161,13 @@ class SettingsPage extends React.Component {
                     lastPushedToCloudString: ""
                 });
             }
-            else if(result.status === 500) {
+            else if(statusCode === 500) {
                 error = "Failed to upload data: A problem occured in the server.";
             }
-            else if(result.status === 404) {
+            else if(statusCode === 404) {
                 error = "Failed to upload data: Bad request (not your fault).";
             }
-            else if(!result.status) {
+            else if(!statusCode) {
                 error = "Failed to upload data: Could not connect to server.";
             }
             else {

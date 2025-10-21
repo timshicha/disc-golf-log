@@ -12,6 +12,7 @@ import { isVersionBehind } from "./Utilities/sorting";
 import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
 import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
+import { migrateDbToV3 } from "./DataHandling/Db";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -31,6 +32,12 @@ if(isVersionBehind(version, "1.1.5")) {
 // Set profile to private by default
 if(isVersionBehind(version, "1.1.6")) {
     localStorage.setItem("public-profile", true);
+}
+// v1.5.0 update
+// Upgrade to Dexie v3
+if(isVersionBehind(version, "1.5.0")) {
+    console.log("Migrating database to v3...");
+    await migrateDbToV3();
 }
 
 localStorage.setItem("version", currentVersion);

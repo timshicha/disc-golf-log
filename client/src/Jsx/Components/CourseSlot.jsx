@@ -60,7 +60,7 @@ class CourseSlot extends React.Component{
                     <div className="inline-block max-w-[calc(100%-45px)] align-middle ml-[10px]">
                         {/* Course title */}
                         <div className="text-[16px] h-[25px] font-bold text-sans truncate">
-                            {this.state.course.name}
+                            {this.state.course.data.name}
                         </div>
                         {/* Number of times played text */}
                         <div className="text-[11px] mt-[-3px]">

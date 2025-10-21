@@ -2,7 +2,7 @@ import { httpLogout } from "./auth.mjs";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
-export const httpSendFriendRequest = async (userUUID) => {
+export const httpSendFriendRequest = async (useruuid) => {
     // If user logged out while offline, logout first
     if(localStorage.getItem("logout")) {
         if(!(await httpLogout()).success) {
@@ -23,7 +23,7 @@ export const httpSendFriendRequest = async (userUUID) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                userUUID: userUUID
+                useruuid: useruuid
             })
         });
         if(!result.ok) {
@@ -47,7 +47,7 @@ export const httpSendFriendRequest = async (userUUID) => {
     };
 }
 
-export const httpUndoSendFriendRequest = async (userUUID) => {
+export const httpUndoSendFriendRequest = async (useruuid) => {
     // If user logged out while offline, logout first
     if(localStorage.getItem("logout")) {
         if(!(await httpLogout()).success) {
@@ -68,7 +68,7 @@ export const httpUndoSendFriendRequest = async (userUUID) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                userUUID: userUUID
+                useruuid: useruuid
             })
         });
         if(!result.ok) {
@@ -113,7 +113,7 @@ export const httpRespondToFriendRequest = async (targetUserUUID, response) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                userUUID: targetUserUUID,
+                useruuid: targetUserUUID,
                 response: response
             })
         });
@@ -264,7 +264,7 @@ export const httpGetFriendRequestCount = async () => {
     };
 }
 
-export const httpRemoveFriend = async (userUUID) => {
+export const httpRemoveFriend = async (useruuid) => {
     // If user logged out while offline, logout first
     if(localStorage.getItem("logout")) {
         if(!(await httpLogout()).success) {
@@ -285,7 +285,7 @@ export const httpRemoveFriend = async (userUUID) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                userUUID: userUUID,
+                useruuid: useruuid,
             })
         });
         if(!result.ok) {

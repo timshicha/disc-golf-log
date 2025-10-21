@@ -49,8 +49,8 @@ const MainPage = forwardRef((props, ref) => {
             let unpinnedCourses = result.filter(course => !course.data.pinned);
             // If sort alphabetically
             if(sortCourseBy === "Alphabetically") {
-                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
-                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
+                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.data.name.toUpperCase(), b.data.name.toUpperCase()));
+                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.data.name.toUpperCase(), b.data.name.toUpperCase()));
             }
             else if(sortCourseBy === "Recently modified") {
                 pinnedCourses = pinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
@@ -149,7 +149,7 @@ const MainPage = forwardRef((props, ref) => {
                             {pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                                 return (
                                     <CourseSlot course={course}
-                                        key={course.courseUUID}
+                                        key={course.courseuuid}
                                         className="mb-[8px]"
                                         onClick={() => {
                                             // If the user selects a course, tell App.jsx
@@ -173,7 +173,7 @@ const MainPage = forwardRef((props, ref) => {
                     {unpinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
-                                key={course.courseUUID}
+                                key={course.courseuuid}
                                 className="mt-[8px]"
                                 onClick={() => {
                                     // If the user selects a course, tell App.jsx

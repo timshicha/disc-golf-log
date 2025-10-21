@@ -93,7 +93,7 @@ export const registerGetProfileEndpoint = (app) => {
             if(!searchResult.visible) {
                 res.status(200).json({
                     username: searchUser.username,
-                    userUUID: searchUser.useruuid,
+                    useruuid: searchUser.useruuid,
                     friends: searchResult.friends,
                     friendRequest: searchResult.friendRequest,
                     visible: false
@@ -107,7 +107,7 @@ export const registerGetProfileEndpoint = (app) => {
                 const rounds = await getMostRecentRounds(searchUser.useruuid, 5);
                 res.status(200).json({
                     username: searchUser.username,
-                    userUUID: searchUser.useruuid,
+                    useruuid: searchUser.useruuid,
                     courses: courses,
                     roundCount: roundCount,
                     rounds: rounds,
@@ -138,7 +138,7 @@ export const registerGetProfileEndpoint = (app) => {
             const rounds = await getMostRecentRounds(user.useruuid, 5);
             res.status(200).json({
                 username: user.username,
-                userUUID: user.useruuid,
+                useruuid: user.useruuid,
                 courses: courses,
                 roundCount: roundCount,
                 rounds: rounds,

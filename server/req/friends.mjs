@@ -15,7 +15,7 @@ export const registerSendFriendRequestEndpoint = (app) => {
         }
         try {
             // See who the request is for
-            const receiverUUID = req.body.userUUID;
+            const receiverUUID = req.body.useruuid;
             if(!receiverUUID) {
                 throw new Error ("Server cannot determine who to send the request to.");
             }
@@ -68,7 +68,7 @@ export const registerRespondFriendRequestEndpoint = (app) => {
         }
         try {
             // See which request responding to
-            const targetUserUUID = req.body.userUUID;
+            const targetUserUUID = req.body.useruuid;
             if(!targetUserUUID) {
                 throw new Error ("Server cannot determine which request user is responding to.");
             }
@@ -106,7 +106,7 @@ export const registerUndoSendFriendRequestEndpoint = (app) => {
         }
         try {
             // See which user to unsend to
-            const targetUserUUID = req.body.userUUID;
+            const targetUserUUID = req.body.useruuid;
             if(!targetUserUUID) {
                 throw new Error ("Server cannot determine which user to unsend the request to.");
             }
@@ -134,7 +134,7 @@ export const registerRemoveFriendEndpoint = (app) => {
         }
         try {
             // See which user to unfriend
-            const targetUserUUID = req.body.userUUID;
+            const targetUserUUID = req.body.useruuid;
             if(!targetUserUUID) {
                 throw new Error ("Server cannot determine which user to unfriend.");
             }
