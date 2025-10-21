@@ -168,8 +168,19 @@ const getAllCloudData = async (user) => {
 
 const getAllChangesAfterTimestamp = async (user, timestamp) => {
     // Get all courses that changed after the timestamp
-    const courses = await getAllCourseChangesAfterTimestamp(user.useruuid, timestamp);
-    const rounds = await getAllRoundChangesAfterTimestamp(user.useruuid, timestamp);
+    let courses = await getAllCourseChangesAfterTimestamp(user.useruuid, timestamp);
+    let rounds = await getAllRoundChangesAfterTimestamp(user.useruuid, timestamp);
+    // Go through each course and round and just keep the data
+    courses = courses.map(course => {
+        const data = course.data;
+        data.deleted = course.deleted;
+        return data;
+    });
+    rounds = rounds.map(round => {
+        const data = round.data;
+        data.deleted = round.deleted;
+        return data;
+    });
     return { courses, rounds };
 }
 
