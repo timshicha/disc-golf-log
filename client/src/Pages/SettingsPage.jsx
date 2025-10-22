@@ -144,6 +144,8 @@ class SettingsPage extends React.Component {
             this.setState({
                 syncWithCloudError: null
             });
+            // Reload courses
+            this.props.refreshCourses();
             this.updateLastSyncedWithCloudString();
 
         } catch (result) {
