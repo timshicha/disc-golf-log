@@ -17,48 +17,48 @@ export const createFriendRequest = async (senderUUID, receiverUUID) => {
     return false;
 }
 
-export const findFriendRequest = async (userUUID, targetUserUUID) => {
+export const findFriendRequest = async (useruuid, targetUserUUID) => {
     const result = await db`SELECT * FROM ${SCHEMA}.friend_requests WHERE
-        (sender = ${userUUID} AND receiver = ${targetUserUUID})
-        OR (sender = ${targetUserUUID} AND receiver = ${userUUID})`;
+        (sender = ${useruuid} AND receiver = ${targetUserUUID})
+        OR (sender = ${targetUserUUID} AND receiver = ${useruuid})`;
     // If no friend request in either direction
     if(!result || result.length == 0) return null;
     // If a friend request was found
     const request = result[0];
     // If this user sent the request to target user
-    if(request.sender === userUUID) return "sent";
+    if(request.sender === useruuid) return "sent";
     // Otherwise, they received a request
     else return "received";
 }
 
-export const getAllFriendRequests = async (userUUID) => {
+export const getAllFriendRequests = async (useruuid) => {
     const result = await db`SELECT users.useruuid, users.username FROM
         ${SCHEMA}.friend_requests friend_requests JOIN
         ${SCHEMA}.users users
         ON friend_requests.sender = users.useruuid
-        WHERE receiver = ${userUUID}`;
+        WHERE receiver = ${useruuid}`;
     return result;
 }
 
-export const getFriendRequestCount = async (userUUID) => {
+export const getFriendRequestCount = async (useruuid) => {
     const result = await db`SELECT COUNT (*) FROM
         ${SCHEMA}.friend_requests friend_requests JOIN
         ${SCHEMA}.users users
         ON friend_requests.sender = users.useruuid
-        WHERE receiver = ${userUUID}`;
+        WHERE receiver = ${useruuid}`;
         console.log(result);
     return result[0].count;
 }
 
-export const removeFriendReqeust = async (userUUID, targetUserUUID) => {
+export const removeFriendReqeust = async (useruuid, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friend_requests WHERE
-        (sender = ${userUUID} AND receiver = ${targetUserUUID})`;
+        (sender = ${useruuid} AND receiver = ${targetUserUUID})`;
 }
 
-export const removeFriend = async (userUUID, targetUserUUID) => {
+export const removeFriend = async (useruuid, targetUserUUID) => {
     await db`DELETE FROM ${SCHEMA}.friends WHERE
-        (user1uuid = ${userUUID} AND user2uuid = ${targetUserUUID}) OR
-        (user1uuid = ${targetUserUUID} AND user2uuid = ${userUUID})`;
+        (user1uuid = ${useruuid} AND user2uuid = ${targetUserUUID}) OR
+        (user1uuid = ${targetUserUUID} AND user2uuid = ${useruuid})`;
 }
 
 export const addFriend = async (user1UUID, user2UUID) => {
@@ -69,18 +69,18 @@ export const addFriend = async (user1UUID, user2UUID) => {
 }
 
 // Response is either "accept" or "decline"
-export const respondFriendReqeust = async (userUUID, targetUserUUID, response) => {
+export const respondFriendReqeust = async (useruuid, targetUserUUID, response) => {
     // Make sure the request exists
-    if(await findFriendRequest(userUUID, targetUserUUID) !== "received") {
+    if(await findFriendRequest(useruuid, targetUserUUID) !== "received") {
         return { success: false, error: "There is no friend request from this user." };
     }
     if(response === "accept") {
-        await removeFriendReqeust(targetUserUUID, userUUID);
-        await addFriend(userUUID, targetUserUUID);
+        await removeFriendReqeust(targetUserUUID, useruuid);
+        await addFriend(useruuid, targetUserUUID);
         return { success: true };
     }
     else if(response === "decline") {
-        await removeFriendReqeust(targetUserUUID, userUUID);
+        await removeFriendReqeust(targetUserUUID, useruuid);
         return { success: true };
     }
     else {
@@ -88,10 +88,10 @@ export const respondFriendReqeust = async (userUUID, targetUserUUID, response) =
     }
 }
 
-export const getAllFriends = async (userUUID) => {
+export const getAllFriends = async (useruuid) => {
     const result = await db`SELECT users.username AS username, users.useruuid AS useruuid
         FROM ${SCHEMA}.users users JOIN ${SCHEMA}.friends friends
         ON users.useruuid = friends.user2uuid
-        WHERE friends.user1uuid = ${userUUID}`;
+        WHERE friends.user1uuid = ${useruuid}`;
     return result;
 }

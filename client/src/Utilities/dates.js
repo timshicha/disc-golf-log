@@ -132,17 +132,12 @@ const timeAgo = (date) => {
     return `on ${month} ${day}, ${year}`;
 }
 
-const createLastPushedToCloudString = async (lastPushedToCloud) => {
-    if(!lastPushedToCloud) {
-        return Promise.resolve("Changes have not yet been uploaded to cloud.");
+const createLastSyncedWithCloudString = async (lastSyncedWithCloud) => {
+    if(!lastSyncedWithCloud) {
+        return Promise.resolve("Have not yet synced with cloud.");
     }
     // See if there are no changes to push
-    return DataHandler.hasChanges().then(result => {
-        if(!result) {
-            return "All changes have been uploaded.";
-        }
-        return `Changes last uploaded to cloud ${timeAgo(lastPushedToCloud)}.`;
-    });
+    return `Last synced with cloud ${timeAgo(lastSyncedWithCloud)}.`;
 }
 
-export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo, createLastPushedToCloudString };
+export { getSafeIso, isoToVisualFormat, toLocalIsoString, timeAgo, createLastSyncedWithCloudString };

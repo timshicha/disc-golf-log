@@ -149,7 +149,7 @@ const MainPage = forwardRef((props, ref) => {
                             {pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                                 return (
                                     <CourseSlot course={course}
-                                        key={course.courseUUID}
+                                        key={course.courseuuid}
                                         className="mb-[8px]"
                                         onClick={() => {
                                             // If the user selects a course, tell App.jsx
@@ -173,7 +173,7 @@ const MainPage = forwardRef((props, ref) => {
                     {unpinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
                             <CourseSlot course={course}
-                                key={course.courseUUID}
+                                key={course.courseuuid}
                                 className="mt-[8px]"
                                 onClick={() => {
                                     // If the user selects a course, tell App.jsx

@@ -12,6 +12,7 @@ import { isVersionBehind } from "./Utilities/sorting";
 import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
 import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
+import { migrateDbToV3 } from "./DataHandling/Db";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -32,20 +33,30 @@ if(isVersionBehind(version, "1.1.5")) {
 if(isVersionBehind(version, "1.1.6")) {
     localStorage.setItem("public-profile", true);
 }
+// v1.5.0 update
+// Upgrade to Dexie v3
+if(isVersionBehind(version, "1.5.0")) {
+    // Relabel local storage variable since we are now syncing with cloud
+    localStorage.setItem("last-synced-with-cloud", localStorage.getItem("last-synced-with-cloud"));
+    localStorage.removeItem("last-synced-with-cloud");
+    // Upgrade DB
+    console.log("Migrating database to v3...");
+    await migrateDbToV3();
+}
 
 localStorage.setItem("version", currentVersion);
 
 // If the user is logged in
 const email = localStorage.getItem("email");
 if(email) {
-    const lastUpdated = localStorage.getItem("last-pushed-to-cloud") || 0;
+    const lastUpdated = localStorage.getItem("last-synced-with-cloud") || 0;
     // If the last time changes were updated to cloud was over an hour
     // ago, push changes to cloud (if there are changes)
     const updateInterval = 1000 * 60 * 60;
     if(new Date() - new Date(lastUpdated) >= updateInterval) {
         httpUploadQueueToCloud(email).then(result => {
             if(result.success === true) {
-                localStorage.setItem("last-pushed-to-cloud", Date ());
+                localStorage.setItem("last-synced-with-cloud", Date ());
             }
             // If the user failed to log in because of credentials,
             // log them out

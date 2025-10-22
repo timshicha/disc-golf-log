@@ -1,12 +1,13 @@
 
 
-import { addCourse, addCourses, deleteAllCourses, deleteCourse, getAllCourses, modifyCourse } from "../db/courses.mjs";
-import { addRound, addRounds, deleteRound, getAllRounds, modifyRound } from "../db/rounds.mjs";
+import { addCourse, addCourses, deleteAllCoursesSoft, deleteCourseSoft, getAllCourseChangesAfterTimestamp, getAllCourses, modifyCourse } from "../db/courses.mjs";
+import { addRound, addRounds, deleteRoundSoft, getAllRoundChangesAfterTimestamp, getAllRounds, modifyRound } from "../db/rounds.mjs";
 import { isValidCourseName } from "../utils/format.mjs";
 
 // If the user sends a bunch of modifications, go through the lists
 // and update their data
 const uploadBulkData = async (user, data) => {
+    console.log(data);
     // Make sure body is defined and is an object
     if(!data || typeof data !== 'object') return null;
     let updatesSucceeded = 0;
@@ -24,7 +25,7 @@ const uploadBulkData = async (user, data) => {
                 continue;
             }
             courses.push({
-                courseuuid: data.addCourseQueue[i].courseUUID,
+                courseuuid: data.addCourseQueue[i].courseuuid,
                 useruuid: user.useruuid,
                 data: data.addCourseQueue[i]
             });
@@ -46,14 +47,14 @@ const uploadBulkData = async (user, data) => {
         for (let i = 0; i < data.modifyCourseQueue.length; i++) {
             try {
                 const validName = isValidCourseName(data.modifyCourseQueue[i].name);
-                const courseUUID = data.modifyCourseQueue[i].courseUUID;
+                const courseuuid = data.modifyCourseQueue[i].courseuuid;
                 const courseData = data.modifyCourseQueue[i];
                 // Validate course name
                 if(!validName.isValid) {
                     updatesFailed++;
                     errors.push(`Could not modify course: ${validName.error}`);
                 }
-                else if(await modifyCourse(user.useruuid, courseUUID, courseData)) {
+                else if(await modifyCourse(user.useruuid, courseuuid, courseData)) {
                     data.modifyCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -71,8 +72,8 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.deleteCourseQueue)) {
         for (let i = 0; i < data.deleteCourseQueue.length; i++) {
             try {
-                const courseUUID = data.deleteCourseQueue[i].courseUUID;
-                if(await deleteCourse(user.useruuid, courseUUID)) {
+                const courseuuid = data.deleteCourseQueue[i].courseuuid;
+                if(await deleteCourseSoft(user.useruuid, courseuuid)) {
                     data.deleteCourseQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -92,8 +93,8 @@ const uploadBulkData = async (user, data) => {
         const rounds = [];
         for (let i = 0; i < data.addRoundQueue.length; i++) {
             rounds.push({
-                courseuuid: data.addRoundQueue[i].courseUUID,
-                rounduuid: data.addRoundQueue[i].roundUUID,
+                courseuuid: data.addRoundQueue[i].courseuuid,
+                rounduuid: data.addRoundQueue[i].rounduuid,
                 played_at: data.addRoundQueue[i].date,
                 data: data.addRoundQueue[i]
             });
@@ -114,10 +115,10 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.modifyRoundQueue)) {
         for (let i = 0; i < data.modifyRoundQueue.length; i++) {
             try {
-                const roundUUID = data.modifyRoundQueue[i].roundUUID;
+                const rounduuid = data.modifyRoundQueue[i].rounduuid;
                 const playedAt = data.modifyRoundQueue[i].date;
                 const roundData = data.modifyRoundQueue[i];
-                if(await modifyRound(user.useruuid, roundUUID, playedAt, roundData)) {
+                if(await modifyRound(user.useruuid, rounduuid, playedAt, roundData)) {
                     data.modifyRoundQueue[i] = null;
                     updatesSucceeded++;
                 }
@@ -135,8 +136,8 @@ const uploadBulkData = async (user, data) => {
     if(Array.isArray(data.deleteRoundQueue)) {
         for (let i = 0; i < data.deleteRoundQueue.length; i++) {
             try {
-                const roundUUID = data.deleteRoundQueue[i].roundUUID;
-                if(await deleteRound(user.useruuid, roundUUID)) {
+                const rounduuid = data.deleteRoundQueue[i].rounduuid;
+                if(await deleteRoundSoft(user.useruuid, rounduuid)) {
                     updatesSucceeded++;
                     data.deleteRoundQueue[i] = null;
                 }
@@ -165,11 +166,30 @@ const getAllCloudData = async (user) => {
     return { courses, rounds };
 }
 
+const getAllChangesAfterTimestamp = async (user, timestamp) => {
+    // Get all courses that changed after the timestamp
+    let courses = await getAllCourseChangesAfterTimestamp(user.useruuid, timestamp);
+    let rounds = await getAllRoundChangesAfterTimestamp(user.useruuid, timestamp);
+    // Go through each course and round and just keep the data
+    courses = courses.map(course => {
+        const data = course.data;
+        data.deleted = course.deleted;
+        return data;
+    });
+    rounds = rounds.map(round => {
+        const data = round.data;
+        data.deleted = round.deleted;
+        return data;
+    });
+    return { courses, rounds };
+}
+
 // Delete all data in the cloud and replace with new data
 const replaceAllCloudData = async (user, data) => {
     // Delete all courses (rounds should be deleted through cascading deletion)
-    await deleteAllCourses(user.useruuid);
+    await deleteAllCoursesSoft(user.useruuid);
     return await uploadBulkData(user, data);
 }
 
-export { uploadBulkData, getAllCloudData, replaceAllCloudData };
+export { uploadBulkData, getAllCloudData,
+    getAllChangesAfterTimestamp, replaceAllCloudData };

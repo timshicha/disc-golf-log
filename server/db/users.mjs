@@ -23,16 +23,16 @@ const findUserByUsername = async (username, caseSensitive=true) => {
     }
 }
 
-// Find user by userUUID
-const findUser = async (userUUID) => {
-    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = ${userUUID}`;
+// Find user by useruuid
+const findUser = async (useruuid) => {
+    const [user] = await db`SELECT * FROM ${SCHEMA}.users WHERE useruuid = ${useruuid}`;
     return user;
 }
 
 // Add a user with email
 const addUser = async (email, userData) => {
-    // Create a userUUID
-    const userUUID = randomUUID();
+    // Create a useruuid
+    const useruuid = randomUUID();
     // Stringigy all data
     const safeEmail = String(email);
     
@@ -48,7 +48,7 @@ const addUser = async (email, userData) => {
         }
     }
     
-    const [user] = await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${userUUID}, ${userData}, ${generatedUsername}) RETURNING *`;
+    const [user] = await db`INSERT INTO ${SCHEMA}.users (email, useruuid, data, username) VALUES (${safeEmail}, ${useruuid}, ${userData}, ${generatedUsername}) RETURNING *`;
     return user;
 }
 

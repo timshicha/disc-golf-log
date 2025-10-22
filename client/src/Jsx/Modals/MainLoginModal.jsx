@@ -113,7 +113,7 @@ const MainLoginModal = (props) => {
         if(result.success) {
             localStorage.setItem("email", user.email);
             localStorage.setItem("username", user.username);
-            localStorage.setItem("last-pushed-to-cloud", Date ());
+            localStorage.setItem("last-synced-with-cloud", Date ());
             localStorage.setItem("username-modified", user.usernameModified);
             setMainLoginError(null);
             setPostLoginError(null);
