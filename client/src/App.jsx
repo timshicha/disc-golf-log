@@ -41,10 +41,12 @@ if(isVersionBehind(version, "1.5.0")) {
     localStorage.removeItem("last-synced-with-cloud");
     // Upgrade DB
     console.log("Migrating database to v3...");
-    await migrateDbToV3();
+    migrateDbToV3().then(res => {
+        // Only update if migration succeeds
+        localStorage.setItem("version", currentVersion);
+    });
 }
 
-localStorage.setItem("version", currentVersion);
 
 // If the user is logged in
 const email = localStorage.getItem("email");
