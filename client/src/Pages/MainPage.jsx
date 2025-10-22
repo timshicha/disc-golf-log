@@ -33,9 +33,7 @@ const MainPage = forwardRef((props, ref) => {
         // *** A better fix for this may be needed because brute forcing every
         // time may take up resources especially when the user has a lot of
         // rounds in many different courses.
-        DataHandler.updateCourseRoundCounts().then(() => {
-            reloadCourses();
-        });
+        reloadCourses();
     }, []);
 
     useImperativeHandle(ref, () => ({
@@ -43,28 +41,34 @@ const MainPage = forwardRef((props, ref) => {
     }));
 
     const reloadCourses = () => {
-        DataHandler.getAllCourses().then(result => {
-            // Separate courses into pinned and unpinned
-            let pinnedCourses = result.filter(course => course.data.pinned);
-            let unpinnedCourses = result.filter(course => !course.data.pinned);
-            // If sort alphabetically
-            if(sortCourseBy === "Alphabetically") {
-                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
-                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
-            }
-            else if(sortCourseBy === "Recently modified") {
-                pinnedCourses = pinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
-                unpinnedCourses = unpinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
-            }
-            else if(sortCourseBy === "Most played") {
-                // Update round counts
-                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
-                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
-            }
-            setCourses(result);
-            setPinnedCourses(pinnedCourses);
-            setUnpinnedCourses(unpinnedCourses);
-        });
+        // Refresh course round counts
+        DataHandler.updateCourseRoundCounts().then(() => {
+            
+            // Now get new list of courses
+            DataHandler.getAllCourses().then(result => {
+                // Separate courses into pinned and unpinned
+                let pinnedCourses = result.filter(course => course.data.pinned);
+                let unpinnedCourses = result.filter(course => !course.data.pinned);
+                // If sort alphabetically
+                if(sortCourseBy === "Alphabetically") {
+                    pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
+                    unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
+                }
+                else if(sortCourseBy === "Recently modified") {
+                    pinnedCourses = pinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
+                    unpinnedCourses = unpinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
+                }
+                else if(sortCourseBy === "Most played") {
+                    // Update round counts
+                    pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
+                    unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(b.roundCount, a.roundCount));
+                }
+                setCourses(result);
+                setPinnedCourses(pinnedCourses);
+                setUnpinnedCourses(unpinnedCourses);
+            });
+
+        })
     }
 
     const handleRenameCourse = (event) => {
