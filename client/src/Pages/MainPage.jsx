@@ -49,8 +49,8 @@ const MainPage = forwardRef((props, ref) => {
             let unpinnedCourses = result.filter(course => !course.data.pinned);
             // If sort alphabetically
             if(sortCourseBy === "Alphabetically") {
-                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.data.name.toUpperCase(), b.data.name.toUpperCase()));
-                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.data.name.toUpperCase(), b.data.name.toUpperCase()));
+                pinnedCourses = pinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
+                unpinnedCourses = unpinnedCourses.sort((a, b) => compareStrings(a.name.toUpperCase(), b.name.toUpperCase()));
             }
             else if(sortCourseBy === "Recently modified") {
                 pinnedCourses = pinnedCourses.sort((a, b) => compareDates(b.modified, a.modified));
