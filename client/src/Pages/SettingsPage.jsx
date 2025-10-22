@@ -5,7 +5,7 @@ import { download } from "../Utilities/downloads.js";
 import { Modals } from "../Utilities/Enums.js";
 import MainLoginModal from "../Jsx/Modals/MainLoginModal.jsx";
 import { httpRetrieveAllModifiedDataFromCloud, httpUploadQueueToCloud } from "../serverCalls/data.mjs";
-import { createLastPushedToCloudString } from "../Utilities/dates.js";
+import { createLastSyncedWithCloudString } from "../Utilities/dates.js";
 import MenuModal from "../Jsx/Modals/Frames/MenuModal.jsx";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle.jsx";
 import editIcon from "../assets/images/editIcon.png";
@@ -34,7 +34,7 @@ class SettingsPage extends React.Component {
             confirmDelete: localStorage.getItem("confirm-delete") == "true",
             autoOpenCourseOnCreation: localStorage.getItem("auto-open-course-on-creation") == "true",
             autoScrollToBottomOnCourseOpen: localStorage.getItem("auto-scroll-to-bottom-on-course-open") == "true",
-            lastPushedToCloudString: ". . .",
+            lastSyncedWithCloudString: ". . .",
             email: localStorage.getItem("email") || null,
             username: localStorage.getItem("username") || null,
             usernameModified: localStorage.getItem("username-modified") === "true",
@@ -51,12 +51,12 @@ class SettingsPage extends React.Component {
             changeUsernameError: null,
             changeUsernameLoading: false
         };
-        this.updateLastPushedToCloudString();
+        this.updateLastSyncedWithCloudString();
     }
 
-    updateLastPushedToCloudString = () => {
-        createLastPushedToCloudString(localStorage.getItem("last-pushed-to-cloud")).then(result => {
-            this.setState({ lastPushedToCloudString: result });
+    updateLastSyncedWithCloudString = () => {
+        createLastSyncedWithCloudString(localStorage.getItem("last-synced-with-cloud")).then(result => {
+            this.setState({ lastSyncedWithCloudString: result });
         });
     }
 
@@ -98,7 +98,7 @@ class SettingsPage extends React.Component {
             uploadChangesToCloudError: null,
             usernameModified: usernameModified
         });
-        this.updateLastPushedToCloudString();
+        this.updateLastSyncedWithCloudString();
         // Force the home page to refresh courses so they appear when user goes back
         this.props.refreshCourses();
     }
@@ -107,7 +107,7 @@ class SettingsPage extends React.Component {
         this.setState({ logoutLoading: true });
         localStorage.removeItem("email");
         localStorage.removeItem("username");
-        localStorage.removeItem("last-pushed-to-cloud");
+        localStorage.removeItem("last-synced-with-cloud");
         this.setState({
             email: null,
             username: null,
@@ -124,7 +124,7 @@ class SettingsPage extends React.Component {
         try {
 
             // Try downloading data
-            const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-pushed-to-cloud"));
+            const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-synced-with-cloud"));
             if(!downloadResult.success) {
                 statusCode = downloadResult.status;
                 throw new Error (downloadResult);
@@ -140,11 +140,11 @@ class SettingsPage extends React.Component {
             // Manage the data we downloaded
             await DataHandler.bulkModify(downloadResult.data.courses, downloadResult.data.rounds);
             const date = Date ();
-            localStorage.setItem("last-pushed-to-cloud", date);
+            localStorage.setItem("last-synced-with-cloud", date);
             this.setState({
                 uploadChangesToCloudError: null
             });
-            this.updateLastPushedToCloudString();
+            this.updateLastSyncedWithCloudString();
 
         } catch (result) {
             console.log("Data causing error: ",result);
@@ -154,11 +154,11 @@ class SettingsPage extends React.Component {
                 error = "Failed to upload data: You are not logged in.";
                 localStorage.removeItem("email");
                 localStorage.removeItem("username");
-                localStorage.removeItem("last-pushed-to-cloud");
+                localStorage.removeItem("last-synced-with-cloud");
                 this.setState({ 
                     email: null,
                     username: null,
-                    lastPushedToCloudString: ""
+                    lastSyncedWithCloudString: ""
                 });
             }
             else if(statusCode === 500) {
@@ -294,9 +294,9 @@ class SettingsPage extends React.Component {
                             <SettingsBlock>
                                 <div className="w-100% text-center">
                                     <div className="text-desc text-gray-mild text-left">
-                                        {this.state.lastPushedToCloudString}
+                                        {this.state.lastSyncedWithCloudString}
                                     </div>
-                                    <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.uploadChangesToCloudLoading} onClick={this.handleUploadChangesToCloud}>Upload changes to cloud</ModalButton>
+                                    <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.uploadChangesToCloudLoading} onClick={this.handleUploadChangesToCloud}>Sync with cloud</ModalButton>
                                     {this.state.uploadChangesToCloudError && 
                                         <div className="text-desc text-red-caution mt-[3px]">{this.state.uploadChangesToCloudError}</div>
                                     }
