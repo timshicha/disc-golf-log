@@ -24,6 +24,7 @@ const MainPage = forwardRef((props, ref) => {
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
     const [searchString, setSearchString] = useState("");
+    const [syncInProgress, setSyncInProgress] = useState(false);
     const [syncError, setSyncError] = useState(null);
     let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
 
@@ -106,6 +107,23 @@ const MainPage = forwardRef((props, ref) => {
         }
     }
 
+    const handleSyncWithCloud = async () => {
+        // If sync is already in progress, do nothing
+        if(syncInProgress) {
+            return;
+        }
+        setSyncInProgress(true);
+        const syncError = await syncWithCloud();
+        setSyncInProgress(false);
+        if(!syncError) {
+            setSyncError(null);
+            reloadCourses();
+        }
+        else {
+            setSyncError(syncError);
+        }
+    }
+
     return (
         <div className="p-[10px] height-[100dvh]] overflow-hidden">
 
@@ -142,15 +160,7 @@ const MainPage = forwardRef((props, ref) => {
                 <div className="fixed left-0 bg-white w-full h-[45px] p-[10px] flex">
                     <div className="inline-block align-top flex">
                         <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
-                        <SyncButton onClick={async () => {
-                            const syncError = await syncWithCloud();
-                            if(!syncError) {
-                                reloadCourses();
-                            }
-                            else {
-                                setSyncError(syncError);
-                            }
-                        }}
+                        <SyncButton onClick={handleSyncWithCloud} loading={syncInProgress}
                         className="inline-block ml-[5px] align-top">sync</SyncButton>
                         {syncError &&
                             <div className="ml-[5px] inline-block text-red-caution text-[12px] font-bold max-w-[calc(100%-75px)] align-top">{syncError}</div>
@@ -216,9 +226,11 @@ const MainPage = forwardRef((props, ref) => {
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p className="text-center text-desc mt-[25px] w-[100dvw]">
-                    You don't have any courses.
-                </p>
+                <>
+                    <p className="text-center text-desc mt-[25px] w-[100dvw]">
+                        You don't have any courses.
+                    </p>
+                </>
             }
             <StickyDiv className="text-center">
                 <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>

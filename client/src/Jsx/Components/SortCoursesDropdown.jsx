@@ -16,7 +16,7 @@ const SortCoursesBy = (props) => {
 
     return (
         <div className={props.className}>
-            <div className="p-[3px] bg-gray-light text-gray-mild rounded-[5px] font-bold text-[16px]" onClick={() => setShowModal(true)}>
+            <div className="p-[3px] bg-gray-light text-gray-mild rounded-[5px] font-bold text-[16px] cursor-pointer" onClick={() => setShowModal(true)}>
                 <img src={sortByIcon} className="h-[28px]" alt="Sort by"></img>
             </div>
             {showModal &&
