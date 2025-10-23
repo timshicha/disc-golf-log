@@ -181,7 +181,7 @@ const MainPage = forwardRef((props, ref) => {
                     <div className="w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 </div>
                 
-                <div className="h-[calc(100dvh-120px)] overflow-scroll px-[10px]">
+                <div className="h-[100dvh] overflow-scroll px-[10px]">
                     <div className="h-[50px]"></div>
                     {/* If there are pinned courses, add a section for pinned courses */}
                     {(() => {
