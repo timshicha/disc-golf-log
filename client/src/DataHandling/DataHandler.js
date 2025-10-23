@@ -1,12 +1,13 @@
+import { httpRetrieveAllModifiedDataFromCloud, httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import db from "./Db";
 import { v4 as uuidv4 } from "uuid";
 
 class DataHandler {
 
     static addCourse = (course, sendChangeToCloud=true) => {
-        // If courseUUID isn't set, create one
-        if(!course.courseUUID) {
-            course.courseUUID = uuidv4();
+        // If courseuuid isn't set, create one
+        if(!course.courseuuid) {
+            course.courseuuid = uuidv4();
         }
         // Add the course to local db
         return db.courses.add(course).then(() => {
@@ -14,7 +15,7 @@ class DataHandler {
             if(sendChangeToCloud) {
                 return db.addCourseQueue.add(course);
             }
-            return Promise.resolve(course.courseUUID)
+            return Promise.resolve(course.courseuuid)
         });
     }
 
@@ -23,25 +24,25 @@ class DataHandler {
     // 2) If a user renamed a->b, then deleted b, result: user deleted a
     static deleteCourse = (course, sendChangeToCloud=true) => {
         // Delete all rounds wuth this course ID
-        return db.rounds.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+        return db.rounds.where("courseuuid").equals(course.courseuuid).delete().then(() => {
             // Delete course
-            return db.courses.delete(course.courseUUID).then(() => {
+            return db.courses.delete(course.courseuuid).then(() => {
                 // Add to server queue to send to backend later
                 if(sendChangeToCloud) {
                     // Delete all rounds and round modifications related to this course
-                    return db.addRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-                        return db.deleteRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
-                            return db.modifyRoundQueue.where("courseUUID").equals(course.courseUUID).delete().then(() => {
+                    return db.addRoundQueue.where("courseuuid").equals(course.courseuuid).delete().then(() => {
+                        return db.deleteRoundQueue.where("courseuuid").equals(course.courseuuid).delete().then(() => {
+                            return db.modifyRoundQueue.where("courseuuid").equals(course.courseuuid).delete().then(() => {
                                 // Remove all course modifications
-                                return db.modifyCourseQueue.delete(course.courseUUID).then(() => {
+                                return db.modifyCourseQueue.delete(course.courseuuid).then(() => {
                                     // Find if the course was added in the queue
-                                    return db.addCourseQueue.get(course.courseUUID).then(result => {
+                                    return db.addCourseQueue.get(course.courseuuid).then(result => {
                                         // If added in the queue, remove the add
                                         if(result) {
-                                            return db.addCourseQueue.delete(course.courseUUID);
+                                            return db.addCourseQueue.delete(course.courseuuid);
                                         }
                                         // If not added in the queue, add the delete
-                                        return db.deleteCourseQueue.add({ courseUUID: course.courseUUID }).then(() => {
+                                        return db.deleteCourseQueue.add({ courseuuid: course.courseuuid }).then(() => {
                                             // .add returns a Promise with the id, but this is a delete function so we want
                                             // the user to receive an empty promise
                                             return Promise.resolve();
@@ -65,7 +66,7 @@ class DataHandler {
         return db.courses.put(course).then(() => {
             if(sendChangeToCloud) {
                 // See if the course was added in the queue
-                return db.addCourseQueue.get(course.courseUUID).then(result => {
+                return db.addCourseQueue.get(course.courseuuid).then(result => {
                     // If the course was added in the queue, modify the add
                     if(result) {
                         return db.addCourseQueue.put(course);
@@ -74,14 +75,14 @@ class DataHandler {
                     return db.modifyCourseQueue.put(course);
                 });
             }
-            return Promise.resolve(course.courseUUID);
+            return Promise.resolve(course.courseuuid);
         });
     }
 
     static addRound = (round, course, sendChangeToCloud=true) => {
         // If round UUID isn't set, assign one
-        if(!round.roundUUID) {
-            round.roundUUID = uuidv4();
+        if(!round.rounduuid) {
+            round.rounduuid = uuidv4();
         }
         // Add the round
         return db.rounds.add(round).then(() => {
@@ -100,14 +101,14 @@ class DataHandler {
                 if(sendChangeToCloud) {
                     return db.addRoundQueue.add(round);
                 }
-                return Promise.resolve(round.roundUUID);
+                return Promise.resolve(round.rounduuid);
             })
         });
     }
 
     static deleteRound = (round, course, sendChangeToCloud=true) => {
         // Delete the round
-        return db.rounds.delete(round.roundUUID).then(() => {
+        return db.rounds.delete(round.rounduuid).then(() => {
             if(course.roundCount) {
                 course.roundCount--;
             }
@@ -117,16 +118,16 @@ class DataHandler {
                 // If also sending the change to the backend
                 if(sendChangeToCloud) {
                     // Find the round if it was added in the queue
-                    return db.addRoundQueue.get(round.roundUUID).then(result => {
+                    return db.addRoundQueue.get(round.rounduuid).then(result => {
                         // If added in the queue, delete the add
                         if(result) {
-                            return db.addRoundQueue.delete(round.roundUUID);
+                            return db.addRoundQueue.delete(round.rounduuid);
                         }
                         // Otherwise, delete the modifications and add the delete to queue
-                        return db.modifyRoundQueue.delete(round.roundUUID).then(() => {
+                        return db.modifyRoundQueue.delete(round.rounduuid).then(() => {
                             return db.deleteRoundQueue.add({
-                                roundUUID: round.roundUUID,
-                                courseUUID: round.courseUUID
+                                rounduuid: round.rounduuid,
+                                courseuuid: round.courseuuid
                             });
                         });
                     });
@@ -143,7 +144,7 @@ class DataHandler {
             return this.modifyCourse(course, sendChangeToCloud).then(() => {
                 // If the round was added in the queue, modify the add instead of
                 // adding a modify task
-                return db.addRoundQueue.get(round.roundUUID).then(result => {
+                return db.addRoundQueue.get(round.rounduuid).then(result => {
                     if(result) {
                         return db.addRoundQueue.put(round);
                     }
@@ -161,7 +162,7 @@ class DataHandler {
     }
 
     static getCourseRounds = (course) => {
-        return db.rounds.where("courseUUID").equals(course.courseUUID).sortBy("date");
+        return db.rounds.where("courseuuid").equals(course.courseuuid).sortBy("date");
     }
 
     static getAllCourses = () => {
@@ -172,10 +173,10 @@ class DataHandler {
     // belonging to each course
     static updateCourseRoundCounts = () => {
         // For each course, see how many rounds have this
-        // course's courseUUID
+        // course's courseuuid
         return db.transaction("rw", db.courses, db.rounds, () => {
             return db.courses.each(course => {
-                return db.rounds.where("courseUUID").equals(course.courseUUID).count().then(count => {
+                return db.rounds.where("courseuuid").equals(course.courseuuid).count().then(count => {
                     course.roundCount = count;
                     return db.courses.put(course);
                 });
@@ -261,6 +262,54 @@ class DataHandler {
         }
     }
 
+    // Bulk modify (such as when reading from cloud).
+    // Changes will not be saved to the update queue or uploaded to cloud
+    static bulkModify = async (courses, rounds) => {
+        // For all courses
+        for (let i = 0; i < courses.length; i++) {
+            // Delete if marked deleted
+            if(courses[i].deleted) {
+                try {
+                    await db.courses.delete(courses[i].courseuuid);
+                } catch (error) {
+                    console.log(`Could not delete course in Dexie: ${error}`)
+                }
+                continue;
+            }
+            // Add/modify course
+            else {
+                try {
+                    // Modify course (or add if it doesn't exist)
+                    await db.courses.put(courses[i]);
+                } catch (error) {
+                    console.log(`Could not modify (or add) course in Dexie: ${error}`)
+                }
+            }
+        }
+        // For all rounds
+        for (let i = 0; i < rounds.length; i++) {
+            // Delete if marked deleted
+            if(rounds[i].deleted) {
+                try {
+                    await db.rounds.delete(rounds[i].rounduuid);
+                } catch (error) {
+                    console.log(`Could not delete round in Dexie: ${error}`)
+                }
+                continue;
+            }
+            // Add/modify round
+            else {
+                try {
+                    // Modify round (or add if it doesn't exist)
+                    console.log(rounds[i]);
+                    await db.rounds.put(rounds[i]);
+                } catch (error) {
+                    console.log(`Could not modify (or add) round in Dexie: ${error}: ${JSON.stringify(rounds[i])}`)
+                }
+            }
+        }
+    }
+
     // Take all the current courses and rounds and make that the update queue.
     // This will replace the current update queue. This is useful for when a user
     // logs in. We will just take whatever data they currently have locally and
@@ -315,4 +364,61 @@ class DataHandler {
     }
 }
 
+// Sync changes with cloud.
+// This will upload any changes in the queue to the cloud and
+// download any changes from the cloud.
+//
+// Returns null on success, or an error string on failure.
+const syncWithCloud = async () => {
+    const email = localStorage.getItem("email");
+    if(!email) {
+        return "Failed to sync data: You are not logged in.";
+    }
+    let statusCode;
+    try {
+        // Try downloading data
+        const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-synced-with-cloud"));
+        if(!downloadResult.success) {
+            statusCode = downloadResult.status;
+            throw new Error (downloadResult);
+        }
+
+        // Try uploading changes to cloud
+        const result = await httpUploadQueueToCloud(false);
+        if(!result.success) {
+            statusCode = result.status;
+            throw new Error (result);
+        }
+
+        // Manage the data we downloaded
+        await DataHandler.bulkModify(downloadResult.data.courses, downloadResult.data.rounds);
+        const date = Date ();
+        localStorage.setItem("last-synced-with-cloud", date);
+        return null;
+    } catch (result) {
+        console.log("Sync failed. Data causing failure: ", result);
+        let error;
+        if(statusCode === 401) {
+            // Log them out so they don't try to request again
+            localStorage.removeItem("email");
+            localStorage.removeItem("username");
+            localStorage.removeItem("last-synced-with-cloud");
+            return "Failed to sync data: You are not logged in.";
+        }
+        else if(statusCode === 500) {
+            return "Failed to sync data: A problem occured in the server.";
+        }
+        else if(statusCode === 404) {
+            return "Failed to sync data: Bad request (not your fault).";
+        }
+        else if(!statusCode) {
+            return "Failed to sync data: Could not connect to server.";
+        }
+        else {
+            return "Failed to sync data.";
+        }
+    }
+}
+
 export default DataHandler;
+export { syncWithCloud };

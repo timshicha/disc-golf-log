@@ -46,7 +46,7 @@ class AddCourseModal extends React.Component {
         
         // Add to Dexie
         const course = {
-            courseUUID: uuidv4(),
+            courseuuid: uuidv4(),
             name: name,
             holes: holes,
             modified: Date (),

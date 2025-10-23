@@ -122,7 +122,7 @@ const httpLogout = async () => {
             status = result.status;
             throw new Error(`HTTP request failed with status ${result.status}`);
         }
-        localStorage.clear("logout");
+        localStorage.removeItem("logout");
 
     } catch (error) {
         console.log(`Could not logout: ${error}`);

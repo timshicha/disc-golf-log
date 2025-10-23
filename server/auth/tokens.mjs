@@ -12,7 +12,7 @@ const generateToken = async (email) => {
     // Attempt to create a token
     try {
         const token = randomUUID();
-        await db`INSERT INTO ${SCHEMA}.tokens (token, userUUID)
+        await db`INSERT INTO ${SCHEMA}.tokens (token, useruuid)
             VALUES (
                 ${token}, (SELECT useruuid FROM ${SCHEMA}.users WHERE email = ${email})
             )`;

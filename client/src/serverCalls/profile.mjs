@@ -44,7 +44,7 @@ const httpGetUserProfile = async (username) => {
     };
 }
 
-const httpGetUserCourse = async (username, courseUUID) => {
+const httpGetUserCourse = async (username, courseuuid) => {
     // If user logged out while offline, logout first
     if(localStorage.getItem("logout")) {
         if(!(await httpLogout()).success) {
@@ -58,7 +58,7 @@ const httpGetUserCourse = async (username, courseUUID) => {
     let result;
     let status;
     try {
-        result = await fetch(SERVER_URI + "/course/" + courseUUID, {
+        result = await fetch(SERVER_URI + "/course/" + courseuuid, {
             method: "GET",
             credentials: "include",
             headers: {

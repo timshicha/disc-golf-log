@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import fs from "fs";
 import { configDotenv } from "dotenv";
 import { registerGoogleAuthEndpoint } from "./auth/google.mjs";
-import { registerGetDataEndpoint, registerPostDataEndpoint } from "./req/bulkData.mjs";
+import { registerGetDataEndpoint, registerGetModifiedDataEndpoint, registerPostDataEndpoint } from "./req/bulkData.mjs";
 import { registerEmailAuthEndpoint } from "./auth/email.mjs";
 import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
@@ -65,6 +65,7 @@ registerLogoutEndpoint(app);
 // Data related endpoints
 registerPostDataEndpoint(app);
 registerGetDataEndpoint(app);
+registerGetModifiedDataEndpoint(app);
 
 // Change username endpoint
 registerChangeUsernameEndpoint(app);
