@@ -167,20 +167,22 @@ const MainPage = forwardRef((props, ref) => {
             {courses.length > 0
             ? // If there are courses, show courses
             <div className="fixed left-0 w-[100dvw] overflow-hidden">
-                <div className="fixed left-0 bg-white w-full h-[45px] p-[10px] flex">
-                    <div className="flex items-start">
-                        <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
-                        <SyncButton onClick={handleSyncWithCloud} loading={syncInProgress}
-                        className="inline-block ml-[5px] align-top">sync</SyncButton>
-                        {/* Sync error message */}
-                        <div className={`ml-[5px] flex-1 max-h-[30px] overflow-y-hidden inline-block text-red-caution text-[10px] font-bold align-top transition-opacity duration-300 opacity-${syncErrorOpacity}`}>{syncError}</div>
+                <div className="fixed left-0 w-full">
+                    <div className="bg-white h-[50px] p-[10px] pb-[0px] flex">
+                        <div className="flex items-start">
+                            <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
+                            <SyncButton onClick={handleSyncWithCloud} loading={syncInProgress}
+                            className="inline-block ml-[5px] align-top">sync</SyncButton>
+                            {/* Sync error message */}
+                            <div className={`ml-[5px] flex-1 max-h-[30px] overflow-y-hidden inline-block text-red-caution text-[10px] font-bold align-top transition-opacity duration-300 opacity-${syncErrorOpacity}`}>{syncError}</div>
+                        </div>
+                        <SearchBar id="course-search-bar" className="inline-block align-top ml-auto" onChange={setSearchString}></SearchBar>
                     </div>
-                    <SearchBar id="course-search-bar" className="inline-block align-top ml-auto" onChange={setSearchString}></SearchBar>
+                    <div className="w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 </div>
-                <div className="fixed left-0 mt-[45px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
-                <div className="h-[46px]"></div>
                 <div className="h-[calc(100dvh-120px)] overflow-scroll px-[10px]">
+                    <div className="h-[50px]"></div>
                     {/* If there are pinned courses, add a section for pinned courses */}
                     {(() => {
                         const filteredPinnedCourses = pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase()))
