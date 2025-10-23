@@ -26,6 +26,7 @@ const MainPage = forwardRef((props, ref) => {
     const [searchString, setSearchString] = useState("");
     const [syncInProgress, setSyncInProgress] = useState(false);
     const [syncError, setSyncError] = useState(null);
+    const [syncErrorOpacity, setSyncErrorOpacity] = useState(0);
     let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
 
     const renameModalRef = useRef(null);
@@ -74,6 +75,15 @@ const MainPage = forwardRef((props, ref) => {
         })
     }
 
+    const showSyncError = (error) => {
+        setSyncError(error);
+        setSyncErrorOpacity(1);
+        // After 2 seconds, fade out
+        setTimeout(() => {
+            setSyncErrorOpacity(0);
+        }, 2000);
+    }
+
     const handleRenameCourse = (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -120,7 +130,7 @@ const MainPage = forwardRef((props, ref) => {
             reloadCourses();
         }
         else {
-            setSyncError(syncError);
+            showSyncError(syncError);
         }
     }
 
@@ -158,13 +168,12 @@ const MainPage = forwardRef((props, ref) => {
             ? // If there are courses, show courses
             <div className="fixed left-0 w-[100dvw] overflow-hidden">
                 <div className="fixed left-0 bg-white w-full h-[45px] p-[10px] flex">
-                    <div className="inline-block align-top flex">
+                    <div className="flex items-start">
                         <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
                         <SyncButton onClick={handleSyncWithCloud} loading={syncInProgress}
                         className="inline-block ml-[5px] align-top">sync</SyncButton>
-                        {syncError &&
-                            <div className="ml-[5px] inline-block text-red-caution text-[12px] font-bold max-w-[calc(100%-75px)] align-top">{syncError}</div>
-                        }
+                        {/* Sync error message */}
+                        <div className={`ml-[5px] flex-1 max-h-[30px] overflow-y-hidden inline-block text-red-caution text-[10px] font-bold align-top transition-opacity duration-300 opacity-${syncErrorOpacity}`}>{syncError}</div>
                     </div>
                     <SearchBar id="course-search-bar" className="inline-block align-top ml-auto" onChange={setSearchString}></SearchBar>
                 </div>

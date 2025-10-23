@@ -295,7 +295,7 @@ class SettingsPage extends React.Component {
                         </MenuModal>
                     }
 
-                    <div className="w-[100%] h-[2px] bg-gray-light"></div>
+                    <div className="w-[100%] h-[2px] bg-gray-light mb-[10px]"></div>
                     <SettingsBlock className="min-h-[60px] bg-special">
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleConfirmDeleteToggle}
                             id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    
