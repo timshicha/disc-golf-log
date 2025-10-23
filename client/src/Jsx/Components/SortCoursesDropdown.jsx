@@ -15,9 +15,9 @@ const SortCoursesBy = (props) => {
     }
 
     return (
-        <div>
-            <div className={"h-[30px] bg-gray-light text-gray-mild rounded-[5px] font-bold text-[16px] " + props.className} onClick={() => setShowModal(true)}>
-                <img src={sortByIcon} className="h-[24px] m-[3px]" alt="Sort by"></img>
+        <div className={props.className}>
+            <div className="p-[3px] bg-gray-light text-gray-mild rounded-[5px] font-bold text-[16px] cursor-pointer" onClick={() => setShowModal(true)}>
+                <img src={sortByIcon} className="h-[28px]" alt="Sort by"></img>
             </div>
             {showModal &&
                 <MenuModal onClose={() => setShowModal(false)}>

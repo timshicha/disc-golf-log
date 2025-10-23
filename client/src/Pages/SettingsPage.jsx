@@ -1,5 +1,5 @@
 import React from "react";
-import DataHandler from "../DataHandling/DataHandler.js";
+import DataHandler, { syncWithCloud } from "../DataHandling/DataHandler.js";
 import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton.jsx";
 import { download } from "../Utilities/downloads.js";
 import { Modals } from "../Utilities/Enums.js";
@@ -119,63 +119,15 @@ class SettingsPage extends React.Component {
     
     handleSyncWithCloud = async () => {
         this.setState({ syncWithCloudLoading: true });
-        const email = localStorage.getItem("email");
-        let statusCode;
-        try {
-
-            // Try downloading data
-            const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-synced-with-cloud"));
-            if(!downloadResult.success) {
-                statusCode = downloadResult.status;
-                throw new Error (downloadResult);
-            }
-
-            // Try uploading changes to cloud
-            const result = await httpUploadQueueToCloud(false);
-            if(!result.success) {
-                statusCode = result.status;
-                throw new Error (result);
-            }
-
-            // Manage the data we downloaded
-            await DataHandler.bulkModify(downloadResult.data.courses, downloadResult.data.rounds);
-            const date = Date ();
-            localStorage.setItem("last-synced-with-cloud", date);
-            this.setState({
-                syncWithCloudError: null
-            });
+        const syncError = await syncWithCloud();
+        if(!syncError) {
+            this.setState({ syncWithCloudError: null });
+            this.updateLastSyncedWithCloudString();
             // Reload courses
             this.props.refreshCourses();
-            this.updateLastSyncedWithCloudString();
-
-        } catch (result) {
-            console.log("Data causing error: ",result);
-            let error;
-            if(statusCode === 401) {
-                // Log them out so they don't try to request again
-                error = "Failed to sync data: You are not logged in.";
-                localStorage.removeItem("email");
-                localStorage.removeItem("username");
-                localStorage.removeItem("last-synced-with-cloud");
-                this.setState({ 
-                    email: null,
-                    username: null,
-                    lastSyncedWithCloudString: ""
-                });
-            }
-            else if(statusCode === 500) {
-                error = "Failed to sync data: A problem occured in the server.";
-            }
-            else if(statusCode === 404) {
-                error = "Failed to sync data: Bad request (not your fault).";
-            }
-            else if(!statusCode) {
-                error = "Failed to sync data: Could not connect to server.";
-            }
-            else {
-                error = "Failed to sync data.";
-            }
-            this.setState({ syncWithCloudError: error });
+        }
+        else {
+            this.setState({ syncWithCloudError: syncError });
         }
         this.setState({ syncWithCloudLoading: false });
     }
@@ -296,7 +248,12 @@ class SettingsPage extends React.Component {
                             <SettingsBlock>
                                 <div className="w-100% text-center">
                                     <div className="text-desc text-gray-mild text-left">
-                                        {this.state.lastSyncedWithCloudString}
+                                        <p className="mb-[15px]">
+                                            Syncing uploads all local changes to the cloud and downloads all changes from the cloud.
+                                        </p>
+                                        <p>
+                                            {this.state.lastSyncedWithCloudString}
+                                        </p>
                                     </div>
                                     <ModalButton className="bg-gray-dark text-white w-[90%] mt-[10px]" loading={this.state.syncWithCloudLoading} onClick={this.handleSyncWithCloud}>Sync with cloud</ModalButton>
                                     {this.state.syncWithCloudError && 
@@ -338,7 +295,7 @@ class SettingsPage extends React.Component {
                         </MenuModal>
                     }
 
-                    <div className="w-[100%] h-[2px] bg-gray-light"></div>
+                    <div className="w-[100%] h-[2px] bg-gray-light mb-[10px]"></div>
                     <SettingsBlock className="min-h-[60px] bg-special">
                         <input type="checkbox" className="float-right w-[40px] h-[40px] accent-gray-dark m-[3px]" onChange={this.handleConfirmDeleteToggle}
                             id="confirm-delete-checkbox" checked={this.state.confirmDelete}>    

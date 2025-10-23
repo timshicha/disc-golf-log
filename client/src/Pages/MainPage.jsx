@@ -4,7 +4,7 @@ import CourseSlot from "../Jsx/Components/CourseSlot";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle";
 import RenameModal from "../Jsx/Modals/RenameModal";
 import { compareDates, compareStrings } from "../Utilities/sorting";
-import DataHandler from "../DataHandling/DataHandler";
+import DataHandler, { syncWithCloud } from "../DataHandling/DataHandler";
 import ModifyHolesModal from "../Jsx/Modals/ModifyHolesModal";
 import { Modals, Pages } from "../Utilities/Enums";
 import CourseOptionsModal from "../Jsx/Modals/CourseOptionsModal";
@@ -12,6 +12,7 @@ import StickyDiv from "../Jsx/Components/StickyDiv";
 import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
 import SearchBar from "../Jsx/Components/SearchBar";
 import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
+import SyncButton from "../Jsx/Components/SyncButton";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -23,6 +24,9 @@ const MainPage = forwardRef((props, ref) => {
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
     const [searchString, setSearchString] = useState("");
+    const [syncInProgress, setSyncInProgress] = useState(false);
+    const [syncError, setSyncError] = useState(null);
+    const [syncErrorOpacity, setSyncErrorOpacity] = useState(0);
     let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
 
     const renameModalRef = useRef(null);
@@ -71,6 +75,15 @@ const MainPage = forwardRef((props, ref) => {
         })
     }
 
+    const showSyncError = (error) => {
+        setSyncError(error);
+        setSyncErrorOpacity(1);
+        // After 2 seconds, fade out
+        setTimeout(() => {
+            setSyncErrorOpacity(0);
+        }, 2000);
+    }
+
     const handleRenameCourse = (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -101,6 +114,23 @@ const MainPage = forwardRef((props, ref) => {
         // Otherwise reload courses so new one appears
         else {
             reloadCourses();
+        }
+    }
+
+    const handleSyncWithCloud = async () => {
+        // If sync is already in progress, do nothing
+        if(syncInProgress) {
+            return;
+        }
+        setSyncInProgress(true);
+        const syncError = await syncWithCloud();
+        setSyncInProgress(false);
+        if(!syncError) {
+            setSyncError(null);
+            reloadCourses();
+        }
+        else {
+            showSyncError(syncError);
         }
     }
 
@@ -137,9 +167,15 @@ const MainPage = forwardRef((props, ref) => {
             {courses.length > 0
             ? // If there are courses, show courses
             <div className="fixed left-0 w-[100dvw] overflow-hidden">
-                <div className="fixed left-0 bg-white w-full h-[45px] p-[10px]">
-                    <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
-                    <SearchBar id="course-search-bar" className="inline-block float-right" onChange={setSearchString}></SearchBar>
+                <div className="fixed left-0 bg-white w-full h-[45px] p-[10px] flex">
+                    <div className="flex items-start">
+                        <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
+                        <SyncButton onClick={handleSyncWithCloud} loading={syncInProgress}
+                        className="inline-block ml-[5px] align-top">sync</SyncButton>
+                        {/* Sync error message */}
+                        <div className={`ml-[5px] flex-1 max-h-[30px] overflow-y-hidden inline-block text-red-caution text-[10px] font-bold align-top transition-opacity duration-300 opacity-${syncErrorOpacity}`}>{syncError}</div>
+                    </div>
+                    <SearchBar id="course-search-bar" className="inline-block align-top ml-auto" onChange={setSearchString}></SearchBar>
                 </div>
                 <div className="fixed left-0 mt-[45px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
@@ -199,9 +235,11 @@ const MainPage = forwardRef((props, ref) => {
                 </div>
             :   // If there are 0 courses, show a message saying there
                 // are no courses
-                <p className="text-center text-desc mt-[25px] w-[100dvw]">
-                    You don't have any courses.
-                </p>
+                <>
+                    <p className="text-center text-desc mt-[25px] w-[100dvw]">
+                        You don't have any courses.
+                    </p>
+                </>
             }
             <StickyDiv className="text-center">
                 <ModalButton onClick={() => setCurrentModal(Modals.ADD_COURSE)} className="bg-blue-basic text-white">Add course</ModalButton>
