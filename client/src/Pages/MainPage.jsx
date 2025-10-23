@@ -4,7 +4,7 @@ import CourseSlot from "../Jsx/Components/CourseSlot";
 import ModalTitle from "../Jsx/Modals/ModalComponents/ModalTitle";
 import RenameModal from "../Jsx/Modals/RenameModal";
 import { compareDates, compareStrings } from "../Utilities/sorting";
-import DataHandler from "../DataHandling/DataHandler";
+import DataHandler, { syncWithCloud } from "../DataHandling/DataHandler";
 import ModifyHolesModal from "../Jsx/Modals/ModifyHolesModal";
 import { Modals, Pages } from "../Utilities/Enums";
 import CourseOptionsModal from "../Jsx/Modals/CourseOptionsModal";
@@ -12,6 +12,7 @@ import StickyDiv from "../Jsx/Components/StickyDiv";
 import ModalButton from "../Jsx/Modals/ModalComponents/ModalButton";
 import SearchBar from "../Jsx/Components/SearchBar";
 import SortCoursesDropdown from "../Jsx/Components/SortCoursesDropdown";
+import SyncButton from "../Jsx/Components/SyncButton";
 
 const SERVER_URI = import.meta.env.VITE_SERVER_URI;
 
@@ -23,6 +24,7 @@ const MainPage = forwardRef((props, ref) => {
     const [currentCourse, setCurrentCourse] = useState(null);
     const [currentModal, setCurrentModal] = useState(null);
     const [searchString, setSearchString] = useState("");
+    const [syncError, setSyncError] = useState(null);
     let sortCourseBy = localStorage.getItem("sort-courses-by") || "Alphabetically";
 
     const renameModalRef = useRef(null);
@@ -137,9 +139,24 @@ const MainPage = forwardRef((props, ref) => {
             {courses.length > 0
             ? // If there are courses, show courses
             <div className="fixed left-0 w-[100dvw] overflow-hidden">
-                <div className="fixed left-0 bg-white w-full h-[45px] p-[10px]">
-                    <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block float-left"></SortCoursesDropdown>
-                    <SearchBar id="course-search-bar" className="inline-block float-right" onChange={setSearchString}></SearchBar>
+                <div className="fixed left-0 bg-white w-full h-[45px] p-[10px] flex">
+                    <div className="inline-block align-top flex">
+                        <SortCoursesDropdown onSubmit={onSortByChange} selected={sortCourseBy} className="inline-block align-top"></SortCoursesDropdown>
+                        <SyncButton onClick={async () => {
+                            const syncError = await syncWithCloud();
+                            if(!syncError) {
+                                reloadCourses();
+                            }
+                            else {
+                                setSyncError(syncError);
+                            }
+                        }}
+                        className="inline-block ml-[5px] align-top">sync</SyncButton>
+                        {syncError &&
+                            <div className="ml-[5px] inline-block text-red-caution text-[12px] font-bold max-w-[calc(100%-75px)] align-top">{syncError}</div>
+                        }
+                    </div>
+                    <SearchBar id="course-search-bar" className="inline-block align-top ml-auto" onChange={setSearchString}></SearchBar>
                 </div>
                 <div className="fixed left-0 mt-[45px] w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 
