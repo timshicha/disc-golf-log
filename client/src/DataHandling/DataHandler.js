@@ -1,3 +1,4 @@
+import { httpRetrieveAllModifiedDataFromCloud, httpUploadQueueToCloud } from "../serverCalls/data.mjs";
 import db from "./Db";
 import { v4 as uuidv4 } from "uuid";
 
@@ -363,4 +364,61 @@ class DataHandler {
     }
 }
 
+// Sync changes with cloud.
+// This will upload any changes in the queue to the cloud and
+// download any changes from the cloud.
+//
+// Returns null on success, or an error string on failure.
+const syncWithCloud = async () => {
+    const email = localStorage.getItem("email");
+    if(!email) {
+        return "Failed to sync data: You are not logged in.";
+    }
+    let statusCode;
+    try {
+        // Try downloading data
+        const downloadResult = await httpRetrieveAllModifiedDataFromCloud(localStorage.getItem("last-synced-with-cloud"));
+        if(!downloadResult.success) {
+            statusCode = downloadResult.status;
+            throw new Error (downloadResult);
+        }
+
+        // Try uploading changes to cloud
+        const result = await httpUploadQueueToCloud(false);
+        if(!result.success) {
+            statusCode = result.status;
+            throw new Error (result);
+        }
+
+        // Manage the data we downloaded
+        await DataHandler.bulkModify(downloadResult.data.courses, downloadResult.data.rounds);
+        const date = Date ();
+        localStorage.setItem("last-synced-with-cloud", date);
+        return null;
+    } catch (result) {
+        console.log("Sync failed. Data causing failure: ", result);
+        let error;
+        if(statusCode === 401) {
+            // Log them out so they don't try to request again
+            localStorage.removeItem("email");
+            localStorage.removeItem("username");
+            localStorage.removeItem("last-synced-with-cloud");
+            return "Failed to sync data: You are not logged in.";
+        }
+        else if(statusCode === 500) {
+            return "Failed to sync data: A problem occured in the server.";
+        }
+        else if(statusCode === 404) {
+            return "Failed to sync data: Bad request (not your fault).";
+        }
+        else if(!statusCode) {
+            return "Failed to sync data: Could not connect to server.";
+        }
+        else {
+            return "Failed to sync data.";
+        }
+    }
+}
+
 export default DataHandler;
+export { syncWithCloud };
