@@ -201,7 +201,7 @@ class SettingsPage extends React.Component {
     render = () => {
         return (
             <div>
-                <div className="settings-page mt-[70px] mb-[40px]">
+                <div className="settings-page mt-[60px] mb-[40px] overflow-y-auto overscroll-contain">
                     <p className="text-desc text-gray-mild my-[10px] text-center">Version: {localStorage.getItem("version")}</p>
 
 
