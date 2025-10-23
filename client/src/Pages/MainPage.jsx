@@ -182,11 +182,13 @@ const MainPage = forwardRef((props, ref) => {
                 <div className="h-[46px]"></div>
                 <div className="h-[calc(100dvh-120px)] overflow-scroll px-[10px]">
                     {/* If there are pinned courses, add a section for pinned courses */}
-                    {pinnedCourses.length > 0 &&  
+                    {(() => {
+                        const filteredPinnedCourses = pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase()))
+                        return filteredPinnedCourses.length > 0 && (
                         <>
                             <div className="text-[12px] text-gray-subtle font-bold text-sans text-center mb-[2px]">Pinned Courses</div>
                             {/* Filter by search string. If name is undefined, treat as empty string. */}
-                            {pinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
+                            {filteredPinnedCourses.map(course => {
                                 return (
                                     <CourseSlot course={course}
                                         key={course.courseuuid}
@@ -208,7 +210,8 @@ const MainPage = forwardRef((props, ref) => {
                             })}
                             <hr className="text-gray-subtle border-[1px] mb-[8px]"></hr>
                         </>
-                    }
+                        );
+                    })()}
                     {/* Filter by search string. If name is undefined, treat as empty string. */}
                     {unpinnedCourses.filter(course => (course.name ? course.name : "" ).toLowerCase().includes(searchString.toLowerCase())).map(course => {
                         return (
