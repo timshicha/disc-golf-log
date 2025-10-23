@@ -235,7 +235,7 @@ const MainPage = forwardRef((props, ref) => {
                             </CourseSlot>
                         );
                     })}
-                    <div className="h-[60px]"></div>
+                    <div className="h-[130px]"></div>
                 </div>
                 </div>
             :   // If there are 0 courses, show a message saying there
