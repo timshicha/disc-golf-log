@@ -35,6 +35,10 @@ body, html {
     background-color: white;
 }
 
+.srollable {
+    -webkit-overflow-scrolling: touch;
+}
+
 /* input, textarea {
     color: #666666;
 } */

@@ -181,7 +181,7 @@ const MainPage = forwardRef((props, ref) => {
                     <div className="w-[100%] h-[5px] bg-linear-to-b to-[#ffffff00] from-[#ffffff]"></div>
                 </div>
                 
-                <div className="h-[100dvh] overflow-scroll px-[10px]">
+                <div className="h-[100dvh] overflow-y-auto overscroll-contain px-[10px]">
                     <div className="h-[50px]"></div>
                     {/* If there are pinned courses, add a section for pinned courses */}
                     {(() => {
@@ -235,7 +235,7 @@ const MainPage = forwardRef((props, ref) => {
                             </CourseSlot>
                         );
                     })}
-                    <div className="h-[60px]"></div>
+                    <div className="h-[130px]"></div>
                 </div>
                 </div>
             :   // If there are 0 courses, show a message saying there

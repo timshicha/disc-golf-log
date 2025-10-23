@@ -108,7 +108,7 @@ class CoursePage extends React.Component{
                 </RoundOptionsModal>
             }
             
-            <div className="overflow-y-scroll overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>
+            <div className="overflow-y-auto overscroll-contain overflow-x-hidden [overflow-anchor:bottom] m-[5px] h-[calc(100dvh-100px)]" ref={this.roundsDivRef}>
                 {this.state.rounds.sort((a, b) => compareStrings(a.date, b.date)).map((round, index) => {
                     return (
                         <Round round={round} course={this.state.course} key={round.rounduuid} index={index}
