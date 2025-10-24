@@ -14,6 +14,7 @@ import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
 import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
 import { migrateDbToV3 } from "./DataHandling/Db";
+import SearchCourseInfoModal from "./Jsx/Modals/SeachCourseInfoModal";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -117,7 +118,14 @@ function App() {
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
             <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount} friendRequestCount={friendRequestCount}>
-            </SocialModal>}
+            </SocialModal>
+            }
+
+            {currentModal === Modals.SEARCH_COURSE_INFO &&
+                <SearchCourseInfoModal onClose={() => setCurrentModal(null)}>
+
+                </SearchCourseInfoModal>
+            }
 
             {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
             IT WILL SIMPLY BY COVERED WHEN OTHER PAGES ARE OPENED. */}
@@ -139,7 +147,9 @@ function App() {
                                 }
                             </button>
                             {/* SEARCH COURSE INFO BUTTON */}
-                            <button className="h-[42px] h-[42px] bg-black ml-[5px] rounded-[7px] cursor-pointer p-[3px] align-top">
+                            <button className="h-[42px] h-[42px] bg-black ml-[5px] rounded-[7px] cursor-pointer p-[3px] align-top" onClick={() => {
+                                setCurrentModal(Modals.SEARCH_COURSE_INFO); console.log("ok")
+                            }}>
                                 <img className="h-[36px] w-[36px]" src={searchIcon}></img>
                             </button>
 
