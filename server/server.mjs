@@ -12,7 +12,7 @@ import { registerChangeUsernameEndpoint } from "./req/usernames.mjs";
 import { registerGetProfileCourseEndpoint, registerGetProfileEndpoint, registerUpdateProfileVisibility } from "./req/profile.mjs";
 import { registerGetAllFriendsEndpoint, registerRemoveFriendEndpoint, registerRespondFriendRequestEndpoint, registerSendFriendRequestEndpoint, registerUndoSendFriendRequestEndpoint, registerGetAllFriendRequestsEndpoint, registerGetFriendRequestCountEndpoint } from "./req/friends.mjs";
 import { registerLogoutEndpoint } from "./auth/logout.mjs";
-import { registerGetCourseInfoEndpoint } from "./req/courseLookup.mjs";
+import { registerCourseLookupByPartialName, registerGetCourseInfoEndpoint } from "./req/courseLookup.mjs";
 
 configDotenv();
 const PORT = process.env.PORT || 8080;
@@ -87,6 +87,7 @@ registerGetFriendRequestCountEndpoint(app);
 
 // Course info endpoints
 registerGetCourseInfoEndpoint(app);
+registerCourseLookupByPartialName(app);
 
 // If on localhost, manually set up to listen via https
 if(ENV === "localhost") {

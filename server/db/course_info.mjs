@@ -5,4 +5,11 @@ const findCourseInfoByCourseUUID = async (uuid) => {
     return result?.[0];
 }
 
-export { findCourseInfoByCourseUUID}
+const findCoursesInfoByPartialName = async (name) => {
+    const result = await db`SELECT uuid, name, city FROM ${SCHEMA}.course_info WHERE name ILIKE ${'%' + name + '%'} LIMIT 5`;
+    return result;
+}
+
+export { findCourseInfoByCourseUUID,
+    findCoursesInfoByPartialName
+}

@@ -3,25 +3,19 @@ import "../../../css/general.css";
 import LoadingImg from "../../Components/LoadingImg";
 
 class ModalButton extends React.Component {
-    constructor (props) {
-        super (props);
-
-        const { loading, ...otherProps } = props;
-        this.otherProps = otherProps;
-        this.props = props;
-    }
 
     render = () => {
+        const { loading, className, disabled, children, ...otherProps } = this.props;
         return (
-            <button {...this.otherProps} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + ((this.props.loading || this.props.disabled) ? "pointer-events-none opacity-60 " : "") + this.props.className}>
-                {this.props.loading &&
+            <button {...otherProps} className={"relative inline-block text-[18px] px-[10px] py-[5px] font-bold font-sans rounded-[7px] cursor-pointer " + className + (loading || disabled ? " pointer-events-none opacity-60 " : "")}>
+                {loading &&
                     <div className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
                         <LoadingImg className="w-[20px]"></LoadingImg>
                     </div>
                 }
                 {/* If loading, opacity 0; if disabled, opacity 0.5 */}
-                <div className={this.props.loading ? "opacity-0" : (this.props.disabled ? "opacity-[0.5]" : "")}>
-                    {this.props.children}
+                <div className={loading ? "opacity-0" : (disabled ? "opacity-[0.5]" : "")}>
+                    {children}
                 </div>
             </button>
         );
