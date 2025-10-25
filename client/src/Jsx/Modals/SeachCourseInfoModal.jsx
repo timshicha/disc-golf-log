@@ -20,7 +20,6 @@ const SearchCourseInfoModal = (props) => {
         // a list of search results of new courses
         setCourseInfo(null)
         const result = await httpLookupCoursesInfoByPartialName(searchString);
-        console.log(result.data);
         setCourseResults(result.data);
     }
 
@@ -51,7 +50,7 @@ const SearchCourseInfoModal = (props) => {
                     </div>
                 </form>
 
-                <div className="overflow-y-auto max-h-[calc(100%-120px)]">
+                <div className="overflow-y-auto overscroll-contain max-h-[calc(100%-120px)]">
                     {/* IF NOT SHOWING A COURSE, SHOW SEARCH RESULTS */}
                     {!courseInfo &&
                         <>

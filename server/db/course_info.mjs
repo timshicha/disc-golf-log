@@ -6,7 +6,7 @@ const findCourseInfoByCourseUUID = async (uuid) => {
 }
 
 const findCoursesInfoByPartialName = async (name) => {
-    const result = await db`SELECT uuid, name, city FROM ${SCHEMA}.course_info WHERE name ILIKE ${'%' + name + '%'} LIMIT 5`;
+    const result = await db`SELECT uuid, name, city FROM ${SCHEMA}.course_info WHERE name ILIKE ${'%' + name + '%'} LIMIT 10`;
     return result;
 }
 

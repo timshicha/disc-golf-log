@@ -148,7 +148,7 @@ function App() {
                             </button>
                             {/* SEARCH COURSE INFO BUTTON */}
                             <button className="h-[42px] h-[42px] bg-black ml-[5px] rounded-[7px] cursor-pointer p-[3px] align-top" onClick={() => {
-                                setCurrentModal(Modals.SEARCH_COURSE_INFO); console.log("ok")
+                                setCurrentModal(Modals.SEARCH_COURSE_INFO);
                             }}>
                                 <img className="h-[36px] w-[36px]" src={searchIcon}></img>
                             </button>
