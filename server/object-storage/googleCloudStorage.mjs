@@ -1,9 +1,16 @@
 import { Storage } from '@google-cloud/storage';
-import fs from 'fs';
+import { configDotenv } from "dotenv";
+
+configDotenv();
+
+const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
 const storage = new Storage({
-    projectId: "bogeypad",
-    keyFilename: "./service-account.json", // Path to service account key file
+    credentials: {
+        client_email: serviceAccount.client_email,
+        private_key: serviceAccount.private_key,
+    },
+    projectId: serviceAccount.project_id
 });
 
 const bucketName = 'bogey-pad-bucket';
