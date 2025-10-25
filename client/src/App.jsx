@@ -5,6 +5,7 @@ import NavBar, { NavBarBackButton, NavBarTitle } from "./Jsx/Components/NavBar";
 import titleLogo from "./assets/images/title-logo.png";
 import cogwheel from "./assets/images/cogwheel.png";
 import socialIcon from "./assets/images/socialIcon.png";
+import searchIcon from "./assets/images/searchIcon.png";
 import CoursePage from "./Pages/CoursePage";
 import { Modals, Pages } from "./Utilities/Enums";
 import { version as currentVersion } from "../package.json";
@@ -13,6 +14,7 @@ import { httpUploadQueueToCloud } from "./ServerCalls/data.mjs";
 import SocialModal from "./Jsx/Modals/SocialModal";
 import { httpGetFriendRequestCount } from "./ServerCalls/friends.mjs";
 import { migrateDbToV3 } from "./DataHandling/Db";
+import SearchCourseInfoModal from "./Jsx/Modals/SeachCourseInfoModal";
 
 // See what version of the software the user currently has. If they haven't
 // used the app, simply give then the current version
@@ -116,7 +118,14 @@ function App() {
         <div className="overflow-hidden">
             {currentModal === Modals.SOCIAL &&
             <SocialModal onClose={() => {setCurrentModal(null)}} username={localStorage.getItem("username")} refreshFriendRequestCount={refreshFriendRequestCount} friendRequestCount={friendRequestCount}>
-            </SocialModal>}
+            </SocialModal>
+            }
+
+            {currentModal === Modals.SEARCH_COURSE_INFO &&
+                <SearchCourseInfoModal onClose={() => setCurrentModal(null)}>
+
+                </SearchCourseInfoModal>
+            }
 
             {/* THIS IS THE MAIN PAGE. THE MAIN PAGE WILL ALWAYS BE IN THE DOM.
             IT WILL SIMPLY BY COVERED WHEN OTHER PAGES ARE OPENED. */}
@@ -124,18 +133,28 @@ function App() {
                 <NavBar>
                     <NavBarTitle>My Courses</NavBarTitle>
                     <div className="flex">
-                        <button className="absolute left-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
-                            setCurrentModal(Modals.SOCIAL);
-                        }}>
-                            <img className="h-[42px] w-[42px]" src={socialIcon} alt="Social"></img>
-                            {/* If there are friend requests, show banner with number on social button */}
-                            {friendRequestCount > 0 &&
-                                <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
-                                    {friendRequestCount}
-                                </div>
-                            }
-                        </button>
-                        <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer" onClick={() => {
+                        <div className="absolute left-[0px]">
+                            {/* SOCIAL BUTTON */}
+                            <button className="w-[42px] h-[42px] bg-black ml-[5px] rounded-[7px] cursor-pointer align-top" onClick={() => {
+                                setCurrentModal(Modals.SOCIAL);
+                            }}>
+                                <img className="h-[42px] w-[42px]" src={socialIcon} alt="Social"></img>
+                                {/* If there are friend requests, show banner with number on social button */}
+                                {friendRequestCount > 0 &&
+                                    <div className="absolute w-[20px] h-[20px] bg-red-600 rounded-[100%] right-[-5px] top-[-5px] text-white text-[15px] font-bold flex items-center justify-center">
+                                        {friendRequestCount}
+                                    </div>
+                                }
+                            </button>
+                            {/* SEARCH COURSE INFO BUTTON */}
+                            <button className="h-[42px] h-[42px] bg-black ml-[5px] rounded-[7px] cursor-pointer p-[3px] align-top" onClick={() => {
+                                setCurrentModal(Modals.SEARCH_COURSE_INFO); console.log("ok")
+                            }}>
+                                <img className="h-[36px] w-[36px]" src={searchIcon}></img>
+                            </button>
+
+                        </div>
+                        <button className="absolute right-[0px] w-[42px] h-[42px] bg-black mx-[5px] rounded-[7px] cursor-pointer align-top" onClick={() => {
                             navigateTo("settings");
                         }}>
                             <img className="h-[42px] w-[42px]" src={cogwheel} alt="Settings"></img>
